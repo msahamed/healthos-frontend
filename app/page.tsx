@@ -1,11 +1,76 @@
 import Nav from "./components/Nav";
+import WaitlistForm from "./components/WaitlistForm";
 import Link from "next/link";
 
 const TEAL = "#0F766E";
 const TEAL_LIGHT = "#F0FDFA";
 const TEAL_BORDER = "#99F6E4";
 
+const painPoints = [
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 8v4M12 16h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    ),
+    headline: "Health apps sell your most sensitive data",
+    body: "Every symptom you log, every question you ask — most apps upload it to remote servers where it can be breached, sold, or subpoenaed. HealthOS runs entirely on your device. Nothing ever leaves your phone.",
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M8.111 16.404a5.5 5.5 0 017.778 0M6.343 14.636a8 8 0 0111.314 0M4.929 12.929a10 10 0 0114.142 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+        <circle cx="12" cy="20" r="1" fill="currentColor" />
+        <path d="M3 3l18 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    ),
+    headline: "Critical moments don't have Wi‑Fi",
+    body: "Emergencies, hospital basements, flights — you need your health context precisely when there's no signal. HealthOS and its AI work fully offline, always.",
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+    headline: "Tracking your health shouldn't be a chore",
+    body: "Most health apps demand structured input — forms, fields, categories. HealthOS gets out of the way. Just talk, type a quick note, or snap a photo. Done.",
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 2a10 10 0 100 20 10 10 0 000-20z" stroke="currentColor" strokeWidth="1.8" />
+      </svg>
+    ),
+    headline: "You deserve straight answers about your health",
+    body: "\"Is this normal?\" \"Am I due for a refill?\" HealthOS knows your full context and answers in plain language — like a knowledgeable friend who's always available.",
+  },
+];
+
 const features = [
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+    title: "Just Talk",
+    desc: "\"I took ibuprofen this morning\" or \"my knee has been sore for two days\" — speak naturally and HealthOS understands, remembers, and organises it.",
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+    title: "Or Type a Quick Note",
+    desc: "Jot down a symptom, a question, or a reminder in seconds. No forms, no categories — just write it the way you'd text a friend.",
+  },
   {
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -13,8 +78,8 @@ const features = [
         <path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" stroke="currentColor" strokeWidth="1.8" />
       </svg>
     ),
-    title: "Scan Any Document",
-    desc: "Camera, photos, or PDFs — HealthOS reads prescriptions, lab reports, clinical notes, and discharge summaries automatically.",
+    title: "Or Snap a Photo",
+    desc: "Point your camera at a prescription, a nutrition label, or anything health-related. HealthOS reads it and folds it into your personal context automatically.",
   },
   {
     icon: (
@@ -22,8 +87,8 @@ const features = [
         <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
-    title: "On-Device AI Extraction",
-    desc: "On-device Qwen AI pulls out medications, lab results, diagnoses, and clinical notes — structured and searchable, no cloud required.",
+    title: "On‑Device AI Agent",
+    desc: "A powerful AI model runs locally on your phone — no server, no subscription, no cloud. It understands your full context and gets smarter the more you share.",
   },
   {
     icon: (
@@ -31,26 +96,8 @@ const features = [
         <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
-    title: "Ask Your Records",
-    desc: "\"What medications am I on?\" \"Are any lab results abnormal?\" Get plain-language answers from your own data — not the internet.",
-  },
-  {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-    title: "Private by Design",
-    desc: "Everything stays on your device. No account required. No data sent to servers. Your health records belong to you.",
-  },
-  {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-    title: "Epic & FHIR Connect",
-    desc: "Connect your hospital account via SMART on FHIR. Sync directly from Epic, Cerner, and other major EHR systems — no scanning needed.",
+    title: "Ask Anything",
+    desc: "\"What medications am I on?\" \"Have I been sleeping worse lately?\" Get plain-language answers drawn from everything you've shared — not generic internet advice.",
   },
   {
     icon: (
@@ -59,7 +106,7 @@ const features = [
       </svg>
     ),
     title: "Trends Over Time",
-    desc: "Track labs, vitals, and medications across years. Spot patterns your doctors see only in single visits.",
+    desc: "Track how you feel across days, weeks, and months. Spot patterns — in sleep, energy, pain, or mood — before they become bigger problems.",
   },
 ];
 
@@ -87,24 +134,23 @@ export default function Home() {
               </svg>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight tracking-tight">
-              Your health records,<br />
-              <span className="text-white/75">privately on‑device</span>
+              Your private health agent,<br />
+              <span className="text-white/75">always on‑device</span>
             </h1>
             <p className="text-lg md:text-xl text-white/70 max-w-xl leading-relaxed">
-              HealthOS collects all your medical records in one place, extracts
-              key data using on‑device AI, and helps you understand your
-              health — without ever leaving your phone.
+              Talk to it, text it, or show it a photo. HealthOS is a personal AI
+              that understands your health context — and keeps it entirely on your phone.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 mt-2">
               <a
-                href="#"
+                href="#waitlist"
                 className="px-7 py-3.5 rounded-xl bg-white font-semibold text-sm shadow-lg hover:bg-white/90 transition-all"
                 style={{ color: TEAL }}
               >
-                Download on iOS
+                Join the Waitlist
               </a>
               <a
-                href="#features"
+                href="#why"
                 className="px-7 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white font-semibold text-sm hover:bg-white/20 transition-all"
               >
                 Learn more
@@ -114,15 +160,45 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Pain Points */}
+        <section id="why" className="py-20 md:py-28 bg-white">
+          <div className="max-w-5xl mx-auto px-6">
+            <div className="text-center mb-14">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">
+                Why your health agent belongs on‑device
+              </h2>
+              <p className="text-slate-500 text-lg max-w-lg mx-auto">
+                Privacy isn't a feature — it's the foundation. Here's what's broken with every other approach.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {painPoints.map((p) => (
+                <div key={p.headline} className="flex gap-4 p-6 rounded-2xl border border-slate-100 bg-slate-50 hover:border-slate-200 transition-colors">
+                  <div
+                    className="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center mt-0.5"
+                    style={{ backgroundColor: TEAL_LIGHT, color: TEAL }}
+                  >
+                    {p.icon}
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-slate-900 mb-1.5">{p.headline}</h3>
+                    <p className="text-slate-500 text-sm leading-relaxed">{p.body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Features */}
         <section id="features" className="py-20 md:py-28" style={{ backgroundColor: TEAL_LIGHT }}>
           <div className="max-w-5xl mx-auto px-6">
             <div className="text-center mb-14">
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">
-                Everything in one place
+                As simple as talking to a friend
               </h2>
               <p className="text-slate-500 text-lg max-w-lg mx-auto">
-                From scanning a prescription to asking about your cholesterol trend — HealthOS handles it all, privately.
+                No setup. No imports. No forms. Just share what's on your mind and let HealthOS handle the rest.
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -154,14 +230,14 @@ export default function Home() {
               style={{ backgroundColor: TEAL_LIGHT, color: TEAL }}
             >
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
-            <h2 className="text-3xl font-bold text-slate-900 mb-3">Built with privacy first</h2>
+            <h2 className="text-3xl font-bold text-slate-900 mb-3">Your data never leaves your phone</h2>
             <p className="text-slate-500 text-lg leading-relaxed mb-6">
-              HealthOS processes everything on your device using on-device AI.
-              No health data is sent to external servers. No account is required.
-              You are the sole custodian of your records.
+              HealthOS runs its AI entirely on your device. No account needed, no cloud sync,
+              no third parties. Everything you share with your agent stays between you and your phone.
             </p>
             <Link
               href="/privacy"
@@ -176,23 +252,28 @@ export default function Home() {
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="py-20" style={{ backgroundColor: TEAL }}>
-          <div className="max-w-3xl mx-auto px-6 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
-              Take control of your health records
-            </h2>
-            <p className="text-white/70 text-lg mb-8">Available on iOS. Free to download.</p>
-            <a
-              href="#"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white font-semibold shadow-lg hover:bg-white/90 transition-all"
-              style={{ color: TEAL }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
-              </svg>
-              Download on the App Store
-            </a>
+        {/* Waitlist */}
+        <section id="waitlist" className="relative py-20 md:py-28 overflow-hidden" style={{ backgroundColor: TEAL }}>
+          <div
+            className="absolute inset-0 pointer-events-none opacity-10"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 80% 50%, white 1px, transparent 1px)",
+              backgroundSize: "60px 60px",
+            }}
+          />
+          <div className="relative max-w-lg mx-auto px-6">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
+                Be the first to try HealthOS
+              </h2>
+              <p className="text-white/70 text-lg">
+                Early access is limited. Drop your email and we'll reach out when your spot is ready.
+              </p>
+            </div>
+            <div className="bg-white rounded-2xl p-8 shadow-xl">
+              <WaitlistForm />
+            </div>
           </div>
         </section>
 
