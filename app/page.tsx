@@ -14,8 +14,8 @@ const painPoints = [
         <path d="M12 8v4M12 16h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
       </svg>
     ),
-    headline: "Health apps sell your most sensitive data",
-    body: "Every symptom you log, every question you ask — most apps upload it to remote servers where it can be breached, sold, or subpoenaed. HealthOS runs entirely on your device. Nothing ever leaves your phone.",
+    headline: "Health apps expose your most sensitive data",
+    body: "Every symptom you log, every question you ask — most apps upload it to remote servers where it can be breached, shared, or subpoenaed. Your agent runs entirely on your device. Nothing ever leaves your phone.",
   },
   {
     icon: (
@@ -26,7 +26,7 @@ const painPoints = [
       </svg>
     ),
     headline: "Critical moments don't have Wi‑Fi",
-    body: "Emergencies, hospital basements, flights — you need your health context precisely when there's no signal. HealthOS and its AI work fully offline, always.",
+    body: "Emergencies, hospital basements, flights — you need your health context precisely when there's no signal. Your agent works fully offline, always.",
   },
   {
     icon: (
@@ -36,7 +36,7 @@ const painPoints = [
       </svg>
     ),
     headline: "Tracking your health shouldn't be a chore",
-    body: "Most health apps demand structured input — forms, fields, categories. HealthOS gets out of the way. Just talk, type a quick note, or snap a photo. Done.",
+    body: "Most health apps demand structured input — forms, fields, categories. Your agent gets out of the way. Just talk, type a quick note, or snap a photo. Done.",
   },
   {
     icon: (
@@ -46,7 +46,7 @@ const painPoints = [
       </svg>
     ),
     headline: "You deserve straight answers about your health",
-    body: "\"Is this normal?\" \"Am I due for a refill?\" HealthOS knows your full context and answers in plain language — like a knowledgeable friend who's always available.",
+    body: "\"Is this normal?\" \"Am I due for a refill?\" Your agent knows your full context and answers in plain language — like a knowledgeable friend who's always available.",
   },
 ];
 
@@ -59,7 +59,7 @@ const features = [
       </svg>
     ),
     title: "Just Talk",
-    desc: "\"I took ibuprofen this morning\" or \"my knee has been sore for two days\" — speak naturally and HealthOS understands, remembers, and organises it.",
+    desc: "\"I took ibuprofen this morning\" or \"my knee has been sore for two days\" — speak naturally and it understands, remembers, and organises everything.",
   },
   {
     icon: (
@@ -79,7 +79,7 @@ const features = [
       </svg>
     ),
     title: "Or Snap a Photo",
-    desc: "Point your camera at a prescription, a nutrition label, or anything health-related. HealthOS reads it and folds it into your personal context automatically.",
+    desc: "Point your camera at a prescription, a nutrition label, or anything health-related. Your agent reads it and folds it into your personal context automatically.",
   },
   {
     icon: (
@@ -138,8 +138,8 @@ export default function Home() {
               <span className="text-white/75">always on‑device</span>
             </h1>
             <p className="text-lg md:text-xl text-white/70 max-w-xl leading-relaxed">
-              Talk to it, text it, or show it a photo. HealthOS is a personal AI
-              that understands your health context — and keeps it entirely on your phone.
+              Talk to it, text it, or show it a photo — a personal AI agent
+              that understands your health context and keeps it entirely on your phone.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 mt-2">
               <a
@@ -198,7 +198,7 @@ export default function Home() {
                 As simple as talking to a friend
               </h2>
               <p className="text-slate-500 text-lg max-w-lg mx-auto">
-                No setup. No imports. No forms. Just share what's on your mind and let HealthOS handle the rest.
+                No setup. No imports. No forms. Just share what's on your mind and your agent handles the rest.
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -236,7 +236,7 @@ export default function Home() {
             </div>
             <h2 className="text-3xl font-bold text-slate-900 mb-3">Your data never leaves your phone</h2>
             <p className="text-slate-500 text-lg leading-relaxed mb-6">
-              HealthOS runs its AI entirely on your device. No account needed, no cloud sync,
+              Runs entirely on your device. No account needed, no cloud sync,
               no third parties. Everything you share with your agent stays between you and your phone.
             </p>
             <Link
@@ -265,7 +265,7 @@ export default function Home() {
           <div className="relative max-w-lg mx-auto px-6">
             <div className="text-center mb-10">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
-                Be the first to try HealthOS
+                Get early access
               </h2>
               <p className="text-white/70 text-lg">
                 Early access is limited. Drop your email and we'll reach out when your spot is ready.
