@@ -25,7 +25,8 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ success: true }, { status: 201 });
-  } catch {
+  } catch (err) {
+    console.error("[waitlist]", err);
     return NextResponse.json({ error: "Something went wrong." }, { status: 500 });
   }
 }
