@@ -156,7 +156,6 @@ export default function Home() {
                 Learn more
               </a>
             </div>
-            <p className="text-white/45 text-sm mt-1">Free · No account required · iOS 16+</p>
           </div>
         </section>
 
