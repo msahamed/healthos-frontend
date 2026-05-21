@@ -14,7 +14,7 @@ const painPoints = [
         <path d="M12 8v4M12 16h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
       </svg>
     ),
-    headline: "Health apps expose your most sensitive data",
+    headline: "Health apps expose your sensitive data",
     body: "Every symptom you log, every question you ask — most apps upload it to remote servers where it can be breached, shared, or subpoenaed. Your agent runs entirely on your device. Nothing ever leaves your phone.",
   },
   {
