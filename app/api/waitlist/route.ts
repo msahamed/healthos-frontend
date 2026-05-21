@@ -13,11 +13,6 @@ export async function POST(req: Request) {
     const db = client.db("healthos");
     const collection = db.collection("waitlist");
 
-    const existing = await collection.findOne({ email });
-    if (existing) {
-      return NextResponse.json({ error: "Already on the waitlist." }, { status: 409 });
-    }
-
     await collection.insertOne({
       email,
       feedback: feedback || null,
