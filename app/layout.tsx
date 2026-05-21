@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col antialiased">
         {children}
         <Analytics />
+        <SpeedInsights />
         {process.env.NODE_ENV === "production" && (
           <Script id="fullstory" strategy="afterInteractive">{`
             window['_fs_host'] = 'fullstory.com';
