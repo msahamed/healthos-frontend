@@ -1,4 +1,5 @@
 import Nav from "../components/Nav";
+import Logo from "../components/Logo";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -147,11 +148,7 @@ export default function TermsPage() {
       <footer className="border-t border-slate-100 py-8">
         <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: TEAL }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                <path d="M12 7v10M7 12h10" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-              </svg>
-            </div>
+            <Logo size={24} />
             <span className="text-sm font-medium text-slate-700">HealthOS</span>
           </div>
           <div className="flex items-center gap-5 text-sm text-slate-400">

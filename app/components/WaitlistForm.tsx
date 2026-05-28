@@ -5,6 +5,7 @@ import { useState } from "react";
 const TEAL = "#0F766E";
 const TEAL_LIGHT = "#F0FDFA";
 const TEAL_BORDER = "#99F6E4";
+const AMBER = "#F59E0B";
 
 export default function WaitlistForm() {
   const [email, setEmail] = useState("");
@@ -85,7 +86,7 @@ export default function WaitlistForm() {
         type="submit"
         disabled={status === "loading"}
         className="w-full py-3.5 rounded-xl font-semibold text-sm text-white shadow-md hover:opacity-90 transition-all disabled:opacity-60"
-        style={{ backgroundColor: TEAL }}
+        style={{ backgroundColor: AMBER }}
       >
         {status === "loading" ? "Joining…" : "Join the Waitlist"}
       </button>

@@ -4,11 +4,30 @@
 :root {
   --background: #ffffff;
   --foreground: #0F172A;
+
+  /* Trust / brand — privacy, structure, nav */
   --teal-primary: #0F766E;
   --teal-dark: #0D5F58;
   --teal-light: #CCFBF1;
   --teal-surface: #F0FDFA;
+
+  /* Agent / AI moments — voice-active, proactive insight, agent CTAs */
+  --amber-primary: #F59E0B;
+  --amber-soft: #FEF3C7;
+  --amber-border: #FCD34D;
+  --sunrise: #FB923C;
+
   --border: #E2E8F0;
+}
+
+@keyframes pulse-listening {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.4); }
+}
+
+@keyframes wave-bar {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.35); }
 }
 
 html {
