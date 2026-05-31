@@ -262,8 +262,8 @@ const showcase = [
     accent: "amber" as const,
   },
   {
-    title: "Sorted before you think about it.",
-    body: "Symptoms, medications, allergies, daily notes — each voice log lands in the right record. No categories to pick, no forms to fill.",
+    title: "The agent understands what you said.",
+    body: "No categories, no tags — it builds context from your words so patterns can surface on their own.",
     media: (
       <img
         src="/screen-records.webp"
@@ -327,7 +327,7 @@ export default function Home() {
               <span className="text-white/75 font-semibold">spots patterns before they get bad.</span>
             </h1>
             <p className="text-lg md:text-xl text-white/70 max-w-2xl leading-relaxed">
-              A voice-first on-device agent that turns your daily observations into patterns you can act on.
+              Speak when something feels off — three seconds is enough. The agent reads your week and the world outside, and tells you what&apos;s shifting before you&apos;d think to look.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 mt-2">
               <a
@@ -344,6 +344,14 @@ export default function Home() {
                 Learn more
               </a>
             </div>
+            <div className="flex flex-col items-center gap-1.5 mt-4 text-center">
+              <p className="text-sm text-white/65">
+                Just your voice — no wearable, no app to integrate, no forms.
+              </p>
+              <p className="text-sm text-white/55">
+                Your health observations never leave your device.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -357,8 +365,7 @@ export default function Home() {
               </h2>
               <p className="text-slate-600 text-lg md:text-xl leading-relaxed">
                 A simple voice agent on your phone. Speak when something&apos;s off — anything from
-                {" "}&ldquo;slept badly&rdquo; to &ldquo;left knee acting up.&rdquo; It maps what you say against your sleep,
-                the air outside, your week. The patterns appear.
+                {" "}&ldquo;slept badly&rdquo; to &ldquo;left knee acting up.&rdquo; It maps what you say against what&apos;s happening outside — air pressure, pollen, air quality — and the rhythm of your week. The agent tells you what it found — before you thought to ask.
               </p>
             </div>
 
@@ -383,10 +390,6 @@ export default function Home() {
                 </div>
               ))}
             </div>
-
-            <p className="text-slate-500 text-base md:text-lg leading-relaxed mt-12 max-w-2xl">
-              All of it runs on the phone in your pocket. None of it leaves the device.
-            </p>
 
           </div>
         </section>

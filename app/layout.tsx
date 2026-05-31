@@ -5,14 +5,21 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "HealthOS — Your health records, privately on-device",
+  title: "HealthOS — Your proactive health agent",
   description:
-    "HealthOS gives you a single private place to collect, understand, and control your lifetime health records. AI-powered insights, fully on-device.",
+    "Voice-first health agent. Speak when something's off — it finds the pattern and warns you before the bad day. No wearable, no integrations. On-device.",
   openGraph: {
-    title: "HealthOS",
-    description: "Your health records, privately on-device",
+    title: "HealthOS — Your proactive health agent",
+    description:
+      "Your proactive health agent. Just speak — it finds the patterns and warns you before things get bad. No wearable. No integrations.",
     url: "https://healthos.live",
     siteName: "HealthOS",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HealthOS — Your proactive health agent",
+    description:
+      "Your proactive health agent. Just speak — it finds the patterns and warns you before things get bad. No wearable. No integrations.",
   },
 };
 

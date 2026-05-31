@@ -67,12 +67,12 @@ export default function WaitlistForm() {
       </div>
       <div>
         <label htmlFor="feedback" className="block text-sm font-medium text-slate-700 mb-1.5">
-          What features matter most to you? <span className="text-slate-400 font-normal">(optional)</span>
+          What health challenge brings you here? <span className="text-slate-400 font-normal">(optional)</span>
         </label>
         <textarea
           id="feedback"
           rows={3}
-          placeholder="e.g. voice search, Apple Health sync, sharing records with my doctor…"
+          placeholder="e.g. chronic migraines, recurring back pain, tracking energy crashes…"
           value={feedback}
           onChange={(e) => setFeedback(e.target.value)}
           className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 placeholder:text-slate-400 text-sm outline-none focus:ring-2 resize-none transition-all"
