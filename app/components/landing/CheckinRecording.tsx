@@ -175,7 +175,7 @@ export default function CheckinRecording({
                 whiteSpace: "nowrap",
               }}
             >
-              Real check-in · 0:30
+              Real check-in · 1:38
             </div>
             <div
               className="rec-eq"
