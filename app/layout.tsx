@@ -1,25 +1,44 @@
 import type { Metadata } from "next";
+import { Newsreader, Hanken_Grotesk } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
+// Editorial serif for display type (matches the design's Newsreader).
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-newsreader",
+  display: "swap",
+});
+
+// Clean grotesque for body + UI.
+const hanken = Hanken_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-hanken",
+  display: "swap",
+});
+
+const DESCRIPTION =
+  "Speak for a few seconds a day, and finally see what your voice has been telling you. " +
+  "HealthOS reads the energy, stress, and mood in how you sound — on-device, never uploaded.";
+
 export const metadata: Metadata = {
-  title: "HealthOS — Your proactive health agent",
-  description:
-    "Voice-first health agent. Speak when something's off — it finds the pattern and warns you before the bad day. No wearable, no integrations. On-device.",
+  title: "HealthOS — Notices what you don't",
+  description: DESCRIPTION,
   openGraph: {
-    title: "HealthOS — Your proactive health agent",
-    description:
-      "Your proactive health agent. Just speak — it finds the patterns and warns you before things get bad. No wearable. No integrations.",
+    title: "HealthOS — Notices what you don't",
+    description: DESCRIPTION,
     url: "https://healthos.live",
     siteName: "HealthOS",
   },
   twitter: {
     card: "summary_large_image",
-    title: "HealthOS — Your proactive health agent",
-    description:
-      "Your proactive health agent. Just speak — it finds the patterns and warns you before things get bad. No wearable. No integrations.",
+    title: "HealthOS — Notices what you don't",
+    description: DESCRIPTION,
   },
 };
 
@@ -27,7 +46,10 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="h-full">
+    <html
+      lang="en"
+      className={`h-full ${newsreader.variable} ${hanken.variable}`}
+    >
       <body className="min-h-full flex flex-col antialiased">
         {children}
         <Analytics />
