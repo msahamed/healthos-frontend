@@ -38,7 +38,7 @@ export default function Home() {
                 Your voice has been trying to tell you <em>something.</em>
               </h1>
               <p className="hero-sub">
-                Every time you speak, your voice carries nine signals —
+                Every time you speak, your voice produces highest amount of signals —
                 energy, stress, mood, confidence, even vocal strain — that
                 you&apos;ll never consciously hear, gone the second you stop
                 talking. <strong>HealthOS catches them</strong>, and the
