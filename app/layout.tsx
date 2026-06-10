@@ -23,8 +23,9 @@ const hanken = Hanken_Grotesk({
 });
 
 const DESCRIPTION =
-  "Speak for a few seconds a day, and finally see what your voice has been telling you. " +
-  "HealthOS reads the energy, stress, and mood in how you sound — on-device, never uploaded.";
+  "Your voice is the biomarker that speaks first. " +
+  "3–5 seconds of unscripted speech decodes nervous system state — hours before anything else catches it. " +
+  "No hardware. No bloodwork. On-device.";
 
 export const metadata: Metadata = {
   title: "HealthOS — Notices what you don't",

@@ -35,14 +35,12 @@ export default function Home() {
                 Voice-first self-understanding
               </span>
               <h1 className="font-serif-display">
-                Your voice has been trying to tell you <em>something.</em>
+                Your voice is the biomarker that speaks <em>first.</em>
               </h1>
               <p className="hero-sub">
-                Every time you speak, your voice produces highest amount of signals —
-                energy, stress, mood, confidence, even vocal strain — that
-                you&apos;ll never consciously hear, gone the second you stop
-                talking. <strong>HealthOS catches them</strong>, and the
-                patterns underneath, before they cost you.
+                3–5 seconds of unscripted speech decodes nervous system
+                state — hours before anything else catches it.{" "}
+                <strong>No hardware. No bloodwork.</strong>
               </p>
 
               <InlineWaitlistForm variant="hero" />
