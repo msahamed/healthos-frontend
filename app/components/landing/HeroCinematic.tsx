@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 
 const CINE = {
   transcript:
-    "Soundcheck just wrapped — voice feels a little tight, not quite where I want it. Third night of the run.",
+    "Yeah, good. Just wrapped the call. Think it went well. Few more today and I'm done.",
   signals: [
     { label: "Vocal strain", val: "High", dir: "up", tone: "amber" },
     { label: "Energy", val: "Low", dir: "down", tone: "muted" },
@@ -23,7 +23,7 @@ const CINE = {
   ] as const,
   moreSignals: 6,
   pattern:
-    "Your vocal strain climbs by the third show — before you can hear it.",
+    "Your vocal strain climbs by your third call — before you can hear it.",
 };
 
 type Scene = {

@@ -2,22 +2,10 @@ import Nav from "./components/Nav";
 import Logo from "./components/Logo";
 import InlineWaitlistForm from "./components/InlineWaitlistForm";
 import HeroCinematic from "./components/landing/HeroCinematic";
-import VoiceSnippet from "./components/landing/VoiceSnippet";
 import CheckinRecording from "./components/landing/CheckinRecording";
 
-// Real audio + video drop-in:
-//   /public/audio/surgeon-preop.mp3
-//   /public/audio/first-responder-postshift.mp3
-//   /public/audio/performer-aftertheset.mp3
-//   /public/landing/checkin.mp4
-// Pass the path to the corresponding VoiceSnippet / CheckinRecording
-// — both components gracefully fall back to placeholder animation if
-// the file isn't there yet.
-const SNIPPETS = [
-  { label: "Surgeon · pre-op", duration: "0:09" /* src: "/audio/surgeon-preop.mp3" */ },
-  { label: "First responder · post-shift", duration: "0:08" },
-  { label: "Performer · after the set", duration: "0:11" },
-];
+// Real video drop-in: /public/landing/checkin.mp4
+// CheckinRecording falls back to placeholder animation if absent.
 
 export default function Home() {
   return (
@@ -66,49 +54,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        {/* ════ HEAR REAL LOGS (voice snippets) ════ */}
-        <div className="logs-wrap">
-          <section id="logs" className="section">
-            <div className="wrap">
-              <div className="sec-head center">
-                <span className="eyebrow eyebrow-center">Hear real logs</span>
-                <h2 className="font-serif-display">
-                  This is all a check-in is.
-                </h2>
-                <p>
-                  A few honest, unpolished seconds — no script, no
-                  performance. Tap one to listen.
-                </p>
-              </div>
-              <div className="snip-row">
-                {SNIPPETS.map((s) => (
-                  <VoiceSnippet
-                    key={s.label}
-                    label={s.label}
-                    duration={s.duration}
-                  />
-                ))}
-              </div>
-              <p className="snip-note">
-                <svg
-                  width="15"
-                  height="15"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#5A554B"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M11 5L6 9H2v6h4l5 4V5z" />
-                  <path d="M15.5 8.5a5 5 0 0 1 0 7" />
-                </svg>
-                Sample audio coming soon — sound on.
-              </p>
-            </div>
-          </section>
-        </div>
 
         {/* ════ SIGNALS (nine biomarkers) ════ */}
         <div className="signals-wrap">
