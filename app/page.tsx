@@ -3,6 +3,9 @@ import Logo from "./components/Logo";
 import InlineWaitlistForm from "./components/InlineWaitlistForm";
 import HeroCinematic from "./components/landing/HeroCinematic";
 import CheckinRecording from "./components/landing/CheckinRecording";
+import HeroTopo from "./components/landing/HeroTopo";
+import BioWave from "./components/landing/BioWave";
+import PatSpark from "./components/landing/PatSpark";
 
 // Real video drop-in: /public/landing/checkin.mp4
 // CheckinRecording falls back to placeholder animation if absent.
@@ -17,6 +20,7 @@ export default function Home() {
         <section className="hero">
           <div className="hero-bg-glow-1" />
           <div className="hero-bg-glow-2" />
+          <HeroTopo />
           <div className="wrap hero-grid">
             <div className="hero-copy">
               <span className="eyebrow eyebrow-dark">
@@ -171,18 +175,30 @@ export default function Home() {
               </p>
             </div>
             <div className="pat-grid">
-              <PatCard>
+              <PatCard
+                shapeIdx={0}
+                action="Protect a 10-minute reset before case three."
+              >
                 Your focus frays after your{" "}
                 <em>second back-to-back case.</em>
               </PatCard>
-              <PatCard>
+              <PatCard
+                shapeIdx={1}
+                action="You have a week of runway — take the light day now, not after."
+              >
                 Burnout shows up in your voice <em>a week before</em> you feel
                 it.
               </PatCard>
-              <PatCard>
+              <PatCard
+                shapeIdx={2}
+                action="It's nerves, not form — run your warm-up routine and let it pass."
+              >
                 Your confidence dips <em>the morning you compete.</em>
               </PatCard>
-              <PatCard>
+              <PatCard
+                shapeIdx={3}
+                action="Get daylight and a walk on day one — it cuts the carry-over."
+              >
                 You&apos;re still carrying the night shift{" "}
                 <em>two days later.</em>
               </PatCard>
@@ -290,15 +306,40 @@ function Bio({
       </span>
       <h4>{title}</h4>
       <p>{body}</p>
+      <BioWave name={title} />
     </div>
   );
 }
 
-function PatCard({ children }: { children: React.ReactNode }) {
+function PatCard({
+  shapeIdx,
+  action,
+  children,
+}: {
+  shapeIdx: number;
+  action: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="pat">
       <span className="qmark">Pattern</span>
       <p className="font-serif-display">{children}</p>
+      <PatSpark shapeIdx={shapeIdx} />
+      <div className="pat-action">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#B45309"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M5 12h13M13 6l6 6-6 6" />
+        </svg>
+        <span>{action}</span>
+      </div>
     </div>
   );
 }
@@ -329,7 +370,7 @@ const LANDING_CSS = `
 
 /* ── HERO ── */
 .hero {
-  position: relative; overflow: hidden;
+  position: relative; overflow: hidden; isolation: isolate;
   background: linear-gradient(168deg, #14272C 0%, #0E1D21 55%, #0A1417 100%);
   color: #F4F1EA;
 }
@@ -343,8 +384,17 @@ const LANDING_CSS = `
   background: radial-gradient(circle, rgba(245,158,11,.12), transparent 70%);
   filter: blur(20px); pointer-events: none;
 }
+.hero-topo-layer {
+  position: absolute; inset: 0; overflow: hidden;
+  pointer-events: none; z-index: 0;
+}
+.hero-topo {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  display: block; pointer-events: none;
+}
 .hero-grid {
-  position: relative; display: grid; grid-template-columns: 1.05fr 0.95fr;
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: 1.05fr 0.95fr;
   gap: 48px; align-items: center; padding: 76px 0 84px;
 }
 .hero h1 {
@@ -389,10 +439,18 @@ const LANDING_CSS = `
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 54px;
 }
 .bio {
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
   background: #fff; border: 1px solid var(--line); border-radius: 18px;
   padding: 22px 22px 20px;
   transition: border-color .2s, box-shadow .2s, transform .2s;
 }
+.bio::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  opacity: 0; transition: opacity .35s; pointer-events: none;
+  background: radial-gradient(230px circle at var(--mx, 50%) var(--my, 50%), rgba(15,118,110,.09), transparent 65%);
+}
+.bio:hover::before { opacity: 1; }
 .bio:hover {
   border-color: var(--line-strong);
   box-shadow: 0 14px 32px rgba(27,26,23,.08);
@@ -401,20 +459,31 @@ const LANDING_CSS = `
 .bio-ic {
   width: 44px; height: 44px; border-radius: 12px;
   background: var(--teal-surface); display: grid; place-items: center; margin-bottom: 15px;
+  transition: background .25s;
 }
+.bio-ic svg { transition: transform .3s cubic-bezier(.34, 1.56, .64, 1); }
+.bio:hover .bio-ic { background: #DDEBE8; }
+.bio:hover .bio-ic svg { transform: scale(1.12); }
 .bio h4 {
   font-family: var(--font-hanken), sans-serif;
   font-size: 17px; font-weight: 700; margin: 0; letter-spacing: -0.01em; color: var(--ink);
 }
 .bio p {
-  font-size: 14.5px; color: var(--ink-soft); margin: 6px 0 0; line-height: 1.5;
+  font-size: 14.5px; color: var(--ink-soft); margin: 6px 0 0; line-height: 1.5; flex: 1;
 }
+.bio-wave {
+  display: block; width: 100%; height: 34px; margin-top: 14px;
+  opacity: .55; transition: opacity .25s;
+}
+.bio:hover .bio-wave { opacity: 1; }
 
 /* ── PATTERNS ── */
 .pat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 52px; }
 .pat {
-  border: 1px solid var(--line); border-radius: 20px; padding: 30px 30px 28px;
-  background: #FCFAF6; transition: border-color .2s, transform .2s, box-shadow .2s;
+  border: 1px solid var(--line); border-radius: 20px; padding: 30px 30px 24px;
+  background: #FCFAF6;
+  display: flex; flex-direction: column;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
 }
 .pat:hover {
   border-color: var(--line-strong); transform: translateY(-2px);
@@ -427,9 +496,23 @@ const LANDING_CSS = `
 }
 .pat p {
   font-size: 25px; line-height: 1.28; margin: 14px 0 0;
-  color: var(--ink); font-weight: 400;
+  color: var(--ink); font-weight: 400; flex: 1;
 }
 .pat p em { font-style: italic; }
+.pat-spark { display: block; width: 100%; height: 64px; margin-top: 18px; }
+.pat-action {
+  display: flex; align-items: flex-start; gap: 9px;
+  margin-top: 14px; padding-top: 14px;
+  border-top: 1px dashed var(--line);
+  font-size: 13.5px; line-height: 1.45; color: #8A5A06; font-weight: 550;
+  opacity: 0; transform: translateY(7px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.pat-action svg { flex: none; margin-top: 2px; }
+.pat-action.on { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .pat-action { opacity: 1; transform: none; transition: none; }
+}
 
 /* ── SEE IT (recording) ── */
 .see-wrap { background: linear-gradient(170deg, #14272C, #0C181C); color: #F4F1EA; }
