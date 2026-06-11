@@ -56,7 +56,20 @@ function getS3(): S3Client {
   if (!region) throw new Error("AWS_REGION not configured");
   // Credentials are picked up from AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY
   // in env (Vercel) automatically by the SDK's default provider chain.
-  _s3 = new S3Client({ region });
+  //
+  // requestChecksumCalculation: "WHEN_REQUIRED" disables the SDK's
+  // default behavior of baking an empty CRC32 checksum into presigned
+  // URLs. With the default ("WHEN_SUPPORTED"), the signed URL carries
+  // `x-amz-checksum-crc32=AAAAAA%3D%3D` (CRC32 of empty bytes); S3
+  // then compares it against the actual upload body and rejects with
+  // BadDigest unless the client computes + sends a matching checksum
+  // (which our Dart Dio client does not). "WHEN_REQUIRED" omits the
+  // checksum from the URL — S3 falls back to MD5 / content-length
+  // verification, which Dio handles natively.
+  _s3 = new S3Client({
+    region,
+    requestChecksumCalculation: "WHEN_REQUIRED",
+  });
   return _s3;
 }
 
