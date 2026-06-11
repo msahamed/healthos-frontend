@@ -9,9 +9,12 @@
 //   2. Keeping audio off the API surface narrows the attack surface
 //      and reduces what the backend has to be trusted with.
 //
-// Key scheme: `voice/<install_id>/<observation_id>.wav`
-//   - Partitioned by install_id so a delete-all-my-data is a
-//     single S3 prefix delete.
+// Key scheme: `<S3_VOICE_PREFIX><install_id>/<observation_id>.wav`
+//   - Prefix is configurable so the bucket can mix voice with other
+//     observation artifacts. Defaults to `observations/` to match the
+//     `s3://<bucket>/observations/` layout we use today.
+//   - Partitioned by install_id so a delete-all-my-data is a single
+//     S3 prefix delete.
 //   - One key per observation; idempotent on retry.
 //
 // Auth: same model as /api/v1/sync — `install_id` IS the bearer.
@@ -103,7 +106,12 @@ export async function POST(req: Request) {
     );
   }
 
-  const s3Key = `voice/${installId}/${observationId}.wav`;
+  // Normalize the prefix so it always ends in exactly one slash and
+  // never starts with one. Defaults to `observations/` to match the
+  // current bucket layout. Override via Vercel env var.
+  const rawPrefix = process.env.S3_VOICE_PREFIX ?? "observations/";
+  const prefix = rawPrefix.replace(/^\/+/, "").replace(/\/*$/, "/");
+  const s3Key = `${prefix}${installId}/${observationId}.wav`;
 
   try {
     const url = await getSignedUrl(
