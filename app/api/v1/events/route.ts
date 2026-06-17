@@ -4,7 +4,7 @@
 //
 // Schema of one AnalyticsEvent (from mobile_app/.../analytics_event.dart):
 //   id              uuid v4 — used as Mongo _id for free dedup
-//   install_id      anonymous per-install uuid (no PII)
+//   user_id      anonymous per-install uuid (no PII)
 //   session_id      app-session uuid (rotates on cold launch + 30m idle)
 //   event           e.g. "log_created", "pattern_confirmed"
 //   tier            "reliability" | "engagement"
@@ -34,7 +34,7 @@ const ALLOWED_TIERS = new Set(["reliability", "engagement"]);
 
 interface IncomingEvent {
   id: string;
-  install_id: string;
+  user_id: string;
   session_id?: string;
   event: string;
   tier: string;
@@ -56,19 +56,19 @@ function sanitize(raw: unknown): IncomingEvent | null {
   if (!isPlainObject(raw)) return null;
   const r = raw as Record<string, unknown>;
   const id = typeof r.id === "string" ? r.id : null;
-  const installId = typeof r.install_id === "string" ? r.install_id : null;
+  const userId = typeof r.user_id === "string" ? r.user_id : null;
   const event = typeof r.event === "string" ? r.event : null;
   const tier = typeof r.tier === "string" ? r.tier : null;
   const eventDt =
     typeof r.event_datetime === "string" ? r.event_datetime : null;
   const createdAt = typeof r.created_at === "string" ? r.created_at : null;
-  if (!id || !installId || !event || !tier || !eventDt || !createdAt) {
+  if (!id || !userId || !event || !tier || !eventDt || !createdAt) {
     return null;
   }
   if (!ALLOWED_TIERS.has(tier)) return null;
   return {
     id,
-    install_id: installId,
+    user_id: userId,
     session_id:
       typeof r.session_id === "string" ? (r.session_id as string) : undefined,
     event,
@@ -121,7 +121,7 @@ export async function POST(req: Request) {
 
   const docs = valid.map((e) => ({
     _id: e.id,
-    install_id: e.install_id,
+    user_id: e.user_id,
     session_id: e.session_id ?? null,
     event: e.event,
     tier: e.tier,

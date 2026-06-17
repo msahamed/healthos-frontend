@@ -7,7 +7,7 @@
 // into separate SQLite tables locally but flattens for transport so a
 // single Mongo upsert is sufficient.
 //
-// Auth: none. The `install_id` IS the bearer — a UUIDv4 generated on the
+// Auth: none. The `user_id` IS the bearer — a UUIDv4 generated on the
 // device, persisted in iCloud Keychain so it survives reinstalls. Anyone
 // who has it can read/write the data tied to it. Acceptable for v1
 // because (a) random 128-bit keys are not enumerable, (b) data is
@@ -30,7 +30,7 @@ import type { AnyBulkWriteOperation } from "mongodb";
 // driver's generics don't force ObjectId on the filter.
 interface ObservationDoc {
   _id: string;
-  install_id: string;
+  user_id: string;
   created_at: Date;
   updated_at: Date;
   deleted_at: Date | null;
@@ -50,7 +50,7 @@ export const runtime = "nodejs";
 const PUSH_MAX_BATCH = 200;
 const PULL_MAX_BATCH = 200;
 
-// UUIDv4 with hyphens. Used to validate both `_id` and `install_id`.
+// UUIDv4 with hyphens. Used to validate both `_id` and `user_id`.
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -60,7 +60,7 @@ function isPlainObject(v: unknown): v is Record<string, unknown> {
 
 interface IncomingObservation {
   _id: string;
-  install_id: string;
+  user_id: string;
   created_at: string;
   updated_at: string;
   deleted_at?: string | null;
@@ -76,23 +76,23 @@ interface IncomingObservation {
 /** Cheap shape check. Drops malformed observations from the batch
  *  rather than rejecting the whole POST — one bad row shouldn't knock
  *  out the rest of a user's queued sync. */
-function sanitize(raw: unknown, expectedInstallId: string): IncomingObservation | null {
+function sanitize(raw: unknown, expectedUserId: string): IncomingObservation | null {
   if (!isPlainObject(raw)) return null;
   const r = raw as Record<string, unknown>;
 
   const id = typeof r._id === "string" ? r._id : null;
-  const installId = typeof r.install_id === "string" ? r.install_id : null;
+  const userId = typeof r.user_id === "string" ? r.user_id : null;
   const createdAt = typeof r.created_at === "string" ? r.created_at : null;
   const updatedAt = typeof r.updated_at === "string" ? r.updated_at : null;
-  if (!id || !installId || !createdAt || !updatedAt) return null;
+  if (!id || !userId || !createdAt || !updatedAt) return null;
   if (!UUID_RE.test(id)) return null;
-  // Paranoia: a doc whose install_id doesn't match the batch's install_id
+  // Paranoia: a doc whose user_id doesn't match the batch's user_id
   // gets dropped silently — wrong-bucket writes have no benign cause.
-  if (installId !== expectedInstallId) return null;
+  if (userId !== expectedUserId) return null;
 
   return {
     _id: id,
-    install_id: installId,
+    user_id: userId,
     created_at: createdAt,
     updated_at: updatedAt,
     deleted_at: typeof r.deleted_at === "string" ? r.deleted_at : null,
@@ -114,7 +114,7 @@ function sanitize(raw: unknown, expectedInstallId: string): IncomingObservation 
 function toDoc(o: IncomingObservation): ObservationDoc {
   return {
     _id: o._id,
-    install_id: o.install_id,
+    user_id: o.user_id,
     created_at: new Date(o.created_at),
     updated_at: new Date(o.updated_at),
     deleted_at: o.deleted_at ? new Date(o.deleted_at) : null,
@@ -131,22 +131,22 @@ function toDoc(o: IncomingObservation): ObservationDoc {
 
 // ── POST ────────────────────────────────────────────────────────────────────
 //
-// Body: { install_id, observations: IncomingObservation[] }
+// Body: { user_id, observations: IncomingObservation[] }
 // Response: { accepted, dropped, upserted, modified }
 
 export async function POST(req: Request) {
-  let body: { install_id?: unknown; observations?: unknown };
+  let body: { user_id?: unknown; observations?: unknown };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
   }
 
-  const installId =
-    typeof body.install_id === "string" ? body.install_id : "";
-  if (!UUID_RE.test(installId)) {
+  const userId =
+    typeof body.user_id === "string" ? body.user_id : "";
+  if (!UUID_RE.test(userId)) {
     return NextResponse.json(
-      { error: "install_id_required" },
+      { error: "user_id_required" },
       { status: 400 },
     );
   }
@@ -171,7 +171,7 @@ export async function POST(req: Request) {
   const valid: IncomingObservation[] = [];
   let dropped = 0;
   for (const raw of list) {
-    const o = sanitize(raw, installId);
+    const o = sanitize(raw, userId);
     if (o) valid.push(o);
     else dropped++;
   }
@@ -204,8 +204,8 @@ export async function POST(req: Request) {
       .db("healthos")
       .collection("waitlist")
       .updateOne(
-        { install_id: installId },
-        { $set: { install_id: installId, last_seen_at: new Date() } },
+        { user_id: userId },
+        { $set: { user_id: userId, last_seen_at: new Date() } },
         { upsert: false },
       )
       .catch(() => {});
@@ -224,7 +224,7 @@ export async function POST(req: Request) {
 
 // ── GET ─────────────────────────────────────────────────────────────────────
 //
-// Query: ?install_id=<uuid>&since=<iso>[&limit=<N>]
+// Query: ?user_id=<uuid>&since=<iso>[&limit=<N>]
 // Response: { observations, server_now, has_more }
 //
 // Client persists `server_now` from each response and uses it as the
@@ -234,10 +234,10 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const installId = url.searchParams.get("install_id") ?? "";
-  if (!UUID_RE.test(installId)) {
+  const userId = url.searchParams.get("user_id") ?? "";
+  if (!UUID_RE.test(userId)) {
     return NextResponse.json(
-      { error: "install_id_required" },
+      { error: "user_id_required" },
       { status: 400 },
     );
   }
@@ -267,7 +267,7 @@ export async function GET(req: Request) {
     // deterministic across pages.
     const rows = await col
       .find(
-        { install_id: installId, updated_at: { $gt: since } },
+        { user_id: userId, updated_at: { $gt: since } },
         { projection: { received_at: 0 } },
       )
       .sort({ updated_at: 1 })

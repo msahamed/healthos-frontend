@@ -2,24 +2,24 @@
 //
 // Used on a fresh install when the user wants to restore their data
 // from another device. The user enters their existing email, the
-// client calls this endpoint, and adopts the returned `install_id`
+// client calls this endpoint, and adopts the returned `user_id`
 // locally — overwriting the fresh UUID generated at first launch.
 // All subsequent sync calls then partition against the restored id.
 //
 // Source of truth: the existing `waitlist` collection, which is
 // upserted on email and already carries the device's most recent
-// install_id. No new collection needed for v1.
+// user_id. No new collection needed for v1.
 //
-// Privacy: returns `install_id` only on exact email match. The
-// install_id is a UUIDv4 — effectively a bearer token for that user's
+// Privacy: returns `user_id` only on exact email match. The
+// user_id is a UUIDv4 — effectively a bearer token for that user's
 // observation data. Anyone with the email could mint a recovery, so
 // this is *not* an auth boundary; it's a convenience layer on top of
 // "data tied to a randomly-generated bearer token." Acceptable for
 // self-awareness/wellness scope; revisit if sensitivity warrants.
 //
 // Response shapes (always 200 unless input is malformed):
-//   - Email found, has install_id      → { found: true,  install_id, last_seen_at }
-//   - Email found, no install_id yet   → { found: true,  install_id: null }
+//   - Email found, has user_id      → { found: true,  user_id, last_seen_at }
+//   - Email found, no user_id yet   → { found: true,  user_id: null }
 //   - Email never registered           → { found: false }
 
 import { NextResponse } from "next/server";
@@ -34,7 +34,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 interface WaitlistRow {
   email: string;
-  install_id?: string | null;
+  user_id?: string | null;
   last_seen_at?: Date | null;
 }
 
@@ -54,21 +54,21 @@ export async function GET(req: Request) {
 
     const row = await col.findOne(
       { email },
-      { projection: { _id: 0, install_id: 1, last_seen_at: 1 } },
+      { projection: { _id: 0, user_id: 1, last_seen_at: 1 } },
     );
 
     if (!row) {
       return NextResponse.json({ found: false });
     }
 
-    const installId =
-      typeof row.install_id === "string" && row.install_id.length > 0
-        ? row.install_id
+    const userId =
+      typeof row.user_id === "string" && row.user_id.length > 0
+        ? row.user_id
         : null;
 
     return NextResponse.json({
       found: true,
-      install_id: installId,
+      user_id: userId,
       last_seen_at: row.last_seen_at ?? null,
     });
   } catch (err) {

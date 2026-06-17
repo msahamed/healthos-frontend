@@ -2,7 +2,7 @@
 //
 // Accepts from both the marketing site (`feedback` optional) and the
 // HealthOS mobile app (`source: "mobile_app"`, plus the anonymous
-// install_id so we can correlate a signup with the device's later
+// user_id so we can correlate a signup with the device's later
 // analytics events without ever collecting a name/account).
 //
 // Idempotent on email: if the same email lands twice, we update
@@ -23,7 +23,7 @@ interface SignupBody {
   /** "marketing_site" | "mobile_app" | other future surface. */
   source?: string;
   /** Anonymous device install id from the mobile app. */
-  install_id?: string;
+  user_id?: string;
 }
 
 export async function POST(req: Request) {
@@ -46,9 +46,9 @@ export async function POST(req: Request) {
     typeof body.source === "string" && body.source.length <= 32
       ? body.source
       : "marketing_site";
-  const installId =
-    typeof body.install_id === "string" && body.install_id.length <= 64
-      ? body.install_id
+  const userId =
+    typeof body.user_id === "string" && body.user_id.length <= 64
+      ? body.user_id
       : null;
   const feedback =
     typeof body.feedback === "string" && body.feedback.length <= 2000
@@ -61,8 +61,10 @@ export async function POST(req: Request) {
     const collection = db.collection("waitlist");
 
     const now = new Date();
-    // Upsert keyed on email. $setOnInsert keeps original createdAt;
-    // $set updates the rest each time we see the same address.
+    // Upsert keyed on email. user_id is set ONCE on first insert and never
+    // overwritten — it's the stable identity for all of this user's data
+    // across reinstalls. Subsequent signups append to user_id_history so we
+    // keep an audit trail without disturbing the canonical id.
     await collection.updateOne(
       { email },
       {
@@ -70,13 +72,24 @@ export async function POST(req: Request) {
           email,
           createdAt: now,
           first_source: source,
+          ...(userId !== null ? { user_id: userId } : {}),
         },
         $set: {
           last_seen_at: now,
           source,
-          ...(installId !== null ? { install_id: installId } : {}),
           ...(feedback !== null ? { feedback } : {}),
         },
+        ...(userId !== null
+          ? {
+              $push: {
+                user_id_history: {
+                  user_id: userId,
+                  seen_at: now,
+                  source,
+                },
+              },
+            }
+          : {}),
         $inc: { signup_count: 1 },
       },
       { upsert: true },
