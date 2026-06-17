@@ -65,35 +65,34 @@ export async function POST(req: Request) {
     // overwritten — it's the stable identity for all of this user's data
     // across reinstalls. Subsequent signups append to user_id_history so we
     // keep an audit trail without disturbing the canonical id.
-    await collection.updateOne(
-      { email },
-      {
-        $setOnInsert: {
-          email,
-          createdAt: now,
-          first_source: source,
-          ...(userId !== null ? { user_id: userId } : {}),
-        },
-        $set: {
-          last_seen_at: now,
-          source,
-          ...(feedback !== null ? { feedback } : {}),
-        },
-        ...(userId !== null
-          ? {
-              $push: {
-                user_id_history: {
-                  user_id: userId,
-                  seen_at: now,
-                  source,
-                },
-              },
-            }
-          : {}),
-        $inc: { signup_count: 1 },
+    //
+    // Typed as any because the Mongo driver's UpdateFilter generic doesn't
+    // play well with conditional $push spreads — runtime shape is fine.
+    const update: Record<string, unknown> = {
+      $setOnInsert: {
+        email,
+        createdAt: now,
+        first_source: source,
+        ...(userId !== null ? { user_id: userId } : {}),
       },
-      { upsert: true },
-    );
+      $set: {
+        last_seen_at: now,
+        source,
+        ...(feedback !== null ? { feedback } : {}),
+      },
+      $inc: { signup_count: 1 },
+    };
+    if (userId !== null) {
+      update.$push = {
+        user_id_history: {
+          user_id: userId,
+          seen_at: now,
+          source,
+        },
+      };
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await collection.updateOne({ email }, update as any, { upsert: true });
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (err) {
