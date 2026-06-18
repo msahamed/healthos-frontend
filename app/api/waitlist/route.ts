@@ -61,13 +61,11 @@ export async function POST(req: Request) {
     const collection = db.collection("waitlist");
 
     const now = new Date();
-    // Upsert keyed on email. user_id is set ONCE on first insert and never
-    // overwritten — it's the stable identity for all of this user's data
-    // across reinstalls. Subsequent signups append to user_id_history so we
-    // keep an audit trail without disturbing the canonical id.
-    //
-    // Typed as any because the Mongo driver's UpdateFilter generic doesn't
-    // play well with conditional $push spreads — runtime shape is fine.
+    // Upsert keyed on email. `user_id` is the single CANONICAL identity for
+    // this user — the key all their observations sync under, and what
+    // restore-from-email (GET /api/v1/installations) hands back so a fresh
+    // install can adopt it. Set once, then stable forever; later submits
+    // only touch last_seen_at.
     const update: Record<string, unknown> = {
       $setOnInsert: {
         email,
@@ -82,17 +80,21 @@ export async function POST(req: Request) {
       },
       $inc: { signup_count: 1 },
     };
-    if (userId !== null) {
-      update.$push = {
-        user_id_history: {
-          user_id: userId,
-          seen_at: now,
-          source,
-        },
-      };
-    }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await collection.updateOne({ email }, update as any, { upsert: true });
+
+    // Backfill the canonical user_id for rows that predate the mobile
+    // install — e.g. an email first captured by the marketing site (no
+    // user_id), which $setOnInsert can never populate on a later submit.
+    // Without this, recovery returns user_id:null forever and restore can't
+    // resolve an account. Only fills when missing, so the canonical id stays
+    // stable once set.
+    if (userId !== null) {
+      await collection.updateOne(
+        { email, $or: [{ user_id: { $exists: false } }, { user_id: null }] },
+        { $set: { user_id: userId } },
+      );
+    }
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (err) {
