@@ -30,9 +30,9 @@ export default function Home() {
                 Your voice is the biomarker that speaks <em>first.</em>
               </h1>
               <p className="hero-sub">
-                3–5 seconds of unscripted speech decodes nervous system
-                state — hours before anything else catches it.{" "}
-                <strong>No hardware. No bloodwork.</strong>
+                A 30-second check-in reads your nervous-system state from how
+                you sound — eight signals, hours before you&apos;d notice them
+                yourself. <strong>No wearable. No bloodwork.</strong>
               </p>
 
               <InlineWaitlistForm variant="hero" />
@@ -59,7 +59,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ════ SIGNALS (nine biomarkers) ════ */}
+        {/* ════ SIGNALS (eight biomarkers) ════ */}
         <div className="signals-wrap">
           <section id="signals" className="section">
             <div className="wrap">
@@ -68,11 +68,11 @@ export default function Home() {
                   What your voice reveals
                 </span>
                 <h2 className="font-serif-display">
-                  Nine signals, read from how you sound.
+                  Eight signals, read from how you sound.
                 </h2>
                 <p>
                   Not what you logged — how you actually came across. Zuri
-                  reads all nine from a few honest seconds of speech.
+                  reads all eight from a few honest seconds of speech.
                 </p>
               </div>
               <div className="bio-grid">
@@ -84,44 +84,9 @@ export default function Home() {
                   }
                 />
                 <Bio
-                  title="Fatigue"
-                  body="The tiredness under your words, before you'd name it."
-                  icon={
-                    <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" />
-                  }
-                />
-                <Bio
                   title="Stress"
                   body="The tension your voice carries first — before you notice it."
                   icon={<path d="M3 12h4l3-8 4 16 3-8h4" />}
-                />
-                <Bio
-                  title="Mood"
-                  body="Warmer or flatter than your usual week."
-                  icon={
-                    <>
-                      <circle cx="12" cy="12" r="9" />
-                      <path d="M8.5 14.5s1.5 2 3.5 2 3.5-2 3.5-2" />
-                      <path d="M9 9.5v.5M15 9.5v.5" />
-                    </>
-                  }
-                />
-                <Bio
-                  title="Vocal strain"
-                  body="When your voice itself is running on empty."
-                  icon={
-                    <path d="M4 12h2M9 6v12M13 3v18M17 8v8M20 12h0" />
-                  }
-                />
-                <Bio
-                  title="Cognitive load"
-                  body="How much you're juggling all at once."
-                  icon={
-                    <>
-                      <path d="M12 3l9 5-9 5-9-5 9-5z" />
-                      <path d="M3 13l9 5 9-5" />
-                    </>
-                  }
                 />
                 <Bio
                   title="Confidence"
@@ -134,24 +99,40 @@ export default function Home() {
                   }
                 />
                 <Bio
-                  title="Social engagement"
-                  body="How connected or withdrawn you sound."
+                  title="Fatigue"
+                  body="The tiredness under your words, before you'd name it."
+                  icon={
+                    <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" />
+                  }
+                />
+                <Bio
+                  title="Vocal strain"
+                  body="When your voice itself is running on empty."
+                  icon={
+                    <path d="M4 12h2M9 6v12M13 3v18M17 8v8M20 12h0" />
+                  }
+                />
+                <Bio
+                  title="Expressiveness"
+                  body="The color in your voice — animated, or gone flat."
+                  icon={<path d="M3 12c2.5-7 5-7 7.5 0s5 7 7.5 0" />}
+                />
+                <Bio
+                  title="Articulation"
+                  body="Crisp and precise, or slurring at the edges."
                   icon={
                     <>
-                      <circle cx="9" cy="8" r="3" />
-                      <path d="M3 20a6 6 0 0 1 12 0" />
-                      <path d="M16 6a3 3 0 0 1 0 6" />
-                      <path d="M18.5 20a6 6 0 0 0-3-5.2" />
+                      <path d="M4 6h16M4 11h11M4 16h14M4 21h7" />
                     </>
                   }
                 />
                 <Bio
-                  title="Future orientation"
-                  body="Looking ahead, or stuck in the right now."
+                  title="Breathing"
+                  body="The breath behind your words — steady, or short and shallow."
                   icon={
                     <>
-                      <circle cx="12" cy="12" r="9" />
-                      <path d="M15.5 8.5l-2.2 5.3-5.3 2.2 2.2-5.3z" />
+                      <path d="M3 9h11a3 3 0 1 0-3-3" />
+                      <path d="M3 15h14a3 3 0 1 1-3 3" />
                     </>
                   }
                 />
@@ -177,34 +158,73 @@ export default function Home() {
             <div className="pat-grid">
               <PatCard
                 shapeIdx={0}
-                action="Protect a 10-minute reset before case three."
+                action="It's nerves, not signal — run your pre-session routine and let it pass."
               >
-                Your focus frays after your{" "}
-                <em>second back-to-back case.</em>
+                Your confidence dips in your voice{" "}
+                <em>the morning before a rough session.</em>
               </PatCard>
               <PatCard
                 shapeIdx={1}
-                action="You have a week of runway — take the light day now, not after."
+                action="You have a week of runway — take the lighter day now, not after."
               >
                 Burnout shows up in your voice <em>a week before</em> you feel
                 it.
               </PatCard>
               <PatCard
                 shapeIdx={2}
-                action="It's nerves, not form — run your warm-up routine and let it pass."
+                action="Bank an earlier night now — you're trending down before you feel it."
               >
-                Your confidence dips <em>the morning you compete.</em>
+                Your energy starts dropping{" "}
+                <em>two days before</em> your ring or the scale shows it.
               </PatCard>
               <PatCard
                 shapeIdx={3}
-                action="Get daylight and a walk on day one — it cuts the carry-over."
+                action="Make it active recovery, not another max effort."
               >
-                You&apos;re still carrying the night shift{" "}
+                You&apos;re still carrying yesterday&apos;s hard session{" "}
                 <em>two days later.</em>
               </PatCard>
             </div>
           </div>
         </section>
+
+        {/* ════ WEDGE (body vs mind) ════ */}
+        <div className="wedge-wrap">
+          <section id="wedge" className="section">
+            <div className="wrap">
+              <div className="sec-head center">
+                <span className="eyebrow eyebrow-center">Why voice</span>
+                <h2 className="font-serif-display">
+                  Wearables read your body. Your voice reveals your{" "}
+                  <em>mind.</em>
+                </h2>
+                <p>
+                  Your ring tracks heart rate, sleep and recovery — then
+                  guesses at your stress. It can&apos;t hear the confidence,
+                  strain, or hedging that live in how you sound. A different
+                  sensor, a different layer.
+                </p>
+              </div>
+              <div className="wedge-grid">
+                <Wedge
+                  title="A layer they can't reach"
+                  body="Psychological and nervous-system state — confidence, expressiveness, vocal strain — not just physiological proxies inferred from your wrist."
+                />
+                <Wedge
+                  title="Nothing to wear or buy"
+                  body="No ring, no charging, nothing to lose. Just the phone already in your hand. Zero barrier to start."
+                />
+                <Wedge
+                  title="'Right now,' not 'last night'"
+                  body="A read tied to a moment — before a session, after a hard call — not a daily average you scroll past."
+                />
+              </div>
+              <p className="wedge-tag font-serif-display">
+                Keep your ring. <em>It can&apos;t hear you.</em>
+              </p>
+            </div>
+          </section>
+        </div>
 
         {/* ════ SEE IT (recording) ════ */}
         <div className="see-wrap">
@@ -340,6 +360,15 @@ function PatCard({
         </svg>
         <span>{action}</span>
       </div>
+    </div>
+  );
+}
+
+function Wedge({ title, body }: { title: string; body: string }) {
+  return (
+    <div className="wedge">
+      <h4>{title}</h4>
+      <p>{body}</p>
     </div>
   );
 }
@@ -514,6 +543,32 @@ const LANDING_CSS = `
   .pat-action { opacity: 1; transform: none; transition: none; }
 }
 
+/* ── WEDGE (body vs mind) ── */
+.wedge-wrap { background: var(--paper-2); }
+.wedge-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 52px;
+}
+.wedge {
+  border: 1px solid var(--line); border-radius: 18px; padding: 26px 26px 24px;
+  background: #fff;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+}
+.wedge:hover {
+  border-color: var(--line-strong); transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(27,26,23,.08);
+}
+.wedge h4 {
+  font-family: var(--font-hanken), sans-serif;
+  font-size: 17px; font-weight: 700; margin: 0; letter-spacing: -0.01em; color: var(--ink);
+}
+.wedge p {
+  font-size: 14.5px; color: var(--ink-soft); margin: 9px 0 0; line-height: 1.55;
+}
+.wedge-tag {
+  text-align: center; margin: 44px auto 0; font-size: 26px; color: var(--ink);
+}
+.wedge-tag em { font-style: italic; color: var(--teal); }
+
 /* ── SEE IT (recording) ── */
 .see-wrap { background: linear-gradient(170deg, #14272C, #0C181C); color: #F4F1EA; }
 .see-grid {
@@ -556,6 +611,7 @@ const LANDING_CSS = `
 @media (max-width: 920px) {
   .hero-grid, .see-grid { grid-template-columns: 1fr; gap: 44px; }
   .bio-grid { grid-template-columns: repeat(2, 1fr); }
+  .wedge-grid { grid-template-columns: 1fr; }
   .cine-box { min-height: 0; }
   .pat-grid { grid-template-columns: 1fr; }
   .hero-grid { padding: 56px 0 64px; }

@@ -62,6 +62,22 @@ const CHARACTERS: Record<string, Character> = {
     fn: (t, x) =>
       (0.18 + 0.72 * x) * (0.6 + 0.4 * Math.sin(t * 2.8 + x * 8)),
   },
+  expressiveness: {
+    bars: 30,
+    fn: (t, x) =>
+      0.28 +
+      0.6 * Math.abs(Math.sin(t * 4.1 + x * 10)) *
+        (0.55 + 0.45 * Math.sin(t * 1.7 + x * 3)),
+  },
+  articulation: {
+    bars: 34,
+    fn: (t, x) =>
+      0.24 + 0.66 * rnd(Math.floor(t * 11) * 0.5 + x * 71),
+  },
+  breathing: {
+    bars: 27,
+    fn: (t, x) => 0.26 + 0.5 * Math.abs(Math.sin(t * 1.1 + x * 3.1)),
+  },
 };
 
 const TEAL = "#0F766E";
