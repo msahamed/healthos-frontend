@@ -36,4 +36,6 @@ Biohackers and self-trackers, performance-minded professionals, and anyone who w
 ## Links
 
 - Website: https://healthos.live
+- FAQ: https://healthos.live/faq
 - TestFlight beta: https://testflight.apple.com/join/JBG3ANFF
+- Discord community: https://discord.gg/SyZPw3cgG

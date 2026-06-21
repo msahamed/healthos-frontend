@@ -38,11 +38,20 @@ export const metadata: Metadata = {
     url: "https://healthos.live",
     siteName: "HealthOS",
     type: "website",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "HealthOS — Your voice is the biomarker that speaks first.",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "HealthOS — Notices what you don't",
     description: DESCRIPTION,
+    images: ["/og.png"],
   },
 };
 

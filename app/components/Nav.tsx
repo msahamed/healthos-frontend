@@ -73,6 +73,9 @@ export default function Nav() {
           <Link href="/#signals" className="nav-link">
             What it reveals
           </Link>
+          <Link href="/faq" className="nav-link">
+            FAQ
+          </Link>
         </nav>
 
         <Link
