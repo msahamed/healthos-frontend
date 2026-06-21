@@ -61,10 +61,25 @@ const ORG_JSONLD = {
   "@type": "Organization",
   name: "HealthOS",
   url: "https://healthos.live",
+  logo: "https://healthos.live/og.png",
   description:
     "HealthOS builds voice-first, on-device wellness technology that reads nervous-system state from how you sound.",
   founder: { "@type": "Person", name: "Sabber Ahamed" },
   foundingLocation: "Dallas, TX",
+  sameAs: [
+    "https://discord.gg/SyZPw3cgG",
+    "https://www.linkedin.com/in/sabber-ahamed/",
+    "https://github.com/msahamed",
+  ],
+};
+
+const WEBSITE_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "HealthOS",
+  url: "https://healthos.live",
+  description: DESCRIPTION,
+  publisher: { "@type": "Organization", name: "HealthOS" },
 };
 
 const APP_JSONLD = {
@@ -106,6 +121,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(APP_JSONLD) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSONLD) }}
         />
         {children}
         <Analytics />
