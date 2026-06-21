@@ -23,23 +23,61 @@ const hanken = Hanken_Grotesk({
 });
 
 const DESCRIPTION =
-  "Your voice is the biomarker that speaks first. " +
-  "3–5 seconds of unscripted speech decodes nervous system state — hours before anything else catches it. " +
-  "No hardware. No bloodwork. On-device.";
+  "HealthOS is a voice-first, on-device iOS app that reads your nervous-system state from how you sound. " +
+  "A check-in takes just a few seconds — up to thirty — and surfaces eight signals — energy, stress, fatigue, confidence and more — " +
+  "before you consciously feel them. No wearable, no bloodwork; your voice never leaves your phone.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://healthos.live"),
   title: "HealthOS — Notices what you don't",
   description: DESCRIPTION,
+  alternates: { canonical: "/" },
   openGraph: {
     title: "HealthOS — Notices what you don't",
     description: DESCRIPTION,
     url: "https://healthos.live",
     siteName: "HealthOS",
+    type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "HealthOS — Notices what you don't",
     description: DESCRIPTION,
+  },
+};
+
+// ── Site-wide structured data (GEO / AI answer engines) ──
+const ORG_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "HealthOS",
+  url: "https://healthos.live",
+  description:
+    "HealthOS builds voice-first, on-device wellness technology that reads nervous-system state from how you sound.",
+  founder: { "@type": "Person", name: "Sabber Ahamed" },
+  foundingLocation: "Dallas, TX",
+};
+
+const APP_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "HealthOS",
+  applicationCategory: "HealthApplication",
+  operatingSystem: "iOS",
+  url: "https://healthos.live",
+  description: DESCRIPTION,
+  featureList: [
+    "On-device voice biomarker analysis",
+    "Eight nervous-system signals: energy, stress, confidence, fatigue, vocal strain, expressiveness, articulation, breathing",
+    "Daily voice check-in that takes just a few seconds (up to 30)",
+    "Pattern detection over your personal baseline",
+    "Fully private — voice audio never leaves the phone",
+  ],
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+    description: "Free during beta",
   },
 };
 
@@ -52,6 +90,14 @@ export default function RootLayout({
       className={`h-full ${newsreader.variable} ${hanken.variable}`}
     >
       <body className="min-h-full flex flex-col antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSONLD) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(APP_JSONLD) }}
+        />
         {children}
         <Analytics />
         <SpeedInsights />

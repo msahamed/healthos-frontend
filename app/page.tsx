@@ -10,9 +10,60 @@ import PatSpark from "./components/landing/PatSpark";
 // Real video drop-in: /public/landing/checkin.mp4
 // CheckinRecording falls back to placeholder animation if absent.
 
+// ── FAQ: drives both the visible section and the FAQPage schema (GEO).
+// Answer-shaped, definitional text so AI answer engines can quote it.
+const FAQ: { q: string; a: string }[] = [
+  {
+    q: "What is HealthOS?",
+    a: "HealthOS is a voice-first, on-device iOS app that reads your nervous-system state from how you sound. A daily check-in takes just a few seconds — up to thirty — analyzing your unscripted speech to surface eight signals — energy, stress, fatigue, confidence and more — so you catch shifts before you consciously feel them.",
+  },
+  {
+    q: "How does voice biomarker analysis work?",
+    a: "HealthOS reads how you sound, not what you say. Each signal is a transparent, literature-grounded formula that blends acoustic features — pitch, loudness, pace, pauses, vocal clarity — scored against your own roughly 30-day baseline. It's a relative read of what's higher or lower than your usual, not a clinical or population score.",
+  },
+  {
+    q: "Is my voice data private?",
+    a: "Yes. All analysis runs entirely on-device. Your voice audio never leaves your phone and is never uploaded to the cloud.",
+  },
+  {
+    q: "How is HealthOS different from Oura, WHOOP, or Apple Watch?",
+    a: "Wearables track physiology — heart rate, HRV, sleep — and infer stress from it. HealthOS reads psychological and nervous-system state such as confidence, vocal strain, and expressiveness that a wrist sensor can't detect. There's no hardware to wear, and it works alongside your wearable rather than replacing it.",
+  },
+  {
+    q: "What signals does HealthOS track?",
+    a: "Eight: energy, stress, confidence, fatigue, vocal strain, expressiveness, articulation, and breathing — all read from how you sound.",
+  },
+  {
+    q: "Who is HealthOS for?",
+    a: "People whose performance and wellbeing depend on catching a bad state early — biohackers and self-trackers, performance-minded professionals, and anyone who wants the mind layer their wearable can't read.",
+  },
+  {
+    q: "Is HealthOS a medical device?",
+    a: "No. HealthOS is a general wellness tool for self-awareness. It does not diagnose, treat, or make clinical claims.",
+  },
+  {
+    q: "What does HealthOS cost and what platforms does it support?",
+    a: "HealthOS is free while in beta and launches on iPhone (iOS) first, currently via TestFlight.",
+  },
+];
+
+const FAQ_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map(({ q, a }) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: { "@type": "Answer", text: a },
+  })),
+};
+
 export default function Home() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }}
+      />
       <Nav />
 
       <main id="top">
@@ -30,9 +81,10 @@ export default function Home() {
                 Your voice is the biomarker that speaks <em>first.</em>
               </h1>
               <p className="hero-sub">
-                A 30-second check-in reads your nervous-system state from how
-                you sound — eight signals, hours before you&apos;d notice them
-                yourself. <strong>No wearable. No bloodwork.</strong>
+                A few seconds of unscripted speech — up to thirty — reads your
+                nervous-system state from how you sound, hours before
+                you&apos;d notice it yourself.{" "}
+                <strong>No wearable. No bloodwork.</strong>
               </p>
 
               <InlineWaitlistForm variant="hero" />
@@ -236,9 +288,9 @@ export default function Home() {
                   A real check-in, start to finish.
                 </h2>
                 <p className="dark-sub">
-                  Thirty seconds of just talking — and watch it turn into
-                  something you can actually read. This is the entire daily
-                  ritual.
+                  Up to thirty seconds of just talking — often just a few — and
+                  watch it turn into something you can actually read. This is
+                  the entire daily ritual.
                 </p>
                 <div className="see-note">
                   <svg
@@ -255,6 +307,43 @@ export default function Home() {
                 </div>
               </div>
               <CheckinRecording />
+            </div>
+          </section>
+        </div>
+
+        {/* ════ FAQ ════ */}
+        <div className="faq-wrap">
+          <section id="faq" className="section">
+            <div className="wrap">
+              <div className="sec-head center">
+                <span className="eyebrow eyebrow-center">Questions</span>
+                <h2 className="font-serif-display">
+                  What people ask about HealthOS.
+                </h2>
+              </div>
+              <div className="faq-list">
+                {FAQ.map(({ q, a }) => (
+                  <details className="faq-item" key={q}>
+                    <summary>
+                      <span>{q}</span>
+                      <svg
+                        className="faq-chev"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </summary>
+                    <p>{a}</p>
+                  </details>
+                ))}
+              </div>
             </div>
           </section>
         </div>
@@ -289,6 +378,7 @@ export default function Home() {
           </div>
           <div className="foot-links">
             <a href="#signals">What it reveals</a>
+            <a href="#faq">FAQ</a>
             <a href="#join">Waitlist</a>
           </div>
         </div>
@@ -580,6 +670,29 @@ const LANDING_CSS = `
 .see-note {
   margin-top: 26px; font-size: 14px; color: #8FA09C;
   display: inline-flex; align-items: center; gap: 9px;
+}
+
+/* ── FAQ ── */
+.faq-wrap { background: var(--paper-3); }
+.faq-list { max-width: 760px; margin: 48px auto 0; }
+.faq-item {
+  border: 1px solid var(--line); border-radius: 14px;
+  background: #fff; padding: 0 22px; margin-bottom: 12px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.faq-item:hover { border-color: var(--line-strong); }
+.faq-item[open] { box-shadow: 0 10px 28px rgba(27,26,23,.06); }
+.faq-item summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  cursor: pointer; list-style: none; padding: 20px 0;
+  font-size: 17px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-chev { color: var(--teal); flex: none; transition: transform .25s ease; }
+.faq-item[open] .faq-chev { transform: rotate(180deg); }
+.faq-item p {
+  margin: 0; padding: 0 0 22px; font-size: 15.5px; line-height: 1.62; color: var(--ink-soft);
+  max-width: 64ch;
 }
 
 /* ── CTA ── */
