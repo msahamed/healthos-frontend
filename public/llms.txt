@@ -39,6 +39,8 @@ Biohackers and self-trackers, performance-minded professionals, and anyone who w
 - FAQ: https://healthos.live/faq
 - What is a voice biomarker (explainer): https://healthos.live/voice-biomarkers
 - Voice biomarkers vs wearables (Oura/WHOOP/Apple Watch): https://healthos.live/voice-vs-wearables
+- Blog: https://healthos.live/blog
+- Beyond the scale — tracking energy and mood on a GLP-1: https://healthos.live/blog/track-energy-and-mood-on-glp1
 - About the founder: https://healthos.live/about
 - TestFlight beta: https://testflight.apple.com/join/JBG3ANFF
 - Discord community: https://discord.gg/SyZPw3cgG
