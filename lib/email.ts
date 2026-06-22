@@ -33,8 +33,9 @@ function welcomeHtml(): string {
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
             <tr>
               <td style="padding:40px 40px 8px;">
-                <p style="margin:0;font-size:14px;letter-spacing:0.08em;text-transform:uppercase;color:#0d9488;font-weight:600;">HealthOS</p>
-                <h1 style="margin:16px 0 0;font-size:26px;line-height:1.25;font-weight:600;color:#111827;">You're on the list.</h1>
+                <img src="${SITE}/email-logo.png" width="44" height="44" alt="HealthOS" style="display:block;width:44px;height:44px;border:0;outline:none;text-decoration:none;" />
+                <p style="margin:20px 0 0;font-size:14px;letter-spacing:0.08em;text-transform:uppercase;color:#0d9488;font-weight:600;">HealthOS</p>
+                <h1 style="margin:12px 0 0;font-size:26px;line-height:1.25;font-weight:600;color:#111827;">You're on the list.</h1>
               </td>
             </tr>
             <tr>
