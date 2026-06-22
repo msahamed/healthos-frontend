@@ -8,8 +8,9 @@
 // Idempotent on email: if the same email lands twice, we update
 // last_seen_at + lightly merge new fields, never insert a duplicate.
 
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { getMongoClient } from "@/lib/mongodb";
+import { sendWelcomeEmail, sendOwnerNotification } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -81,7 +82,21 @@ export async function POST(req: Request) {
       $inc: { signup_count: 1 },
     };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await collection.updateOne({ email }, update as any, { upsert: true });
+    const res = await collection.updateOne({ email }, update as any, {
+      upsert: true,
+    });
+
+    // Only a fresh insert (not a resubmit) triggers email. `upsertedCount`
+    // is 1 exactly when this email was newly added. Sent via after() so a
+    // slow or failing email provider never blocks the signup response.
+    if (res.upsertedCount === 1) {
+      after(async () => {
+        await Promise.all([
+          sendWelcomeEmail(email),
+          sendOwnerNotification(email, { source, feedback }),
+        ]);
+      });
+    }
 
     // Backfill the canonical user_id for rows that predate the mobile
     // install — e.g. an email first captured by the marketing site (no
