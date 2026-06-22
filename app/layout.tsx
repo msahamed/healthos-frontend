@@ -130,6 +130,20 @@ export default function RootLayout({
         <Analytics />
         <SpeedInsights />
         {process.env.NODE_ENV === "production" && (
+          <>
+            <Script
+              src="https://www.googletagmanager.com/gtag/js?id=G-YK3M9ZE2MS"
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">{`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-YK3M9ZE2MS');
+            `}</Script>
+          </>
+        )}
+        {process.env.NODE_ENV === "production" && (
           <Script id="fullstory" strategy="afterInteractive">{`
             window['_fs_host'] = 'fullstory.com';
             window['_fs_script'] = 'edge.fullstory.com/s/fs.js';
