@@ -80,6 +80,11 @@ This is the difference between "I think I've felt better lately" and actually se
 
 Logging by hand is the thing everyone starts and most quit by week three. HealthOS is built to remove that friction: it reads energy and a few other nervous-system signals from *how you sound* in a few seconds of normal speech, scored against your own 30-day baseline — your usual, versus today. No wearable, nothing to wear or charge.
 
+<figure class="post-shot">
+  <img src="/screenshots/signal-reading.png" alt="A HealthOS check-in showing Energy below the user's usual range and Fatigue above it, scored against their own baseline." />
+  <figcaption>A single check-in: energy reading below your usual, fatigue above it — measured against your own baseline, not a population average.</figcaption>
+</figure>
+
 It's a general-wellness tool for self-awareness, not a medical device. It won't diagnose a B12 deficiency or tell you what to do about a side effect — that's your clinician's job. What it gives you is a steady, low-effort read on whether your energy is trending back up, so the recovery you're hoping for is something you can actually see. If you haven't yet, the companion piece on [tracking energy and mood beyond the scale](/blog/track-energy-and-mood-on-glp1) covers the bigger picture, and [how voice biomarkers work](/voice-biomarkers) explains the read itself.
 
 The tiredness usually passes. Track it, and you'll know it's passing instead of just hoping.

@@ -152,6 +152,9 @@ const POST_CSS = `
 .post-body :where(h2) { margin-top: 1.8em; }
 .post-body :where(a) { color: var(--teal); text-decoration: underline; text-underline-offset: 2px; }
 .post-body :where(hr) { border: 0; border-top: 1px solid var(--line); margin: 2.2em 0; }
+.post-shot { margin: 2em auto; max-width: 300px; text-align: center; }
+.post-shot img { width: 100%; height: auto; border-radius: 26px; border: 1px solid var(--line); box-shadow: 0 20px 48px -22px rgba(11,80,72,.45); background: #fff; }
+.post-shot figcaption { margin-top: 12px; font-size: 13.5px; line-height: 1.5; color: var(--ink-soft); }
 .post-foot { background: var(--paper-2); border-top: 1px solid var(--line); margin-top: 48px; }
 .post-foot-inner { max-width: 760px; margin: 0 auto; padding: 28px 32px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; }
 .post-foot-brand { display: inline-flex; align-items: center; gap: 9px; font-weight: 700; color: var(--ink); }

@@ -92,6 +92,11 @@ A daily note does this. So does a tape measure and a monthly photo for the physi
 
 This is the problem HealthOS was built for. Instead of asking you to rate yourself, which is the self-report that drifts, it reads energy, stress, and a handful of other nervous-system signals from *how you sound* during a few seconds of normal speech, then scores them against your own 30-day baseline. Not a population average. Your usual, versus today.
 
+<figure class="post-shot">
+  <img src="/screenshots/trend-day.png" alt="A HealthOS trend chart showing the user's readings against their usual range over a day." />
+  <figcaption>Your readings plotted against your own usual range — so a stalled scale and a rising energy line can tell two different stories about the same week.</figcaption>
+</figure>
+
 It's a general-wellness tool for self-awareness, not a medical device. It doesn't diagnose anything or tell you what to do about a side effect; that's a conversation for your prescriber. What it gives you is the thing the scale can't and a journal usually won't: a steady, low-effort read on the parts of a GLP-1 month that are otherwise invisible until they've already added up. It runs entirely on your phone, and your voice never leaves the device. No wearable, no extra hardware. You can read more on [how voice biomarkers work](/voice-biomarkers) and [how this compares to a ring or watch](/voice-vs-wearables).
 
 The scale will do its slow, noisy thing. Track the rest, and you'll actually know how the month went.

@@ -17,7 +17,7 @@ type Props = {
 
 export default function CheckinRecording({
   src = "/landing/checkin.mp4",
-  poster = "/screenshots/talk-smaller.png",
+  poster = "/screenshots/listening.png",
 }: Props) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [playing, setPlaying] = useState(false);
