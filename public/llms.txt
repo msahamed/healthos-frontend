@@ -41,6 +41,10 @@ Biohackers and self-trackers, performance-minded professionals, and anyone who w
 - Voice biomarkers vs wearables (Oura/WHOOP/Apple Watch): https://healthos.live/voice-vs-wearables
 - Blog: https://healthos.live/blog
 - Beyond the scale — tracking energy and mood on a GLP-1: https://healthos.live/blog/track-energy-and-mood-on-glp1
+- GLP-1 fatigue — why you're tired and how to track it: https://healthos.live/blog/glp-1-fatigue
+- When your readiness score becomes the stressor (wearable anxiety / orthosomnia): https://healthos.live/blog/wearable-anxiety-orthosomnia
+- The pre-trade check — should today's you be at the screens? (traders): https://healthos.live/blog/pre-trade-readiness-check
+- The between-session blind spot every coach has: https://healthos.live/blog/coaching-between-sessions
 - About the founder: https://healthos.live/about
 - TestFlight beta: https://testflight.apple.com/join/JBG3ANFF
 - Discord community: https://discord.gg/SyZPw3cgG
