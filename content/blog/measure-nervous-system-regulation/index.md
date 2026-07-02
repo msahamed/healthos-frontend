@@ -21,6 +21,8 @@ faq:
     a: "Because the people who most need regulation are often the worst at feeling it. Chronic stress raises the threshold for noticing internal body signals — interoception drops right when dysregulation is highest. So 'I'm fine' isn't a lie; the client genuinely can't feel it. An objective read gives them the signal their own body stopped sending."
   - q: "Can I use it to show a regulation protocol is working?"
     a: "That's the point. The client checks in before and after a breathwork series, a vagus-tone practice, or a reset week, and you compare the trend around the protocol — turning 'I think that helped' into something you can show the client and yourself."
+  - q: "Does this replace a coach's read?"
+    a: "No — and it shouldn't. Skilled coaches integrate many signals in real time, and even imperfect self-report is workable in their hands. HealthOS is a complementary layer: it extends the read to between sessions and makes a protocol's effect something you can show. It informs a coach's judgment; it doesn't override it."
 sources:
   - title: "The Rise of Neurowellness — Global Wellness Summit (2026 Trends)"
     url: "https://www.globalwellnesssummit.com/the-rise-of-neurowellness/"
@@ -40,13 +42,13 @@ Nervous-system state isn't a metaphor. Sympathetic activation is a physiological
 
 The problem is who can perceive it. The clients who most need regulation — the high-functioning ones running hot for months — are often the least able to feel it, and not because they aren't trying. Chronic stress raises the sensory threshold for internal body signals; interoceptive accuracy drops as stress accumulates ([Frontiers in Psychology](https://pmc.ncbi.nlm.nih.gov/articles/PMC4507149/)). The nervous system turns down the very alarm that would tell them to stop.
 
-So when you ask "how was your week?" and they say "fine," it isn't evasion. They genuinely can't feel the load they're carrying. Self-report fails exactly where dysregulation is worst — in the people who've adapted to it. That's the gap at the center of your work: the state you specialize in is the state your client is structurally blind to.
+So when a client says "I'm fine," it isn't evasion — they genuinely can't feel the load they're carrying. A skilled coach reads it anyway: the catch in the voice, the story that doesn't quite line up, the state sitting under the words. That reading is the craft, and no tool replaces it. What's hard isn't your read in the room — it's that the client is often blind to the very thing you specialize in, so the six days between sessions, when you're not there to hear them, stay dark.
 
 ## Why the tools you've been offered don't fit
 
 The obvious fix is a wearable, and coaches have mostly said no — for good reasons. A wrist sensor reads the *body*: heart rate, HRV, sleep. It infers stress from physiology and never hears the person. It also asks every client to buy, wear, and charge a device, which doesn't belong in a practice built on talking and breathing. The lab-grade options — EEG, autonomic-monitoring hardware — are more precise and even less portable; they live in a clinic, not in a client's Tuesday.
 
-And self-report, the one instrument you always have, leaks in the direction we just covered: the client under-reports the load precisely because they can't feel it. None of these is worthless. But none of them gives you an objective read of nervous-system state that fits how you actually work.
+And self-report — the client's own account — under-reports the load precisely because they can't feel it. Your trained ear fills much of that gap in session; that's exactly the skill. What's still missing is an objective layer that fits how you work: one that reaches past the hour you're together and gives you something you can show, not only sense.
 
 ## The voice is a direct line to autonomic state
 
@@ -56,7 +58,7 @@ That's the opening. The voice is the one channel that carries nervous-system sta
 
 ## What an objective regulation read changes
 
-Give the client — and you — a read on that state, and three things shift at once.
+An objective read isn't meant to sit in your chair — masterful coaching already integrates more signal, in real time, than any device does. It's a second layer beside that judgment, not a substitute for it. Give the client (and you) that layer, and three things shift at once.
 
 **You walk in already knowing the week.** Not a Monday-morning reconstruction from someone who couldn't feel most of it. You see the actual trajectory of their activation and spend the session on what happened, not on reassembling it.
 
@@ -77,7 +79,7 @@ The client does a few-second voice check-in on their own phone — their habit, 
 
 That's the idea behind HealthOS. It reads energy, stress, vocal strain, and other nervous-system signals from *how a client sounds* in a few seconds of speech, scored against their own baseline — no wearable, no bloodwork, and it runs entirely on-device, so the client's voice never leaves their phone. For higher-status or guarded clients, that privacy is a feature, not a footnote. It reads the arousal side of the state you regulate — the sympathetic load — and it does it in the modality your practice already uses. You can read more on [how voice biomarkers work](/voice-biomarkers), or how this sits [next to a wearable](/voice-vs-wearables) rather than replacing it.
 
-HealthOS is a general-wellness, self-awareness tool, not a clinical or diagnostic device. It doesn't measure a medical construct of "regulation," and it doesn't replace your judgment. It gives you and your client an objective read on the state you've both only been able to guess at.
+HealthOS is a general-wellness, self-awareness tool, not a clinical or diagnostic device. It doesn't measure a medical construct of "regulation," and it doesn't replace your judgment. It adds an objective layer to the state you already track by ear — reaching into the days between sessions, and turning what you sense into something you can show.
 
 ## FAQ
 
@@ -92,6 +94,9 @@ Those read the body and add hardware that doesn't fit a talking, breath-based pr
 
 **How would I actually use it?**
 The client checks in on their own phone and shares the trend; you review before the session and compare before and after a regulation protocol.
+
+**Does this replace a coach's read?**
+No — and it shouldn't. Skilled coaches integrate many signals in real time, and even imperfect self-report is workable in their hands. HealthOS is a complementary layer: it extends the read to between sessions and makes a protocol's effect something you can show. It informs your judgment; it doesn't override it.
 
 ---
 
