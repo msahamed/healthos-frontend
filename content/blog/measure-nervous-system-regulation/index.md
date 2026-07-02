@@ -8,7 +8,7 @@ targetKeyword: "measure nervous system regulation"
 secondaryKeywords: ["nervous system coaching tool", "objective nervous system tracking", "prove regulation outcomes", "voice biomarker nervous system", "somatic coaching measurement"]
 intent: "problem"
 icp: "coaches"
-status: "draft"
+status: "published"
 heroImage: "/blog/measure-nervous-system-regulation/hero-16x9.png"
 ogImage: "/blog/measure-nervous-system-regulation/og-1200x630.png"
 heroImageAlt: "A client's nervous-system activation over a week — the state a coach regulates, usually invisible between sessions."
