@@ -24,7 +24,7 @@ function buildLlmsTxt(): string {
 
 ## What it is
 
-- **Product:** HealthOS — a voice biomarker wellness app for iPhone (iOS).
+- **Product:** HealthOS — performance intelligence from your voice; a voice-biomarker app.
 - **Website:** ${BASE_URL}
 - **Core idea:** Your voice is the biomarker that speaks first. HealthOS reads *how* you sound (acoustic features like pitch, loudness, pace, pauses, vocal clarity), not the words you say.
 - **Privacy:** All analysis runs entirely on-device. Voice audio never leaves the phone and is never uploaded to the cloud.
@@ -44,12 +44,12 @@ Wearables (Oura, WHOOP, Apple Watch) track physiology — heart rate, HRV, sleep
 
 ## Who it's for
 
-Biohackers and self-trackers, performance-minded professionals, and anyone who wants the "mind" layer their wearable can't read.
+Performance-minded professionals — founders, salespeople, traders — plus coaches who want an objective read on how clients are doing between sessions, biohackers and self-trackers, and anyone who wants the "mind" layer their wearable can't read.
 
 ## Key facts
 
 - Founder: Sabber Ahamed (Applied ML Scientist), Dallas, TX.
-- Category: voice biomarker app, mental-wellness monitoring, biometric self-tracking.
+- Category: performance intelligence, voice biomarker app, biometric self-tracking.
 - Pricing: free during beta; pricing after beta not yet public.
 - Not a medical device; for self-awareness and general wellness only.
 

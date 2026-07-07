@@ -23,7 +23,7 @@ const hanken = Hanken_Grotesk({
 });
 
 const DESCRIPTION =
-  "HealthOS is a voice-first, on-device iOS app that reads your nervous-system state from how you sound. " +
+  "HealthOS is performance intelligence from your voice — a voice-first, on-device tool that reads your nervous-system state from how you sound. " +
   "A check-in takes just a few seconds — up to thirty — and surfaces eight signals — energy, stress, fatigue, confidence and more — " +
   "before you consciously feel them. No wearable, no bloodwork; your voice never leaves your phone.";
 
@@ -63,7 +63,7 @@ const ORG_JSONLD = {
   url: "https://healthos.live",
   logo: "https://healthos.live/og.png",
   description:
-    "HealthOS builds voice-first, on-device wellness technology that reads nervous-system state from how you sound.",
+    "HealthOS builds voice-first, on-device performance-intelligence technology that reads nervous-system state from how you sound.",
   founder: { "@type": "Person", name: "Sabber Ahamed" },
   foundingLocation: "Dallas, TX",
   sameAs: [

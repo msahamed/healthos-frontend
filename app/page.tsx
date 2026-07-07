@@ -24,14 +24,15 @@ export default function Home() {
           <div className="wrap hero-grid">
             <div className="hero-copy">
               <span className="eyebrow eyebrow-dark">
-                Voice-first self-understanding
+                Performance intelligence from your voice
               </span>
               <h1 className="font-serif-display">
                 Your voice is the biomarker that speaks <em>first.</em>
               </h1>
               <p className="hero-sub">
-                A few seconds of unscripted speech — up to thirty — reads your
-                nervous-system state from how you sound, hours before
+                A few seconds of unscripted speech reads your nervous-system
+                state from how you sound — stress, energy, confidence —
+                the way athletes see their body data, hours before
                 you&apos;d notice it yourself.{" "}
                 <strong>No wearable. No bloodwork.</strong>
               </p>
