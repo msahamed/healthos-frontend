@@ -41,6 +41,12 @@ interface ObservationDoc {
   signals: Record<string, unknown>;
   markers: Record<string, unknown>;
   voice_clip: Record<string, unknown> | null;
+  // Per-segment marker timeline ({t, m, cov, vad, q} entries) — powers the
+  // within-session trend chart on restore. Optional; absent on old docs.
+  frames?: unknown[];
+  // Raw per-marker thumbs map ({markerId: 1|-1} + the session self-report
+  // key) — restored verbatim so ratings survive a device change.
+  marker_ratings?: Record<string, unknown>;
   received_at: Date;
 }
 
@@ -71,6 +77,8 @@ interface IncomingObservation {
   signals?: Record<string, unknown>;
   markers?: Record<string, unknown>;
   voice_clip?: Record<string, unknown> | null;
+  frames?: unknown[];
+  marker_ratings?: Record<string, unknown>;
 }
 
 /** Cheap shape check. Drops malformed observations from the batch
@@ -107,6 +115,10 @@ function sanitize(raw: unknown, expectedUserId: string): IncomingObservation | n
       : r.voice_clip === null
       ? null
       : undefined,
+    frames: Array.isArray(r.frames) ? r.frames : undefined,
+    marker_ratings: isPlainObject(r.marker_ratings)
+      ? r.marker_ratings
+      : undefined,
   };
 }
 
@@ -125,6 +137,8 @@ function toDoc(o: IncomingObservation): ObservationDoc {
     signals: o.signals ?? {},
     markers: o.markers ?? {},
     voice_clip: o.voice_clip ?? null,
+    ...(o.frames !== undefined && { frames: o.frames }),
+    ...(o.marker_ratings !== undefined && { marker_ratings: o.marker_ratings }),
     received_at: new Date(),
   };
 }
