@@ -238,13 +238,21 @@ export async function POST(req: Request) {
 
 // ── GET ─────────────────────────────────────────────────────────────────────
 //
-// Query: ?user_id=<uuid>&since=<iso>[&limit=<N>]
+// Query: ?user_id=<uuid>&since=<iso>[&after_id=<uuid>][&limit=<N>]
 // Response: { observations, server_now, has_more }
 //
 // Client persists `server_now` from each response and uses it as the
 // next `since`. Echoing server time (vs. client computing it) prevents
 // clock-drift gaps where a doc written at "server time T+1ms" gets
 // missed because the client polled at "client time T."
+//
+// `after_id` is the tie-breaker cursor: bulk pushes (backfill/re-push)
+// stamp hundreds of docs with the SAME updated_at, and a strictly-
+// greater-than timestamp cursor can never advance past such a group —
+// pagination stalls and the tail is unreachable. With after_id set, the
+// page resumes at (updated_at == since AND _id > after_id) OR
+// (updated_at > since), sorted by (updated_at, _id). Clients that only
+// send `since` keep the old (tie-unsafe) behavior.
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -262,6 +270,9 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "invalid_since" }, { status: 400 });
   }
 
+  const afterIdRaw = url.searchParams.get("after_id");
+  const afterId = afterIdRaw && UUID_RE.test(afterIdRaw) ? afterIdRaw : null;
+
   const limitRaw = url.searchParams.get("limit");
   const limit = (() => {
     if (!limitRaw) return PULL_MAX_BATCH;
@@ -277,14 +288,21 @@ export async function GET(req: Request) {
       .collection<ObservationDoc>("observations");
 
     // Strictly-greater-than `since` excludes the boundary row the
-    // client already has. Order by updated_at so pagination is
-    // deterministic across pages.
+    // client already has; with `after_id`, rows AT `since` resume after
+    // that _id so a group of tied timestamps paginates cleanly. Sort by
+    // (updated_at, _id) so the order is total and deterministic.
+    const filter = afterId
+      ? {
+          user_id: userId,
+          $or: [
+            { updated_at: { $gt: since } },
+            { updated_at: since, _id: { $gt: afterId } },
+          ],
+        }
+      : { user_id: userId, updated_at: { $gt: since } };
     const rows = await col
-      .find(
-        { user_id: userId, updated_at: { $gt: since } },
-        { projection: { received_at: 0 } },
-      )
-      .sort({ updated_at: 1 })
+      .find(filter, { projection: { received_at: 0 } })
+      .sort({ updated_at: 1, _id: 1 })
       .limit(limit + 1)
       .toArray();
 
