@@ -37,10 +37,11 @@ const ALLOWED_CONTENT_TYPES = new Set(["audio/wav", "audio/x-wav"]);
 // leaked URL is unusable by the next morning.
 const URL_TTL_SECONDS = 15 * 60;
 
-// 20 MB cap — a 3–5 second 16 kHz mono PCM wav is ~100 KB, so this is
-// generous even for misconfigured recordings. Above this, the client
-// is doing something wrong and we'd rather reject than absorb cost.
-const MAX_BYTES = 20 * 1024 * 1024;
+// 120 MB cap. Desktop continuous-capture sessions run up to 45 min —
+// ~86 MB at 16 kHz mono 16-bit PCM — so the cap must clear that with
+// headroom. Above this, the client is doing something wrong and we'd
+// rather reject than absorb cost.
+const MAX_BYTES = 120 * 1024 * 1024;
 
 interface PresignBody {
   user_id?: string;
