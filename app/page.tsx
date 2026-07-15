@@ -1,634 +1,288 @@
-import Nav from "./components/Nav";
-import Logo from "./components/Logo";
 import InlineWaitlistForm from "./components/InlineWaitlistForm";
-import HeroCinematic from "./components/landing/HeroCinematic";
-import CheckinRecording from "./components/landing/CheckinRecording";
-import HeroTopo from "./components/landing/HeroTopo";
-import BioWave from "./components/landing/BioWave";
-import PatSpark from "./components/landing/PatSpark";
+import HeroTimeline from "./components/landing/HeroTimeline";
 
-// Real video drop-in: /public/landing/checkin.mp4
-// CheckinRecording falls back to placeholder animation if absent.
+// HealthOS homepage — performance-intelligence relaunch.
+// Ported from the approved Claude Design "HealthOS Home". The hero visual is
+// the product itself: an animated call timeline where dots appear only when
+// YOU speak; the gaps are the other person, never captured (mic-gated).
+// Waitlist form = real <InlineWaitlistForm> (POST /api/waitlist). Nav = real <Nav>.
+
+const ink = "#1B1A17", inkSoft = "#5A554B", teal = "#0F766E", amber = "#F59E0B";
 
 export default function Home() {
   return (
     <>
-      <Nav />
+      <header style={{ position: "sticky", top: 0, zIndex: 50, background: "rgba(247,244,238,.88)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", borderBottom: "1px solid #E4DDD0" }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 32px", height: 70, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <a href="#top" style={{ display: "inline-flex", alignItems: "center", gap: 10, fontWeight: 700, fontSize: 18, letterSpacing: "-0.01em", color: ink, textDecoration: "none" }}>
+            <svg width="30" height="30" viewBox="0 0 30 30" style={{ display: "block", borderRadius: 6.6, background: teal }}>
+              <rect x="5.1" y="10.8" width="2.7" height="8.4" rx="1.35" fill={amber} /><rect x="9.9" y="7.5" width="2.7" height="15" rx="1.35" fill={amber} /><rect x="14.7" y="4.8" width="2.7" height="20.4" rx="1.35" fill={amber} /><rect x="19.5" y="7.5" width="2.7" height="15" rx="1.35" fill={amber} /><rect x="24.3" y="10.8" width="2.7" height="8.4" rx="1.35" fill={amber} />
+            </svg>
+            HealthOS
+          </a>
+          <nav className="hos-nav" style={{ display: "flex", alignItems: "center", gap: 30, fontSize: 14.5, fontWeight: 500, color: inkSoft }}>
+            <a href="#how" style={{ color: "inherit", textDecoration: "none" }}>How it works</a>
+            <a href="#signals" style={{ color: "inherit", textDecoration: "none" }}>What it reads</a>
+            <a href="#privacy" style={{ color: "inherit", textDecoration: "none" }}>Privacy</a>
+            <a href="#science" style={{ color: "inherit", textDecoration: "none" }}>Science</a>
+            <a href="/blog" style={{ color: "inherit", textDecoration: "none" }}>Blog</a>
+          </nav>
+          <a href="#join" className="hos-beta" style={{ fontSize: 14, fontWeight: 600, background: teal, color: "#fff", borderRadius: 12, padding: "9px 16px", whiteSpace: "nowrap", boxShadow: "0 6px 18px rgba(15,118,110,.22)", textDecoration: "none" }}>Get the beta</a>
+        </div>
+      </header>
 
       <main id="top">
         {/* ════ HERO ════ */}
-        <section className="hero">
-          <div className="hero-bg-glow-1" />
-          <div className="hero-bg-glow-2" />
-          <HeroTopo />
-          <div className="wrap hero-grid">
-            <div className="hero-copy">
-              <span className="eyebrow eyebrow-dark">
-                Performance intelligence from your voice
-              </span>
-              <h1 className="font-serif-display">
-                Your voice is the biomarker that speaks <em>first.</em>
+        <section style={{ position: "relative", overflow: "hidden", isolation: "isolate", background: "linear-gradient(168deg, #14272C 0%, #0E1D21 55%, #0A1417 100%)", color: "#F4F1EA" }}>
+          <div style={{ position: "absolute", top: "-25%", right: "-10%", width: "60%", height: "90%", background: "radial-gradient(circle, rgba(20,134,123,.4), transparent 68%)", filter: "blur(20px)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", bottom: "-30%", left: "-12%", width: "50%", height: "80%", background: "radial-gradient(circle, rgba(245,158,11,.1), transparent 70%)", filter: "blur(20px)", pointerEvents: "none" }} />
+          <div className="hos-hero-grid" style={{ position: "relative", zIndex: 1, maxWidth: 1160, margin: "0 auto", padding: "76px 32px 88px", display: "grid", gridTemplateColumns: "1fr 1.22fr", gap: 48, alignItems: "center" }}>
+            <div>
+              <span style={eyebrow("#6FD6C9")}><span style={eyeDot} />For work that happens on calls</span>
+              <h1 className="font-serif-display" style={{ fontWeight: 500, fontSize: "clamp(38px, 4.6vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.02em", margin: "22px 0 0", color: "#FBF8F1" }}>
+                Performance intelligence <em style={{ fontStyle: "italic", color: "#FCD34D" }}>from your voice.</em>
               </h1>
-              <p className="hero-sub">
-                A few seconds of unscripted speech reads your nervous-system
-                state from how you sound — stress, energy, confidence —
-                the way athletes see their body data, hours before
-                you&apos;d notice it yourself.{" "}
-                <strong>No wearable. No bloodwork.</strong>
+              <p style={{ margin: "24px 0 0", fontSize: 18, lineHeight: 1.62, color: "#C9D4D2", maxWidth: 520 }}>
+                HealthOS sits in your menu bar. Press Start and it quietly reads your nervous system — stress, energy, confidence — from how you sound through real calls. <strong style={{ color: "#F4F1EA", fontWeight: 600 }}>It only ever listens to you:</strong> when the other person talks, it records nothing. All on-device — no wearable needed.
               </p>
-
               <InlineWaitlistForm variant="hero" />
-
-              <div className="hero-micro">
-                <svg
-                  width="15"
-                  height="15"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#6FD6C9"
-                  strokeWidth="2"
-                >
-                  <rect x="4" y="10" width="16" height="11" rx="2.5" />
-                  <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-                </svg>
-                On-device. Your voice never leaves your phone.
+              <div style={{ marginTop: 14, fontSize: 13.5, color: "#94A39F", display: "inline-flex", alignItems: "center", gap: 8 }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6FD6C9" strokeWidth="2"><rect x="4" y="10" width="16" height="11" rx="2.5" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></svg>
+                macOS, Windows, iOS &amp; Android · only your voice · no wearable needed
               </div>
             </div>
-
-            <div className="cine-box">
-              <HeroCinematic />
-            </div>
+            <div style={{ minWidth: 0 }}><HeroTimeline /></div>
           </div>
         </section>
 
-        {/* ════ SIGNALS (eight biomarkers) ════ */}
-        <div className="signals-wrap">
-          <section id="signals" className="section">
-            <div className="wrap">
-              <div className="sec-head center">
-                <span className="eyebrow eyebrow-center">
-                  What your voice reveals
-                </span>
-                <h2 className="font-serif-display">
-                  Eight signals, read from how you sound.
-                </h2>
-                <p>
-                  Not what you logged — how you actually came across. Zuri
-                  reads all eight from a few honest seconds of speech.
-                </p>
-              </div>
-              <div className="bio-grid">
-                <Bio
-                  title="Energy"
-                  body="How much you've got in the tank today."
-                  icon={
-                    <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" />
-                  }
-                />
-                <Bio
-                  title="Stress"
-                  body="The tension your voice carries first — before you notice it."
-                  icon={<path d="M3 12h4l3-8 4 16 3-8h4" />}
-                />
-                <Bio
-                  title="Confidence"
-                  body="Steady and sure, or hedging your way through."
-                  icon={
-                    <>
-                      <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z" />
-                      <path d="M9 12l2 2 4-4" />
-                    </>
-                  }
-                />
-                <Bio
-                  title="Fatigue"
-                  body="The tiredness under your words, before you'd name it."
-                  icon={
-                    <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" />
-                  }
-                />
-                <Bio
-                  title="Vocal strain"
-                  body="When your voice itself is running on empty."
-                  icon={
-                    <path d="M4 12h2M9 6v12M13 3v18M17 8v8M20 12h0" />
-                  }
-                />
-                <Bio
-                  title="Expressiveness"
-                  body="The color in your voice — animated, or gone flat."
-                  icon={<path d="M3 12c2.5-7 5-7 7.5 0s5 7 7.5 0" />}
-                />
-                <Bio
-                  title="Articulation"
-                  body="Crisp and precise, or slurring at the edges."
-                  icon={
-                    <>
-                      <path d="M4 6h16M4 11h11M4 16h14M4 21h7" />
-                    </>
-                  }
-                />
-                <Bio
-                  title="Breathing"
-                  body="The breath behind your words — steady, or short and shallow."
-                  icon={
-                    <>
-                      <path d="M3 9h11a3 3 0 1 0-3-3" />
-                      <path d="M3 15h14a3 3 0 1 1-3 3" />
-                    </>
-                  }
-                />
-              </div>
+        {/* ════ HOW IT WORKS ════ */}
+        <section id="how" style={{ padding: "88px 0", background: "#F1ECE2" }}>
+          <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 32px" }}>
+            <div style={{ maxWidth: 660, margin: "0 auto", textAlign: "center" }}>
+              <span style={eyebrow(teal, true)}><span style={eyeDot} />How it works</span>
+              <h2 className="font-serif-display" style={h2()}>Press Start. Take the call. See how you held up.</h2>
+              <p style={{ fontSize: 18, color: inkSoft, margin: "18px 0 0", lineHeight: 1.6 }}>No dashboard to babysit, no behavior to change. It works while you work.</p>
             </div>
-          </section>
-        </div>
-
-        {/* ════ PATTERNS ════ */}
-        <section id="patterns" className="section">
-          <div className="wrap">
-            <div className="sec-head center">
-              <span className="eyebrow eyebrow-center">The payoff</span>
-              <h2 className="font-serif-display">
-                The patterns hiding in plain sound.
-              </h2>
-              <p>
-                None of these are things you&apos;d catch in yourself — and for
-                the people who can&apos;t afford to miss them, that&apos;s the
-                whole point.
-              </p>
-            </div>
-            <div className="pat-grid">
-              <PatCard
-                shapeIdx={0}
-                action="It's nerves, not signal — run your pre-session routine and let it pass."
-              >
-                Your confidence dips in your voice{" "}
-                <em>the morning before a rough session.</em>
-              </PatCard>
-              <PatCard
-                shapeIdx={1}
-                action="You have a week of runway — take the lighter day now, not after."
-              >
-                Burnout shows up in your voice <em>a week before</em> you feel
-                it.
-              </PatCard>
-              <PatCard
-                shapeIdx={2}
-                action="Bank an earlier night now — you're trending down before you feel it."
-              >
-                Your energy starts dropping{" "}
-                <em>two days before</em> your ring or the scale shows it.
-              </PatCard>
-              <PatCard
-                shapeIdx={3}
-                action="Make it active recovery, not another max effort."
-              >
-                You&apos;re still carrying yesterday&apos;s hard session{" "}
-                <em>two days later.</em>
-              </PatCard>
-            </div>
-          </div>
-        </section>
-
-        {/* ════ WEDGE (body vs mind) ════ */}
-        <div className="wedge-wrap">
-          <section id="wedge" className="section">
-            <div className="wrap">
-              <div className="sec-head center">
-                <span className="eyebrow eyebrow-center">Why voice</span>
-                <h2 className="font-serif-display">
-                  Wearables read your body. Your voice reveals your{" "}
-                  <em>mind.</em>
-                </h2>
-                <p>
-                  Your ring tracks heart rate, sleep and recovery — then
-                  guesses at your stress. It can&apos;t hear the confidence,
-                  strain, or hedging that live in how you sound. A different
-                  sensor, a different layer.
-                </p>
-              </div>
-              <div className="wedge-grid">
-                <Wedge
-                  title="A layer they can't reach"
-                  body="Psychological and nervous-system state — confidence, expressiveness, vocal strain — not just physiological proxies inferred from your wrist."
-                />
-                <Wedge
-                  title="Nothing to wear or buy"
-                  body="No ring, no charging, nothing to lose. Just the phone already in your hand. Zero barrier to start."
-                />
-                <Wedge
-                  title="'Right now,' not 'last night'"
-                  body="A read tied to a moment — before a session, after a hard call — not a daily average you scroll past."
-                />
-              </div>
-              <p className="wedge-tag font-serif-display">
-                Keep your ring. <em>It can&apos;t hear you.</em>
-              </p>
-            </div>
-          </section>
-        </div>
-
-        {/* ════ SEE IT (recording) ════ */}
-        <div className="see-wrap">
-          <section id="see" className="section">
-            <div className="wrap see-grid">
-              <div className="sec-head">
-                <span className="eyebrow eyebrow-dark">See it in action</span>
-                <h2 className="font-serif-display">
-                  A real check-in, start to finish.
-                </h2>
-                <p className="dark-sub">
-                  Up to thirty seconds of just talking — often just a few — and
-                  watch it turn into something you can actually read. This is
-                  the entire daily ritual.
-                </p>
-                <div className="see-note">
-                  <svg
-                    width="15"
-                    height="15"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#6FD6C9"
-                    strokeWidth="2"
-                  >
-                    <polygon points="6 4 20 12 6 20 6 4" />
-                  </svg>
-                  Tap to play — with sound
+            <div className="hos-3grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, marginTop: 54, alignItems: "stretch" }}>
+              {/* Step 1 — menu bar mock */}
+              <div style={stepCard}>
+                <span style={stepN}>01</span>
+                <div style={{ background: "linear-gradient(160deg,#2C3A40,#1B262B)", borderRadius: 12, padding: "12px 12px 16px", flex: 1, display: "flex", flexDirection: "column" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 12, background: "rgba(255,255,255,.13)", borderRadius: 7, padding: "5px 10px" }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E8EDEC" strokeWidth="2" strokeLinecap="round"><path d="M5 12.5a11 11 0 0 1 14 0" /><path d="M8.5 16a6 6 0 0 1 7 0" /><circle cx="12" cy="19" r="1" fill="#E8EDEC" /></svg>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 2.5, background: "rgba(255,255,255,.22)", borderRadius: 6, padding: "4px 7px" }}>
+                      {[5, 9, 12, 9, 5].map((h, i) => <span key={i} style={{ width: 2.5, height: h, borderRadius: 2, background: "#fff" }} />)}
+                    </span>
+                    <span style={{ fontSize: 11, color: "#E8EDEC", fontWeight: 600 }}>Tue 9:58 AM</span>
+                  </div>
+                  <div style={{ background: "rgba(250,250,250,.96)", borderRadius: 10, margin: "6px 34px 0 auto", width: 172, padding: 6, boxShadow: "0 18px 34px rgba(0,0,0,.35)", fontSize: 13, color: ink }}>
+                    <div style={{ padding: "6px 9px", borderRadius: 6 }}>Open HealthOS</div>
+                    <div style={{ height: 1, background: "#E2E0DB", margin: "3px 6px" }} />
+                    <div style={{ padding: "6px 9px", borderRadius: 6, background: teal, color: "#fff", fontWeight: 600 }}>Start</div>
+                    <div style={{ padding: "6px 9px", borderRadius: 6, display: "flex", justifyContent: "space-between", alignItems: "center" }}>Microphone <span style={{ color: "#8A8375" }}>›</span></div>
+                    <div style={{ height: 1, background: "#E2E0DB", margin: "3px 6px" }} />
+                    <div style={{ padding: "6px 9px", borderRadius: 6, display: "flex", justifyContent: "space-between", alignItems: "center" }}>Quit HealthOS <span style={{ color: "#8A8375", fontSize: 11.5 }}>⌘Q</span></div>
+                  </div>
                 </div>
+                <div><h4 style={stepH}>It lives in your menu bar</h4><p style={stepP}>One click before the call — Start. That&rsquo;s the entire workflow. No window, no note-taking bot joining the meeting.</p></div>
               </div>
-              <CheckinRecording />
+              {/* Step 2 — you vs them */}
+              <div style={stepCard}>
+                <span style={stepN}>02</span>
+                <div style={{ background: "#F7F4EE", border: "1px solid #EDE7DA", borderRadius: 12, padding: "18px 16px", flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 14 }}>
+                  <div>
+                    <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".06em", textTransform: "uppercase", color: teal, marginBottom: 6 }}>You speak → analyzed</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 2.5, height: 22 }}>
+                      {[8, 15, 20, 12, 18, 9, 16, 11, 19, 7].map((h, i) => <span key={i} style={{ width: 3, height: h, borderRadius: 2, background: "#14867B" }} />)}
+                    </div>
+                  </div>
+                  <div style={{ borderTop: "1px dashed #D6CDBC" }} />
+                  <div>
+                    <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: ".06em", textTransform: "uppercase", color: "#A39B8B", marginBottom: 6 }}>They speak → nothing captured</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <div style={{ flex: 1, borderTop: "1.5px dashed #C9C2B2" }} />
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A39B8B" strokeWidth="2" strokeLinecap="round"><path d="M12 2a3 3 0 0 1 3 3v4" /><path d="M19 10v1a7 7 0 0 1-11.6 5.3" /><path d="M12 18v4" /><line x1="2" y1="2" x2="22" y2="22" /></svg>
+                      <div style={{ flex: 1, borderTop: "1.5px dashed #C9C2B2" }} />
+                    </div>
+                  </div>
+                </div>
+                <div><h4 style={stepH}>It reads only you, as you work</h4><p style={stepP}>Pace, pitch, strain, steadiness — measured against your own baseline, on your machine. When anyone else speaks, it&rsquo;s deaf by design.</p></div>
+              </div>
+              {/* Step 3 — result */}
+              <div style={stepCard}>
+                <span style={stepN}>03</span>
+                <div style={{ background: "#F7F4EE", border: "1px solid #EDE7DA", borderRadius: 12, padding: 16, flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 11 }}>
+                  {[
+                    { n: "Stress", d: [[12, "#14867B", 2], [26, "#14867B", 3], [55, amber, 0], [63, amber, 1], [88, "#14867B", 3]] },
+                    { n: "Energy", d: [[10, "#14867B", 2], [30, "#14867B", 2], [58, "#14867B", 3], [86, amber, 5]] },
+                    { n: "Confidence", d: [[14, "#14867B", 2], [34, "#14867B", 2], [60, "#14867B", 2], [84, "#14867B", 2]] },
+                  ].map((row) => (
+                    <div key={row.n} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: ink, width: 64 }}>{row.n}</span>
+                      <div style={{ flex: 1, position: "relative", height: 10 }}>
+                        <div style={{ position: "absolute", inset: "2px 0", background: "rgba(27,26,23,.05)", borderRadius: 5 }} />
+                        {(row.d as [number, string, number][]).map(([l, c, top], i) => (
+                          <span key={i} style={{ position: "absolute", left: `${l}%`, top, width: 6, height: 6, borderRadius: "50%", background: c }} />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                  <div style={{ fontSize: 12, color: "#8A5A06", fontWeight: 600, borderTop: "1px dashed #E4DDD0", paddingTop: 10, marginTop: 2 }}>Stress climbed at minute 25 — right where the pricing question landed.</div>
+                </div>
+                <div><h4 style={stepH}>See how you held up</h4><p style={stepP}>A minute-by-minute timeline of your state across the whole call — where you were steady, where you slipped, and how it lines up with the outcome.</p></div>
+              </div>
             </div>
-          </section>
-        </div>
+            <p style={{ textAlign: "center", margin: "34px 0 0", fontSize: 13.5, color: inkSoft }}>Away from your desk? A 30-second voice read on iPhone or Android — same engine, same baseline.</p>
+          </div>
+        </section>
+
+        {/* ════ PRIVACY ════ */}
+        <section id="privacy" style={{ background: "linear-gradient(170deg, #14272C, #0C181C)", color: "#F4F1EA", padding: "88px 0" }}>
+          <div className="hos-priv-grid" style={{ maxWidth: 1160, margin: "0 auto", padding: "0 32px", display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: 56, alignItems: "center" }}>
+            <div>
+              <span style={eyebrow("#6FD6C9")}><span style={eyeDot} />Privacy, by architecture</span>
+              <h2 className="font-serif-display" style={{ fontWeight: 500, fontSize: "clamp(30px, 3.6vw, 42px)", lineHeight: 1.1, margin: "16px 0 0", color: "#FBF8F1" }}>The other side of every call is never heard, analyzed, or stored.</h2>
+              <p style={{ fontSize: 18, color: "#BFCAC7", margin: "18px 0 0", lineHeight: 1.6 }}>HealthOS is speaker-gated: the moment anyone but you talks, no audio exists to capture. There is nothing to disclose and no one to ask — because nothing of theirs is ever touched. <em style={{ fontStyle: "italic", color: "#F4F1EA" }}>Self-tracking, not surveillance.</em></p>
+              <p style={{ fontSize: 15.5, color: "#8FA09C", margin: "18px 0 0", lineHeight: 1.6 }}>If you sell for a living: this is the opposite of the call-recording stack your manager bought. Nothing here is for them — your calls, your data, your edge.</p>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {[
+                ["Speaker-gated", "Enrolled to your voice. Everyone else is silence to it — by design, not by policy."],
+                ["On-device", "All analysis runs on your machine. Audio is processed in memory and discarded."],
+                ["No wearable needed", "Nothing to wear, charge, or remember. On-device by default — cloud sync only if you turn it on."],
+              ].map(([t2, b]) => (
+                <div key={t2} style={{ border: "1px solid rgba(255,255,255,.1)", borderRadius: 16, padding: "20px 22px", background: "rgba(255,255,255,.03)" }}>
+                  <h4 style={{ fontSize: 16, fontWeight: 700, margin: 0, color: "#F4F1EA" }}>{t2}</h4>
+                  <p style={{ fontSize: 14, color: "#9FB0AC", margin: "6px 0 0", lineHeight: 1.55 }}>{b}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ════ SCIENCE ════ */}
+        <section id="science" style={{ padding: "88px 0", background: "#F0FDFA" }}>
+          <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 32px" }}>
+            <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
+              <span style={eyebrow(teal, true)}><span style={eyeDot} />The science</span>
+              <h2 className="font-serif-display" style={h2()}>Your voice carries signals. Research has read them for decades.</h2>
+              <p style={{ fontSize: 17.5, color: inkSoft, margin: "20px 0 0", lineHeight: 1.65 }}>Decades of peer-reviewed research show the human voice carries measurable markers of activation, effort, and strain — how energized, tense, or worn down you are shows up in pitch, rhythm, and voice quality. HealthOS turns how you sound into these signals and tracks each against <em style={{ fontStyle: "italic", color: ink }}>your own</em> baseline, so you see when today differs from your normal — never how you compare to anyone else.</p>
+            </div>
+            <div className="hos-3grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, marginTop: 48 }}>
+              {SCIENCE.map((c) => (
+                <div key={c.title} style={{ background: "#fff", border: "1px solid #D4E8E4", borderRadius: 18, padding: "24px 22px" }}>
+                  <span style={{ width: 44, height: 44, borderRadius: 12, background: "#CCFBF1", display: "grid", placeItems: "center", marginBottom: 15 }}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={teal} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" dangerouslySetInnerHTML={{ __html: c.icon }} />
+                  </span>
+                  <h4 style={{ fontSize: 16.5, fontWeight: 700, margin: 0, letterSpacing: "-0.01em" }}>{c.title}</h4>
+                  <p style={{ fontSize: 14, color: inkSoft, margin: "6px 0 0", lineHeight: 1.55 }}>{c.body}</p>
+                </div>
+              ))}
+            </div>
+            <p style={{ textAlign: "center", margin: "40px auto 0", maxWidth: 640, fontSize: 14, color: inkSoft, lineHeight: 1.6 }}>Built on established acoustic-voice research — the same signal families used across decades of studies on vocal effort, arousal, and speech — adapted for private, personal, day-over-day tracking.</p>
+            <p style={{ textAlign: "center", margin: "14px auto 0", maxWidth: 640, fontSize: 12.5, color: "#8A8375", lineHeight: 1.6 }}>HealthOS is a self-insight and performance tool, not a medical device. It surfaces trends and prompts reflection — it doesn&rsquo;t diagnose.</p>
+          </div>
+        </section>
+
+        {/* ════ SIGNALS ════ */}
+        <section id="signals" style={{ padding: "88px 0", background: "#E7DEC9" }}>
+          <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 32px" }}>
+            <div style={{ maxWidth: 660, margin: "0 auto", textAlign: "center" }}>
+              <span style={eyebrow(teal, true)}><span style={eyeDot} />What it reads</span>
+              <h2 className="font-serif-display" style={h2()}>Performance signals, from how you sound.</h2>
+              <p style={{ fontSize: 18, color: inkSoft, margin: "18px 0 0", lineHeight: 1.6 }}>Not what you said — how you actually showed up. Each one scored against your own baseline, call after call.</p>
+            </div>
+            <div className="hos-4grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginTop: 54 }}>
+              {SIGNALS.map((s) => (
+                <div key={s.title} className="hos-card" style={{ background: "#fff", border: "1px solid #E4DDD0", borderRadius: 18, padding: "22px 20px 20px", display: "flex", flexDirection: "column", transition: "border-color .2s, box-shadow .2s, transform .2s" }}>
+                  <span style={{ width: 44, height: 44, borderRadius: 12, background: "#E8F1EF", display: "grid", placeItems: "center", marginBottom: 15 }}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={teal} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" dangerouslySetInnerHTML={{ __html: s.icon }} />
+                  </span>
+                  <h4 style={{ fontSize: 16.5, fontWeight: 700, margin: 0, letterSpacing: "-0.01em", color: ink }}>{s.title}</h4>
+                  <p style={{ fontSize: 14, color: inkSoft, margin: "6px 0 0", lineHeight: 1.5, flex: 1 }}>{s.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* ════ CTA ════ */}
-        <section id="join" className="section cta">
-          <div className="wrap">
-            <span className="eyebrow eyebrow-center">Early access</span>
-            <h2 className="font-serif-display">
-              See what your voice has <em>been telling you.</em>
-            </h2>
+        <section id="join" style={{ padding: "96px 0", textAlign: "center" }}>
+          <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 32px" }}>
+            <span style={eyebrow(teal, true)}><span style={eyeDot} />Early access</span>
+            <h2 className="font-serif-display" style={{ fontWeight: 500, fontSize: "clamp(34px, 4.6vw, 56px)", lineHeight: 1.06, margin: "18px auto 0", maxWidth: 820, letterSpacing: "-0.01em" }}>See how you actually show up, <em style={{ fontStyle: "italic", color: teal }}>call after call.</em></h2>
             <InlineWaitlistForm variant="cta" />
-            <div className="cta-micro">
-              Free while in beta · iPhone first · On-device &amp; private · No
-              spam, ever.
-            </div>
+            <div style={{ marginTop: 16, fontSize: 13.5, color: inkSoft }}>Free while in beta · macOS, Windows, iOS &amp; Android · on-device &amp; private · No spam, ever.</div>
           </div>
         </section>
       </main>
 
       {/* ════ FOOTER ════ */}
-      <footer className="foot">
-        <div className="wrap foot-inner">
-          <div className="foot-brand-wrap">
-            <span className="foot-brand">
-              <Logo size={26} />
+      <footer style={{ borderTop: "1px solid #E4DDD0", padding: "40px 0 56px" }}>
+        <div className="hos-foot" style={{ maxWidth: 1160, margin: "0 auto", padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 10, fontWeight: 700, fontSize: 16, color: ink }}>
+              <svg width="26" height="26" viewBox="0 0 26 26" style={{ display: "block", borderRadius: 5.7, background: teal }}><rect x="4.4" y="9.4" width="2.3" height="7.2" rx="1.15" fill={amber} /><rect x="8.6" y="6.5" width="2.3" height="13" rx="1.15" fill={amber} /><rect x="12.8" y="4.2" width="2.3" height="17.6" rx="1.15" fill={amber} /><rect x="17" y="6.5" width="2.3" height="13" rx="1.15" fill={amber} /><rect x="21.2" y="9.4" width="2.3" height="7.2" rx="1.15" fill={amber} /></svg>
               HealthOS
             </span>
-            <span className="foot-tag font-serif-display">
-              Notices what you don&apos;t.
-            </span>
+            <span className="font-serif-display" style={{ fontStyle: "italic", color: inkSoft, fontSize: 16 }}>Self-tracking, not surveillance.</span>
           </div>
-          <div className="foot-links">
-            <a href="#signals">What it reveals</a>
-            <a href="/faq">FAQ</a>
-            <a
-              href="https://discord.gg/SyZPw3cgG"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Discord
-            </a>
-            <a href="#join">Waitlist</a>
+          <div style={{ display: "flex", gap: 24, fontSize: 14, color: inkSoft }}>
+            <a href="#signals" style={footLink}>What it reads</a>
+            <a href="#privacy" style={footLink}>Privacy</a>
+            <a href="/blog" style={footLink}>Blog</a>
+            <a href="#join" style={footLink}>Beta</a>
           </div>
         </div>
       </footer>
 
-      <style>{LANDING_CSS}</style>
+      <style>{RESPONSIVE_CSS}</style>
     </>
   );
 }
 
-function Bio({
-  title,
-  body,
-  icon,
-}: {
-  title: string;
-  body: string;
-  icon: React.ReactNode;
-}) {
-  return (
-    <div className="bio">
-      <span className="bio-ic">
-        <svg
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#0F766E"
-          strokeWidth="1.9"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {icon}
-        </svg>
-      </span>
-      <h4>{title}</h4>
-      <p>{body}</p>
-      <BioWave name={title} />
-    </div>
-  );
+// ─── shared style helpers ───
+const eyeDot = { width: 7, height: 7, borderRadius: "50%", background: "#F59E0B", display: "inline-block" } as const;
+function eyebrow(color: string, center = false): React.CSSProperties {
+  return { fontSize: 12.5, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color, display: "inline-flex", alignItems: "center", gap: 9, ...(center ? { justifyContent: "center" } : {}) };
 }
+function h2(): React.CSSProperties {
+  return { fontWeight: 500, fontSize: "clamp(30px, 3.8vw, 44px)", lineHeight: 1.08, letterSpacing: "-0.01em", margin: "16px 0 0" };
+}
+const stepCard: React.CSSProperties = { background: "#fff", border: "1px solid #E4DDD0", borderRadius: 18, padding: 24, display: "flex", flexDirection: "column", gap: 16 };
+const stepN: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: ".08em", color: "#0F766E" };
+const stepH: React.CSSProperties = { fontSize: 17, fontWeight: 700, margin: 0, letterSpacing: "-0.01em" };
+const stepP: React.CSSProperties = { fontSize: 14.5, color: "#5A554B", margin: "6px 0 0", lineHeight: 1.5 };
+const footLink: React.CSSProperties = { color: "inherit", textDecoration: "none" };
 
-function PatCard({
-  shapeIdx,
-  action,
-  children,
-}: {
-  shapeIdx: number;
-  action: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="pat">
-      <span className="qmark">Pattern</span>
-      <p className="font-serif-display">{children}</p>
-      <PatSpark shapeIdx={shapeIdx} />
-      <div className="pat-action">
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#B45309"
-          strokeWidth="2.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M5 12h13M13 6l6 6-6 6" />
-        </svg>
-        <span>{action}</span>
-      </div>
-    </div>
-  );
-}
+const SIGNALS = [
+  { title: "Energy", body: "What you had in the tank — hour by hour, not how it felt.", icon: '<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>' },
+  { title: "Stress", body: "Pressure in your voice before you’d name it yourself.", icon: '<path d="M3 12h4l3-8 4 16 3-8h4"/>' },
+  { title: "Confidence", body: "Steady and decisive, or hedging your way through.", icon: '<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/>' },
+  { title: "Fatigue", body: "The tiredness under your words by the third call.", icon: '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>' },
+  { title: "Vocal strain", body: "When the instrument itself is wearing down.", icon: '<path d="M4 12h2M9 6v12M13 3v18M17 8v8M20 12h0"/>' },
+  { title: "Expressiveness", body: "Animated and persuasive, or gone flat.", icon: '<path d="M3 12c2.5-7 5-7 7.5 0s5 7 7.5 0"/>' },
+  { title: "Articulation", body: "Crisp and precise, or fraying at the edges.", icon: '<path d="M4 6h16M4 11h11M4 16h14M4 21h7"/>' },
+  { title: "Breathing", body: "Controlled and full, or short and shallow under load.", icon: '<path d="M3 9h11a3 3 0 1 0-3-3"/><path d="M3 15h14a3 3 0 1 1-3 3"/>' },
+];
 
-function Wedge({ title, body }: { title: string; body: string }) {
-  return (
-    <div className="wedge">
-      <h4>{title}</h4>
-      <p>{body}</p>
-    </div>
-  );
-}
+const SCIENCE = [
+  { title: "On your device", body: "Your voice is analyzed on the device itself. Nothing leaves it unless you turn on optional sync.", icon: '<rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10 18.5h4"/>' },
+  { title: "Your baseline, not a benchmark", body: "Every reading is relative to your own recent history — the only fair comparison.", icon: '<path d="M3 12h18" stroke-dasharray="2.5 3"/><path d="M3 15c3-1 4-6 7-6s4 5 7 4c1.5-.5 2.5-1.5 4-3"/>' },
+  { title: "Grounded in published science", body: "The signals map to established findings in voice research on arousal, vocal effort, and speech production.", icon: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>' },
+];
 
-// ─── Landing-page CSS ───────────────────────────────────────────────────
-
-const LANDING_CSS = `
-.wrap { max-width: 1160px; margin: 0 auto; padding: 0 32px; }
-.section { padding: 88px 0; }
-
-/* Eyebrow */
-.eyebrow {
-  font-size: 12.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--teal); display: inline-flex; align-items: center; gap: 9px;
+const RESPONSIVE_CSS = `
+.hos-nav a:hover{ color:#1B1A17; }
+.hos-beta:hover{ background:#0B5048 !important; }
+.hos-card:hover { border-color:#D6CDBC !important; box-shadow:0 14px 32px rgba(27,26,23,.08); transform:translateY(-3px); }
+@media (max-width: 760px){ .hos-nav { display:none !important; } }
+@media (max-width: 920px){
+  .hos-hero-grid, .hos-priv-grid { grid-template-columns:1fr !important; gap:40px !important; padding-top:56px !important; padding-bottom:64px !important; }
+  .hos-3grid { grid-template-columns:1fr !important; }
+  .hos-4grid { grid-template-columns:repeat(2,1fr) !important; }
 }
-.eyebrow::before {
-  content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--amber); flex-shrink: 0;
-}
-.eyebrow-dark { color: #6FD6C9; }
-.eyebrow-center { justify-content: center; }
-
-/* Section headers */
-.sec-head { max-width: 660px; }
-.sec-head h2 { font-size: clamp(30px, 3.8vw, 44px); line-height: 1.08; margin: 16px 0 0; }
-.sec-head p { font-size: 18px; color: var(--ink-soft); margin: 18px 0 0; line-height: 1.6; }
-.sec-head .dark-sub { color: #BFCAC7; }
-.center { text-align: center; margin-left: auto; margin-right: auto; }
-
-/* ── HERO ── */
-.hero {
-  position: relative; overflow: hidden; isolation: isolate;
-  background: linear-gradient(168deg, #14272C 0%, #0E1D21 55%, #0A1417 100%);
-  color: #F4F1EA;
-}
-.hero-bg-glow-1 {
-  position: absolute; top: -25%; right: -10%; width: 60%; height: 90%;
-  background: radial-gradient(circle, rgba(20,134,123,.45), transparent 68%);
-  filter: blur(20px); pointer-events: none;
-}
-.hero-bg-glow-2 {
-  position: absolute; bottom: -30%; left: -12%; width: 50%; height: 80%;
-  background: radial-gradient(circle, rgba(245,158,11,.12), transparent 70%);
-  filter: blur(20px); pointer-events: none;
-}
-.hero-topo-layer {
-  position: absolute; inset: 0; overflow: hidden;
-  pointer-events: none; z-index: 0;
-}
-.hero-topo {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  display: block; pointer-events: none;
-}
-.hero-grid {
-  position: relative; z-index: 1;
-  display: grid; grid-template-columns: 1.05fr 0.95fr;
-  gap: 48px; align-items: center; padding: 76px 0 84px;
-}
-.hero h1 {
-  font-size: clamp(38px, 5vw, 60px); line-height: 1.04; margin: 22px 0 0;
-  color: #FBF8F1; letter-spacing: -0.02em;
-}
-.hero h1 em { font-style: italic; color: #FCD34D; }
-.hero-sub {
-  margin: 26px 0 0; font-size: 18.5px; line-height: 1.62; color: #C9D4D2; max-width: 540px;
-}
-.hero-sub strong { color: #F4F1EA; font-weight: 600; }
-.hero-micro {
-  margin-top: 14px; font-size: 13.5px; color: #94A39F;
-  display: inline-flex; align-items: center; gap: 8px;
-}
-
-/* Cinematic container */
-.cine-box {
-  position: relative; display: flex; align-items: center; justify-content: center;
-  min-height: 740px;
-}
-
-/* ── HEAR REAL LOGS (voice snippets) ── */
-.logs-wrap { background: var(--paper-2); }
-.snip-row {
-  display: flex; gap: 18px; margin-top: 50px;
-  flex-wrap: wrap; justify-content: center;
-}
-.snip:hover {
-  border-color: var(--line-strong) !important;
-  box-shadow: 0 14px 30px rgba(27,26,23,.08);
-  transform: translateY(-2px);
-}
-.snip-note {
-  text-align: center; margin: 30px 0 0; font-size: 13.5px; color: var(--ink-soft);
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-
-/* ── SIGNALS (nine biomarkers) ── */
-.signals-wrap { background: var(--paper-3); }
-.bio-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 54px;
-}
-.bio {
-  position: relative; overflow: hidden;
-  display: flex; flex-direction: column;
-  background: #fff; border: 1px solid var(--line); border-radius: 18px;
-  padding: 22px 22px 20px;
-  transition: border-color .2s, box-shadow .2s, transform .2s;
-}
-.bio::before {
-  content: ""; position: absolute; inset: 0; border-radius: inherit;
-  opacity: 0; transition: opacity .35s; pointer-events: none;
-  background: radial-gradient(230px circle at var(--mx, 50%) var(--my, 50%), rgba(15,118,110,.09), transparent 65%);
-}
-.bio:hover::before { opacity: 1; }
-.bio:hover {
-  border-color: var(--line-strong);
-  box-shadow: 0 14px 32px rgba(27,26,23,.08);
-  transform: translateY(-3px);
-}
-.bio-ic {
-  width: 44px; height: 44px; border-radius: 12px;
-  background: var(--teal-surface); display: grid; place-items: center; margin-bottom: 15px;
-  transition: background .25s;
-}
-.bio-ic svg { transition: transform .3s cubic-bezier(.34, 1.56, .64, 1); }
-.bio:hover .bio-ic { background: #DDEBE8; }
-.bio:hover .bio-ic svg { transform: scale(1.12); }
-.bio h4 {
-  font-family: var(--font-hanken), sans-serif;
-  font-size: 17px; font-weight: 700; margin: 0; letter-spacing: -0.01em; color: var(--ink);
-}
-.bio p {
-  font-size: 14.5px; color: var(--ink-soft); margin: 6px 0 0; line-height: 1.5; flex: 1;
-}
-.bio-wave {
-  display: block; width: 100%; height: 34px; margin-top: 14px;
-  opacity: .55; transition: opacity .25s;
-}
-.bio:hover .bio-wave { opacity: 1; }
-
-/* ── PATTERNS ── */
-.pat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 52px; }
-.pat {
-  border: 1px solid var(--line); border-radius: 20px; padding: 30px 30px 24px;
-  background: #FCFAF6;
-  display: flex; flex-direction: column;
-  transition: border-color .2s, transform .2s, box-shadow .2s;
-}
-.pat:hover {
-  border-color: var(--line-strong); transform: translateY(-2px);
-  box-shadow: 0 16px 36px rgba(27,26,23,.07);
-}
-.pat .qmark {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 12px; font-weight: 700; letter-spacing: .08em;
-  text-transform: uppercase; color: var(--teal);
-}
-.pat p {
-  font-size: 25px; line-height: 1.28; margin: 14px 0 0;
-  color: var(--ink); font-weight: 400; flex: 1;
-}
-.pat p em { font-style: italic; }
-.pat-spark { display: block; width: 100%; height: 64px; margin-top: 18px; }
-.pat-action {
-  display: flex; align-items: flex-start; gap: 9px;
-  margin-top: 14px; padding-top: 14px;
-  border-top: 1px dashed var(--line);
-  font-size: 13.5px; line-height: 1.45; color: #8A5A06; font-weight: 550;
-  opacity: 0; transform: translateY(7px);
-  transition: opacity .6s ease, transform .6s ease;
-}
-.pat-action svg { flex: none; margin-top: 2px; }
-.pat-action.on { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) {
-  .pat-action { opacity: 1; transform: none; transition: none; }
-}
-
-/* ── WEDGE (body vs mind) ── */
-.wedge-wrap { background: var(--paper-2); }
-.wedge-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 52px;
-}
-.wedge {
-  border: 1px solid var(--line); border-radius: 18px; padding: 26px 26px 24px;
-  background: #fff;
-  transition: border-color .2s, transform .2s, box-shadow .2s;
-}
-.wedge:hover {
-  border-color: var(--line-strong); transform: translateY(-3px);
-  box-shadow: 0 14px 32px rgba(27,26,23,.08);
-}
-.wedge h4 {
-  font-family: var(--font-hanken), sans-serif;
-  font-size: 17px; font-weight: 700; margin: 0; letter-spacing: -0.01em; color: var(--ink);
-}
-.wedge p {
-  font-size: 14.5px; color: var(--ink-soft); margin: 9px 0 0; line-height: 1.55;
-}
-.wedge-tag {
-  text-align: center; margin: 44px auto 0; font-size: 26px; color: var(--ink);
-}
-.wedge-tag em { font-style: italic; color: var(--teal); }
-
-/* ── SEE IT (recording) ── */
-.see-wrap { background: linear-gradient(170deg, #14272C, #0C181C); color: #F4F1EA; }
-.see-grid {
-  display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 56px; align-items: center;
-}
-.see-wrap h2 {
-  color: #FBF8F1; font-size: clamp(30px, 3.6vw, 42px); line-height: 1.1; margin: 16px 0 0;
-}
-.see-note {
-  margin-top: 26px; font-size: 14px; color: #8FA09C;
-  display: inline-flex; align-items: center; gap: 9px;
-}
-
-/* ── CTA ── */
-.cta { text-align: center; }
-.cta h2 {
-  font-size: clamp(34px, 4.6vw, 56px); line-height: 1.06;
-  margin: 18px auto 0; max-width: 820px;
-}
-.cta h2 em { font-style: italic; color: var(--teal); }
-.cta-micro { margin-top: 16px; font-size: 13.5px; color: var(--ink-soft); }
-
-/* ── FOOTER ── */
-.foot { border-top: 1px solid var(--line); padding: 40px 0 56px; }
-.foot-inner {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 20px; flex-wrap: wrap;
-}
-.foot-brand-wrap { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
-.foot-brand {
-  display: inline-flex; align-items: center; gap: 10px;
-  font-weight: 700; font-size: 16px; color: var(--ink);
-}
-.foot-tag { font-style: italic; color: var(--ink-soft); font-size: 16px; }
-.foot-links { display: flex; gap: 24px; font-size: 14px; color: var(--ink-soft); }
-.foot-links a { color: inherit; text-decoration: none; transition: color .15s; }
-.foot-links a:hover { color: var(--ink); }
-
-/* ── Responsive ── */
-@media (max-width: 920px) {
-  .hero-grid, .see-grid { grid-template-columns: 1fr; gap: 44px; }
-  .bio-grid { grid-template-columns: repeat(2, 1fr); }
-  .wedge-grid { grid-template-columns: 1fr; }
-  .cine-box { min-height: 0; }
-  .pat-grid { grid-template-columns: 1fr; }
-  .hero-grid { padding: 56px 0 64px; }
-}
-@media (max-width: 560px) {
-  .wrap { padding: 0 20px; }
-  .bio-grid { grid-template-columns: 1fr; }
-  .section { padding: 64px 0; }
+@media (max-width: 560px){
+  .hos-4grid { grid-template-columns:1fr !important; }
 }
 `;

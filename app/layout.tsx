@@ -23,17 +23,16 @@ const hanken = Hanken_Grotesk({
 });
 
 const DESCRIPTION =
-  "HealthOS is performance intelligence from your voice — a voice-first, on-device tool that reads your nervous-system state from how you sound. " +
-  "A check-in takes just a few seconds — up to thirty — and surfaces eight signals — energy, stress, fatigue, confidence and more — " +
-  "before you consciously feel them. No wearable, no bloodwork; your voice never leaves your phone.";
+  "HealthOS is performance intelligence from your voice. It sits in your menu bar and reads your nervous-system state — stress, energy, confidence and more — from how you sound across real calls, plus a few-second check-in on mobile. " +
+  "It only ever listens to you (speaker-gated), runs on-device, and needs no wearable. macOS, Windows, iOS & Android.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://healthos.live"),
-  title: "HealthOS — Notices what you don't",
+  title: "HealthOS — Performance intelligence from your voice",
   description: DESCRIPTION,
   alternates: { canonical: "/" },
   openGraph: {
-    title: "HealthOS — Notices what you don't",
+    title: "HealthOS — Performance intelligence from your voice",
     description: DESCRIPTION,
     url: "https://healthos.live",
     siteName: "HealthOS",
@@ -43,13 +42,13 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "HealthOS — Your voice is the biomarker that speaks first.",
+        alt: "HealthOS — Performance intelligence from your voice.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "HealthOS — Notices what you don't",
+    title: "HealthOS — Performance intelligence from your voice",
     description: DESCRIPTION,
     images: ["/og.png"],
   },
@@ -87,15 +86,15 @@ const APP_JSONLD = {
   "@type": "SoftwareApplication",
   name: "HealthOS",
   applicationCategory: "HealthApplication",
-  operatingSystem: "iOS",
+  operatingSystem: "macOS, Windows, iOS, Android",
   url: "https://healthos.live",
   description: DESCRIPTION,
   featureList: [
-    "On-device voice biomarker analysis",
+    "Desktop menu-bar app reads your nervous-system state across a live call, in real time",
+    "Speaker-gated — only your own voice is analyzed, never the other person on the call",
     "Eight nervous-system signals: energy, stress, confidence, fatigue, vocal strain, expressiveness, articulation, breathing",
-    "Daily voice check-in that takes just a few seconds (up to 30)",
-    "Pattern detection over your personal baseline",
-    "Fully private — voice audio never leaves the phone",
+    "On-device voice analysis — audio never leaves your device",
+    "Quick voice check-in on mobile, with pattern detection over your personal baseline",
   ],
   offers: {
     "@type": "Offer",

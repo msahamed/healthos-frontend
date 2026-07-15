@@ -20,15 +20,18 @@ function postLinks(): string {
 function buildLlmsTxt(): string {
   return `# HealthOS
 
-> HealthOS is a voice-first, on-device iOS app that reads your nervous-system state from how you sound — not what you say. A daily voice check-in takes just a few seconds (anywhere from ~3-5 seconds up to 30) of unscripted speech and surfaces eight signals, so you catch shifts in stress, energy, and fatigue before you consciously feel them.
+> HealthOS is performance intelligence from your voice. A desktop app that sits in your menu bar reads your nervous-system state — stress, energy, confidence, fatigue and more — from *how you sound* across real calls and meetings, in real time. It is speaker-gated: only your own voice is analyzed, never the other person's. There is also a few-second voice check-in on mobile. Everything runs on-device.
 
 ## What it is
 
-- **Product:** HealthOS — performance intelligence from your voice; a voice-biomarker app.
+- **Product:** HealthOS — performance intelligence from your voice (a voice-biomarker app).
 - **Website:** ${BASE_URL}
-- **Core idea:** Your voice is the biomarker that speaks first. HealthOS reads *how* you sound (acoustic features like pitch, loudness, pace, pauses, vocal clarity), not the words you say.
-- **Privacy:** All analysis runs entirely on-device. Voice audio never leaves the phone and is never uploaded to the cloud.
-- **Status:** Pre-launch, free during beta (TestFlight). iPhone first.
+- **Platforms:** macOS, Windows, iOS, and Android — one engine and the same personal baseline everywhere.
+- **Core idea:** Every sales/productivity tool measures what you *did* (calls, pipeline, activity). Nothing measures *how you are holding up* while you do it. HealthOS reads that from how your own voice sounds, so a dip shows up before it costs you the outcome.
+- **Desktop session mode (the differentiator):** Press Start in the menu bar and it passively reads your voice across a whole call, producing a timeline of your state minute to minute. It is speaker-gated — when the other person talks, nothing is captured. No bot joins the meeting; it runs beside Zoom / Meet / Teams, not inside them.
+- **Mobile check-in:** A few seconds of unscripted speech gives a quick nervous-system read when you are away from your desk.
+- **Privacy:** All analysis runs on-device; voice audio is not uploaded. Only your own voice is ever analyzed. Self-tracking, not surveillance.
+- **Status:** Pre-launch, free during beta.
 
 ## The eight signals
 
@@ -36,22 +39,23 @@ Energy, Stress, Confidence, Fatigue, Vocal Strain, Expressiveness, Articulation,
 
 ## How it works
 
-Each signal is a deterministic, peer-reviewed-literature-grounded blend of acoustic features compared to the user's personal baseline. It is not a black-box model. The read is relative and for self-awareness — it does not diagnose or treat, and makes no clinical claims (positioned as a general wellness product).
+Each signal is a deterministic, peer-reviewed-literature-grounded blend of acoustic features (pitch, loudness, pace, pauses, vocal clarity) compared to the user's personal baseline. It is not a black-box model. The read is relative and for self-awareness — it does not diagnose or treat, and makes no clinical claims (positioned as a general wellness / performance tool).
 
-## How it's different from wearables
+## How it is different
 
-Wearables (Oura, WHOOP, Apple Watch) track physiology — heart rate, HRV, sleep — and infer stress. HealthOS reads psychological and nervous-system state (confidence, vocal strain, expressiveness) that a wrist sensor cannot detect. No hardware to wear; it complements a wearable rather than replacing it. "Wearables read your body. Your voice reveals your mind."
+- **vs. wearables (Oura, WHOOP, Apple Watch):** Wearables track physiology — heart rate, HRV, sleep — and infer stress. HealthOS reads psychological and nervous-system state (confidence, vocal strain, expressiveness) a wrist sensor cannot detect. No hardware to wear; it complements a wearable rather than replacing it. "Wearables read your body. Your voice reveals your mind."
+- **vs. call-recording / conversation-intelligence tools (Gong, Chorus):** Those record *what was said* and are sold to the manager. HealthOS reads *how the rep sounds*, is rep-first and speaker-gated, and never captures the other side of the call. Different layer, different buyer.
 
-## Who it's for
+## Who it is for
 
-Performance-minded professionals — founders, salespeople, traders — plus coaches who want an objective read on how clients are doing between sessions, biohackers and self-trackers, and anyone who wants the "mind" layer their wearable can't read.
+Salespeople and sales teams (rep-first performance intelligence for people who live on calls); founders and other performance-minded professionals; coaches who want an objective read on how clients are doing between sessions; and biohackers/self-trackers who want the "mind" layer their wearable cannot read.
 
 ## Key facts
 
 - Founder: Sabber Ahamed (Applied ML Scientist), Dallas, TX.
 - Category: performance intelligence, voice biomarker app, biometric self-tracking.
 - Pricing: free during beta; pricing after beta not yet public.
-- Not a medical device; for self-awareness and general wellness only.
+- Not a medical device; for self-awareness and general wellness / performance only.
 
 ## Links
 
