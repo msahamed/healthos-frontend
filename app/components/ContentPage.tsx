@@ -48,7 +48,7 @@ export default function ContentPage({
         <div className="cp-wrap cp-foot-inner">
           <span className="cp-foot-brand">
             <Logo size={26} />
-            HealthOS
+            Ontor
           </span>
           <div className="cp-foot-links">
             <Link href="/#signals">What it reveals</Link>

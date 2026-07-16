@@ -2,19 +2,19 @@ import ContentPage from "../components/ContentPage";
 import type { Metadata } from "next";
 
 const DESCRIPTION =
-  "Voice biomarkers vs wearables (Oura, WHOOP, Apple Watch): wearables track physiology and infer stress; HealthOS reads psychological and nervous-system state from your voice. A side-by-side comparison of what each can and can't measure.";
+  "Voice biomarkers vs wearables (Oura, WHOOP, Apple Watch): wearables track physiology and infer stress; Ontor reads psychological and nervous-system state from your voice. A side-by-side comparison of what each can and can't measure.";
 
 export const metadata: Metadata = {
-  title: "Voice biomarkers vs wearables (Oura, WHOOP, Apple Watch) — HealthOS",
+  title: "Voice biomarkers vs wearables (Oura, WHOOP, Apple Watch) — Ontor",
   description: DESCRIPTION,
   alternates: { canonical: "/voice-vs-wearables" },
   openGraph: {
     title: "Voice biomarkers vs wearables: Oura, WHOOP & Apple Watch",
     description: DESCRIPTION,
     url: "https://healthos.live/voice-vs-wearables",
-    siteName: "HealthOS",
+    siteName: "Ontor",
     type: "article",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "HealthOS" }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Ontor" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -26,16 +26,16 @@ export const metadata: Metadata = {
 
 const FAQ = [
   {
-    q: "Is HealthOS an alternative to Oura or WHOOP?",
-    a: "HealthOS is best understood as complementary rather than a replacement. Oura and WHOOP track physiology — heart rate, HRV, sleep — and infer stress from it. HealthOS reads psychological and nervous-system state such as confidence, vocal strain, and expressiveness directly from your voice, which a wrist or finger sensor cannot measure. Many users keep their wearable and add HealthOS for the 'mind' layer.",
+    q: "Is Ontor an alternative to Oura or WHOOP?",
+    a: "Ontor is best understood as complementary rather than a replacement. Oura and WHOOP track physiology — heart rate, HRV, sleep — and infer stress from it. Ontor reads psychological and nervous-system state such as confidence, vocal strain, and expressiveness directly from your voice, which a wrist or finger sensor cannot measure. Many users keep their wearable and add Ontor for the 'mind' layer.",
   },
   {
     q: "Can a wearable measure stress as well as voice?",
     a: "Wearables infer stress indirectly from physiological proxies like heart-rate variability. Voice carries direct cues of psychological state — vocal strain, hedging, and reduced expressiveness — that physiology alone doesn't reveal. They capture different, complementary dimensions of stress.",
   },
   {
-    q: "Do I need to buy hardware to use HealthOS?",
-    a: "No. HealthOS runs on the iPhone you already carry — there's no ring or band to buy, charge, or lose. A check-in takes a few seconds of speech, up to thirty, and runs entirely on-device.",
+    q: "Do I need to buy hardware to use Ontor?",
+    a: "No. Ontor runs on the iPhone you already carry — there's no ring or band to buy, charge, or lose. A check-in takes a few seconds of speech, up to thirty, and runs entirely on-device.",
   },
 ];
 
@@ -44,8 +44,8 @@ const ARTICLE_JSONLD = {
   "@type": "Article",
   headline: "Voice biomarkers vs wearables: Oura, WHOOP & Apple Watch",
   description: DESCRIPTION,
-  author: { "@type": "Organization", name: "HealthOS", url: "https://healthos.live" },
-  publisher: { "@type": "Organization", name: "HealthOS", url: "https://healthos.live" },
+  author: { "@type": "Organization", name: "Ontor", url: "https://healthos.live" },
+  publisher: { "@type": "Organization", name: "Ontor", url: "https://healthos.live" },
   mainEntityOfPage: "https://healthos.live/voice-vs-wearables",
 };
 
@@ -78,7 +78,7 @@ export default function VoiceVsWearablesPage() {
             can&apos;t read.
           </>
         }
-        lede="Oura, WHOOP, and Apple Watch own passive physical tracking. HealthOS reads a different layer entirely — and the two work better together."
+        lede="Oura, WHOOP, and Apple Watch own passive physical tracking. Ontor reads a different layer entirely — and the two work better together."
       >
         <p className="lead">
           Wearables read your body. Your voice reveals your mind. A wrist or
@@ -91,7 +91,7 @@ export default function VoiceVsWearablesPage() {
         <p>
           Oura, WHOOP, and Apple Watch are excellent at effortless, 24/7
           physiological tracking — heart rate, HRV, temperature, sleep. From
-          those signals they estimate stress and readiness. HealthOS measures
+          those signals they estimate stress and readiness. Ontor measures
           something they structurally can&apos;t reach: the psychological and
           nervous-system state carried in <strong>how you sound</strong>.
         </p>
@@ -101,7 +101,7 @@ export default function VoiceVsWearablesPage() {
           <thead>
             <tr>
               <th>&nbsp;</th>
-              <th>HealthOS (voice)</th>
+              <th>Ontor (voice)</th>
               <th>Oura / WHOOP / Apple Watch</th>
             </tr>
           </thead>
@@ -145,9 +145,9 @@ export default function VoiceVsWearablesPage() {
         <h2>Where wearables win</h2>
         <p>
           Honestly: passive monitoring. A ring on your finger captures data
-          while you sleep with zero effort, and HealthOS asks for a deliberate
+          while you sleep with zero effort, and Ontor asks for a deliberate
           check-in. If continuous, hands-off physiological tracking is what you
-          want, a wearable is the right tool — and HealthOS doesn&apos;t try to
+          want, a wearable is the right tool — and Ontor doesn&apos;t try to
           replace it.
         </p>
 
@@ -162,7 +162,7 @@ export default function VoiceVsWearablesPage() {
 
         <h2>The bottom line</h2>
         <p>
-          HealthOS isn&apos;t an Oura or WHOOP replacement — it&apos;s the mind
+          Ontor isn&apos;t an Oura or WHOOP replacement — it&apos;s the mind
           layer they can&apos;t reach. Keep your ring; it can&apos;t hear you.
           If you want to understand the underlying science, see{" "}
           <a href="/voice-biomarkers">what a voice biomarker is</a>, or read the{" "}

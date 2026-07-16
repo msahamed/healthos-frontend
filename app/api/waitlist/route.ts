@@ -1,7 +1,7 @@
 // POST /api/waitlist — early-access signups.
 //
 // Accepts from both the marketing site (`feedback` optional) and the
-// HealthOS mobile app (`source: "mobile_app"`, plus the anonymous
+// Ontor mobile app (`source: "mobile_app"`, plus the anonymous
 // user_id so we can correlate a signup with the device's later
 // analytics events without ever collecting a name/account).
 //

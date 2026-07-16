@@ -18,16 +18,16 @@ function postLinks(): string {
 }
 
 function buildLlmsTxt(): string {
-  return `# HealthOS
+  return `# Ontor
 
-> HealthOS is performance intelligence from your voice. A desktop app that sits in your menu bar reads your nervous-system state — stress, energy, confidence, fatigue and more — from *how you sound* across real calls and meetings, in real time. It is speaker-gated: only your own voice is analyzed, never the other person's. There is also a few-second voice check-in on mobile. Everything runs on-device.
+> Ontor is performance intelligence from your voice. A desktop app that sits in your menu bar reads your nervous-system state — stress, energy, confidence, fatigue and more — from *how you sound* across real calls and meetings, in real time. It is speaker-gated: only your own voice is analyzed, never the other person's. There is also a few-second voice check-in on mobile. Everything runs on-device.
 
 ## What it is
 
-- **Product:** HealthOS — performance intelligence from your voice (a voice-biomarker app).
+- **Product:** Ontor — performance intelligence from your voice (a voice-biomarker app).
 - **Website:** ${BASE_URL}
 - **Platforms:** macOS, Windows, iOS, and Android — one engine and the same personal baseline everywhere.
-- **Core idea:** Every sales/productivity tool measures what you *did* (calls, pipeline, activity). Nothing measures *how you are holding up* while you do it. HealthOS reads that from how your own voice sounds, so a dip shows up before it costs you the outcome.
+- **Core idea:** Every sales/productivity tool measures what you *did* (calls, pipeline, activity). Nothing measures *how you are holding up* while you do it. Ontor reads that from how your own voice sounds, so a dip shows up before it costs you the outcome.
 - **Desktop session mode (the differentiator):** Press Start in the menu bar and it passively reads your voice across a whole call, producing a timeline of your state minute to minute. It is speaker-gated — when the other person talks, nothing is captured. No bot joins the meeting; it runs beside Zoom / Meet / Teams, not inside them.
 - **Mobile check-in:** A few seconds of unscripted speech gives a quick nervous-system read when you are away from your desk.
 - **Privacy:** All analysis runs on-device; voice audio is not uploaded. Only your own voice is ever analyzed. Self-tracking, not surveillance.
@@ -43,8 +43,8 @@ Each signal is a deterministic, peer-reviewed-literature-grounded blend of acous
 
 ## How it is different
 
-- **vs. wearables (Oura, WHOOP, Apple Watch):** Wearables track physiology — heart rate, HRV, sleep — and infer stress. HealthOS reads psychological and nervous-system state (confidence, vocal strain, expressiveness) a wrist sensor cannot detect. No hardware to wear; it complements a wearable rather than replacing it. "Wearables read your body. Your voice reveals your mind."
-- **vs. call-recording / conversation-intelligence tools (Gong, Chorus):** Those record *what was said* and are sold to the manager. HealthOS reads *how the rep sounds*, is rep-first and speaker-gated, and never captures the other side of the call. Different layer, different buyer.
+- **vs. wearables (Oura, WHOOP, Apple Watch):** Wearables track physiology — heart rate, HRV, sleep — and infer stress. Ontor reads psychological and nervous-system state (confidence, vocal strain, expressiveness) a wrist sensor cannot detect. No hardware to wear; it complements a wearable rather than replacing it. "Wearables read your body. Your voice reveals your mind."
+- **vs. call-recording / conversation-intelligence tools (Gong, Chorus):** Those record *what was said* and are sold to the manager. Ontor reads *how the rep sounds*, is rep-first and speaker-gated, and never captures the other side of the call. Different layer, different buyer.
 
 ## Who it is for
 

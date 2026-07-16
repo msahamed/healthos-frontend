@@ -60,10 +60,10 @@ If you're off, the answer isn't to push harder. It's to cut size, tighten rules,
 
 ## A 5-second read before the open
 
-The trouble with self-assessment is that it drifts — "I'm fine" is what you tell yourself right up until you're not. HealthOS is built to make that read objective and fast: it picks up stress, energy, and a few other nervous-system signals from *how you sound* in a few seconds of speech, scored against your own baseline. Your normal, versus today.
+The trouble with self-assessment is that it drifts — "I'm fine" is what you tell yourself right up until you're not. Ontor is built to make that read objective and fast: it picks up stress, energy, and a few other nervous-system signals from *how you sound* in a few seconds of speech, scored against your own baseline. Your normal, versus today.
 
 <figure class="post-shot">
-  <img src="/screenshots/listening.png" alt="HealthOS capturing a few seconds of speech for a quick pre-session state read." />
+  <img src="/screenshots/listening.png" alt="Ontor capturing a few seconds of speech for a quick pre-session state read." />
   <figcaption>A few seconds before the open — an objective read on your state, while you can still decide how to play the day.</figcaption>
 </figure>
 
@@ -87,6 +87,6 @@ A consistent pre-session sequence — plan, levels, risk, *and* a read on your o
 
 ---
 
-*HealthOS is a general wellness tool for self-awareness. It is not financial advice, not a trading signal, and does not predict markets. It does not diagnose, treat, or prevent any condition.*
+*Ontor is a general wellness tool for self-awareness. It is not financial advice, not a trading signal, and does not predict markets. It does not diagnose, treat, or prevent any condition.*
 
-**Want an honest read before the open?** [Join the HealthOS beta →](/#join) · [Read the FAQ](/faq)
+**Want an honest read before the open?** [Join the Ontor beta →](/#join) · [Read the FAQ](/faq)

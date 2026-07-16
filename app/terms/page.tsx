@@ -4,8 +4,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Use — HealthOS",
-  description: "HealthOS terms of use. Read before connecting your hospital account or using the app.",
+  title: "Terms of Use — Ontor",
+  description: "Ontor terms of use. Read before connecting your hospital account or using the app.",
 };
 
 const TEAL = "#0F766E";
@@ -39,7 +39,7 @@ export default function TermsPage() {
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-10 not-prose">
               <p className="text-sm font-semibold text-amber-800 mb-1">Not a medical device</p>
               <p className="text-sm text-amber-700">
-                HealthOS is a personal health record organizer, not a medical device or clinical tool.
+                Ontor is a personal health record organizer, not a medical device or clinical tool.
                 It does not provide medical advice, diagnosis, or treatment. Always consult a qualified
                 healthcare professional for medical decisions.
               </p>
@@ -47,14 +47,14 @@ export default function TermsPage() {
 
             <h2>1. Acceptance of Terms</h2>
             <p>
-              By downloading or using HealthOS (&quot;the App&quot;), you agree to these Terms of Use.
+              By downloading or using Ontor (&quot;the App&quot;), you agree to these Terms of Use.
               If you do not agree, do not use the App. These terms govern your use of the App
-              and any related services provided by HealthOS.
+              and any related services provided by Ontor.
             </p>
 
             <h2>2. Description of Service</h2>
             <p>
-              HealthOS is a personal health record management application that allows you to:
+              Ontor is a personal health record management application that allows you to:
             </p>
             <ul>
               <li>Scan, import, and organize health documents</li>
@@ -65,7 +65,7 @@ export default function TermsPage() {
 
             <h2>3. Not Medical Advice</h2>
             <p>
-              HealthOS is a personal information management tool. The information and AI-generated
+              Ontor is a personal information management tool. The information and AI-generated
               summaries provided by the App are for informational purposes only and do not constitute
               medical advice, diagnosis, or treatment recommendations. Always seek the advice of a
               physician or other qualified health provider with any questions you may have regarding
@@ -77,9 +77,9 @@ export default function TermsPage() {
               When connecting to a hospital or health system via SMART on FHIR:
             </p>
             <ul>
-              <li>You authorize HealthOS to retrieve your health records on your behalf</li>
+              <li>You authorize Ontor to retrieve your health records on your behalf</li>
               <li>You are responsible for maintaining the confidentiality of your hospital credentials</li>
-              <li>HealthOS acts as a data recipient — you are authorizing access under your hospital&apos;s patient portal terms</li>
+              <li>Ontor acts as a data recipient — you are authorizing access under your hospital&apos;s patient portal terms</li>
               <li>You may revoke access at any time through the App or directly through your hospital&apos;s patient portal</li>
             </ul>
 
@@ -94,14 +94,14 @@ export default function TermsPage() {
 
             <h2>6. Data Ownership</h2>
             <p>
-              You retain full ownership of all health data stored in the App. HealthOS does not
+              You retain full ownership of all health data stored in the App. Ontor does not
               claim any ownership of your health records or documents. As a local-first application,
               your data remains on your device under your control at all times.
             </p>
 
             <h2>7. Disclaimer of Warranties</h2>
             <p>
-              The App is provided &quot;as is&quot; without warranty of any kind. HealthOS does not warrant
+              The App is provided &quot;as is&quot; without warranty of any kind. Ontor does not warrant
               that the App will be error-free, that extracted data will be accurate or complete,
               or that AI-generated summaries will be free from inaccuracies. AI extraction is
               assistive and may make errors — always verify important medical information against
@@ -110,7 +110,7 @@ export default function TermsPage() {
 
             <h2>8. Limitation of Liability</h2>
             <p>
-              To the fullest extent permitted by law, HealthOS shall not be liable for any
+              To the fullest extent permitted by law, Ontor shall not be liable for any
               indirect, incidental, special, or consequential damages arising from your use of
               the App, including but not limited to reliance on AI-extracted health information
               for medical decisions.
@@ -118,8 +118,8 @@ export default function TermsPage() {
 
             <h2>9. Intellectual Property</h2>
             <p>
-              The HealthOS app, including its design, code, and AI models (excluding open-source
-              components), is the intellectual property of HealthOS. You are granted a limited,
+              The Ontor app, including its design, code, and AI models (excluding open-source
+              components), is the intellectual property of Ontor. You are granted a limited,
               non-exclusive, non-transferable license to use the App for personal purposes.
             </p>
 
@@ -149,14 +149,14 @@ export default function TermsPage() {
         <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Logo size={24} />
-            <span className="text-sm font-medium text-slate-700">HealthOS</span>
+            <span className="text-sm font-medium text-slate-700">Ontor</span>
           </div>
           <div className="flex items-center gap-5 text-sm text-slate-400">
             <Link href="/privacy" className="hover:text-slate-600 transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-slate-600 transition-colors">Terms of Use</Link>
             <a href="mailto:sabber@healthos.live" className="hover:text-slate-600 transition-colors">Contact</a>
           </div>
-          <p className="text-sm text-slate-400">© {new Date().getFullYear()} HealthOS</p>
+          <p className="text-sm text-slate-400">© {new Date().getFullYear()} Ontor</p>
         </div>
       </footer>
     </>

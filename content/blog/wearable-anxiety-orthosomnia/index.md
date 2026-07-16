@@ -61,16 +61,16 @@ The research and the clinicians converge on the same advice, and none of it mean
 
 ## A read, not a grade
 
-This last point is the whole idea behind HealthOS. It doesn't hand you a number to beat. It reads energy, stress, and a handful of other nervous-system signals from *how you sound* in a few seconds of speech, and shows each one relative to *your own* baseline — in your usual range, a little below, a little above. Not a leaderboard. Your normal, and where today sits against it.
+This last point is the whole idea behind Ontor. It doesn't hand you a number to beat. It reads energy, stress, and a handful of other nervous-system signals from *how you sound* in a few seconds of speech, and shows each one relative to *your own* baseline — in your usual range, a little below, a little above. Not a leaderboard. Your normal, and where today sits against it.
 
 <figure class="post-shot">
-  <img src="/screenshots/daily-checkins.png" alt="A HealthOS day of quick voice check-ins, each showing signals relative to the user's usual range." />
+  <img src="/screenshots/daily-checkins.png" alt="A Ontor day of quick voice check-ins, each showing signals relative to the user's usual range." />
   <figcaption>A few seconds, a few times a day — a read on where your state sits versus your usual, not a grade to chase.</figcaption>
 </figure>
 
 Because it reads the mind layer rather than re-scoring your heart rate, it works *alongside* the wearable instead of giving you one more number to dread. Keep your ring for what it's good at; you can read [how voice compares to a wearable](/voice-vs-wearables) and [how the read itself works](/voice-biomarkers) if you want the detail. It runs entirely on-device, and your voice never leaves the phone.
 
-HealthOS is a general wellness tool, not a treatment for anxiety. If checking your data has started to affect your sleep, your mood, or your relationships, that's worth raising with a professional — and worth taking seriously, not scoring.
+Ontor is a general wellness tool, not a treatment for anxiety. If checking your data has started to affect your sleep, your mood, or your relationships, that's worth raising with a professional — and worth taking seriously, not scoring.
 
 The point of tracking was to feel more in control, not less. A signal you can read calmly beats a grade you brace for.
 
@@ -90,6 +90,6 @@ Read weekly trends, check how you feel before opening the app, take breaks, and 
 
 ---
 
-*HealthOS is a general wellness tool and does not diagnose, treat, or prevent any condition. It is not medical advice. If anxiety about health data is affecting your daily life, consider speaking with a qualified professional.*
+*Ontor is a general wellness tool and does not diagnose, treat, or prevent any condition. It is not medical advice. If anxiety about health data is affecting your daily life, consider speaking with a qualified professional.*
 
-**Want a read you can check calmly?** [Join the HealthOS beta →](/#join) · [Read the FAQ](/faq)
+**Want a read you can check calmly?** [Join the Ontor beta →](/#join) · [Read the FAQ](/faq)

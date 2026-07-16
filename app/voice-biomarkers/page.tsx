@@ -2,19 +2,19 @@ import ContentPage from "../components/ContentPage";
 import type { Metadata } from "next";
 
 const DESCRIPTION =
-  "A voice biomarker is a measurable feature of how you sound — pitch, loudness, pace, pauses, vocal clarity — that reflects your physiological or psychological state. Here's how voice biomarkers work, what they can read, and how HealthOS uses them on-device.";
+  "A voice biomarker is a measurable feature of how you sound — pitch, loudness, pace, pauses, vocal clarity — that reflects your physiological or psychological state. Here's how voice biomarkers work, what they can read, and how Ontor uses them on-device.";
 
 export const metadata: Metadata = {
-  title: "What is a voice biomarker? — HealthOS",
+  title: "What is a voice biomarker? — Ontor",
   description: DESCRIPTION,
   alternates: { canonical: "/voice-biomarkers" },
   openGraph: {
     title: "What is a voice biomarker?",
     description: DESCRIPTION,
     url: "https://healthos.live/voice-biomarkers",
-    siteName: "HealthOS",
+    siteName: "Ontor",
     type: "article",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "HealthOS" }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Ontor" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -35,7 +35,7 @@ const FAQ = [
   },
   {
     q: "Can a voice biomarker app run without sending my audio to the cloud?",
-    a: "Yes. HealthOS runs entirely on-device — the acoustic features are extracted on your phone and your voice audio never leaves it. Many clinical voice-biomarker systems are cloud-based; on-device analysis is what makes a private, consumer version possible.",
+    a: "Yes. Ontor runs entirely on-device — the acoustic features are extracted on your phone and your voice audio never leaves it. Many clinical voice-biomarker systems are cloud-based; on-device analysis is what makes a private, consumer version possible.",
   },
 ];
 
@@ -45,8 +45,8 @@ const ARTICLE_JSONLD = {
   headline: "What is a voice biomarker?",
   description: DESCRIPTION,
   about: "Voice biomarkers",
-  author: { "@type": "Organization", name: "HealthOS", url: "https://healthos.live" },
-  publisher: { "@type": "Organization", name: "HealthOS", url: "https://healthos.live" },
+  author: { "@type": "Organization", name: "Ontor", url: "https://healthos.live" },
+  publisher: { "@type": "Organization", name: "Ontor", url: "https://healthos.live" },
   mainEntityOfPage: "https://healthos.live/voice-biomarkers",
 };
 
@@ -74,7 +74,7 @@ export default function VoiceBiomarkersPage() {
       <ContentPage
         eyebrow="Explainer"
         title="What is a voice biomarker?"
-        lede="The science behind reading your nervous-system state from how you sound — and how HealthOS turns it into a 30-second daily check-in."
+        lede="The science behind reading your nervous-system state from how you sound — and how Ontor turns it into a 30-second daily check-in."
       >
         <p className="lead">
           A voice biomarker is a measurable feature of how you sound — pitch,
@@ -100,9 +100,9 @@ export default function VoiceBiomarkersPage() {
           against the general population.
         </p>
 
-        <h2>What HealthOS reads from your voice</h2>
+        <h2>What Ontor reads from your voice</h2>
         <p>
-          HealthOS computes eight signals from a few seconds of unscripted
+          Ontor computes eight signals from a few seconds of unscripted
           speech: <strong>energy, stress, confidence, fatigue, vocal strain,
           expressiveness, articulation, and breathing</strong>. Each is a
           transparent, deterministic formula — a weighted blend of acoustic
@@ -113,7 +113,7 @@ export default function VoiceBiomarkersPage() {
         <h2>Is it grounded in real science?</h2>
         <p>
           Yes. The feature-to-state mappings come from decades of peer-reviewed
-          speech research rather than being invented. HealthOS composes
+          speech research rather than being invented. Ontor composes
           validated markers — for example, pitch and vocal-clarity changes under
           stress, and rate, tone, and pausing changes under fatigue. The honest
           limits matter too: phone-microphone noise means values are best read
@@ -125,7 +125,7 @@ export default function VoiceBiomarkersPage() {
         <h2>Why on-device matters</h2>
         <p>
           Most established voice-biomarker technology is clinical and
-          cloud-based — your audio is uploaded for analysis. HealthOS runs
+          cloud-based — your audio is uploaded for analysis. Ontor runs
           entirely on-device: the features are extracted on your phone and your
           voice audio never leaves it. That privacy model is what makes a
           consumer voice-biomarker app possible in the first place.

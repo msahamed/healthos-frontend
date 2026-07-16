@@ -69,9 +69,9 @@ The client does a few-second voice check-in on their own phone — their habit, 
   <figcaption>What you'd see before the session: the client's actual trajectory against their own usual range, not a Monday-morning recap.</figcaption>
 </figure>
 
-That's the idea behind HealthOS. It reads stress, energy, and other nervous-system signals from *how a client sounds* in a few seconds of speech, scored against their own baseline — no wearable, no bloodwork, and it runs entirely on-device so a client's voice never leaves their phone. For your higher-status or more guarded clients, that privacy is a feature, not a footnote. It's the between-session read your clients can't give you themselves — and the modality is the same one your practice already runs on: the voice. You can read more on [how voice biomarkers work](/voice-biomarkers) if you want the detail.
+That's the idea behind Ontor. It reads stress, energy, and other nervous-system signals from *how a client sounds* in a few seconds of speech, scored against their own baseline — no wearable, no bloodwork, and it runs entirely on-device so a client's voice never leaves their phone. For your higher-status or more guarded clients, that privacy is a feature, not a footnote. It's the between-session read your clients can't give you themselves — and the modality is the same one your practice already runs on: the voice. You can read more on [how voice biomarkers work](/voice-biomarkers) if you want the detail.
 
-HealthOS is a general-wellness, self-awareness tool, not a clinical or diagnostic device. It doesn't replace your judgment — it gives you the week you've been missing.
+Ontor is a general-wellness, self-awareness tool, not a clinical or diagnostic device. It doesn't replace your judgment — it gives you the week you've been missing.
 
 ## FAQ
 
@@ -89,6 +89,6 @@ The client checks in on their own phone and shares the trend; you review before 
 
 ---
 
-*HealthOS is a general wellness tool for self-awareness. It does not diagnose, treat, or prevent any condition, and it is not a substitute for clinical care or professional judgment.*
+*Ontor is a general wellness tool for self-awareness. It does not diagnose, treat, or prevent any condition, and it is not a substitute for clinical care or professional judgment.*
 
-**Curious whether this fits your practice?** [Join the HealthOS beta →](/#join) · [Read the FAQ](/faq)
+**Curious whether this fits your practice?** [Join the Ontor beta →](/#join) · [Read the FAQ](/faq)

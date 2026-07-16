@@ -2,25 +2,25 @@ import ContentPage from "../components/ContentPage";
 import type { Metadata } from "next";
 
 const DESCRIPTION =
-  "HealthOS is built by Sabber Ahamed — an applied ML scientist in radiology AI and PhD geophysicist who specializes in signal processing and on-device machine learning, the exact stack voice biomarkers require.";
+  "Ontor is built by Sabber Ahamed — an applied ML scientist in radiology AI and PhD geophysicist who specializes in signal processing and on-device machine learning, the exact stack voice biomarkers require.";
 
 export const metadata: Metadata = {
-  title: "About the founder — HealthOS",
+  title: "About the founder — Ontor",
   description: DESCRIPTION,
   alternates: { canonical: "/about" },
   openGraph: {
-    title: "About the founder — HealthOS",
+    title: "About the founder — Ontor",
     description: DESCRIPTION,
     url: "https://healthos.live/about",
-    siteName: "HealthOS",
+    siteName: "Ontor",
     type: "profile",
     images: [
-      { url: "/og.png", width: 1200, height: 630, alt: "HealthOS" },
+      { url: "/og.png", width: 1200, height: 630, alt: "Ontor" },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "About the founder — HealthOS",
+    title: "About the founder — Ontor",
     description: DESCRIPTION,
     images: ["/og.png"],
   },
@@ -30,11 +30,11 @@ const PERSON_JSONLD = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Sabber Ahamed",
-  jobTitle: "Founder, HealthOS · Applied ML Scientist",
+  jobTitle: "Founder, Ontor · Applied ML Scientist",
   description:
     "Applied ML scientist in radiology AI and PhD geophysicist specializing in signal processing, computer vision, and on-device machine learning.",
   url: "https://healthos.live/about",
-  worksFor: { "@type": "Organization", name: "HealthOS", url: "https://healthos.live" },
+  worksFor: { "@type": "Organization", name: "Ontor", url: "https://healthos.live" },
   alumniOf: {
     "@type": "CollegeOrUniversity",
     name: "University of Memphis",
@@ -67,12 +67,12 @@ export default function AboutPage() {
             <em>whole pipeline.</em>
           </>
         }
-        lede="HealthOS is the work of Sabber Ahamed — an applied ML scientist in radiology AI and a PhD geophysicist who has spent his career turning signals into deployable, on-device models."
+        lede="Ontor is the work of Sabber Ahamed — an applied ML scientist in radiology AI and a PhD geophysicist who has spent his career turning signals into deployable, on-device models."
       >
         <p className="lead">
           Voice biomarkers sit at the intersection of three hard disciplines:
           signal processing, machine learning, and on-device deployment.
-          HealthOS is built by someone who has shipped all three in production.
+          Ontor is built by someone who has shipped all three in production.
         </p>
 
         <h2>Why a signal scientist built a voice app</h2>
@@ -80,7 +80,7 @@ export default function AboutPage() {
           Sabber&apos;s PhD (University of Memphis, Geophysics &amp;
           Seismology) was built on signal processing — Fourier transforms,
           spectrograms, frequency-domain analysis of seismic waves. The same
-          mathematics underlies voice biomarkers: HealthOS reads pitch,
+          mathematics underlies voice biomarkers: Ontor reads pitch,
           loudness, pace, pauses, and vocal clarity from the acoustic signal of
           your speech. It&apos;s the field he&apos;s worked in for over a
           decade, pointed at a new signal.
@@ -131,7 +131,7 @@ export default function AboutPage() {
           </tbody>
         </table>
 
-        <h2>Why HealthOS</h2>
+        <h2>Why Ontor</h2>
         <p>
           Sabber saw voice biomarkers stuck in research labs and clinical B2B
           companies — powerful science with no consumer product on the iPhone
@@ -152,7 +152,7 @@ export default function AboutPage() {
 
         <h2>The methodology principle</h2>
         <p>
-          HealthOS doesn&apos;t invent its own science. Every signal is a
+          Ontor doesn&apos;t invent its own science. Every signal is a
           transparent, deterministic formula composed of acoustic features
           whose links to nervous-system state are grounded in decades of
           peer-reviewed speech research. The reads are relative to your own

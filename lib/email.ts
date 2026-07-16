@@ -11,7 +11,7 @@
 
 import { Resend } from "resend";
 
-const FROM = "HealthOS <hello@healthos.live>";
+const FROM = "Ontor <hello@healthos.live>";
 const OWNER_NOTIFY = "sabbers@gmail.com";
 const SITE = "https://healthos.live";
 
@@ -33,13 +33,13 @@ function welcomeHtml(): string {
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
             <tr>
               <td style="padding:40px 40px 8px;">
-                <p style="margin:0;font-size:14px;letter-spacing:0.08em;text-transform:uppercase;color:#0d9488;font-weight:600;">HealthOS</p>
+                <p style="margin:0;font-size:14px;letter-spacing:0.08em;text-transform:uppercase;color:#0d9488;font-weight:600;">Ontor</p>
                 <h1 style="margin:16px 0 0;font-size:26px;line-height:1.25;font-weight:600;color:#111827;">You're on the list.</h1>
               </td>
             </tr>
             <tr>
               <td style="padding:16px 40px 0;font-size:16px;line-height:1.6;color:#374151;">
-                <p style="margin:0 0 16px;">Thanks for joining the HealthOS early-access list. We're building a voice-first, on-device health agent that notices what you don't &mdash; reading your nervous-system state from how you sound, without a wearable and without your voice ever leaving your phone.</p>
+                <p style="margin:0 0 16px;">Thanks for joining the Ontor early-access list. We're building a voice-first, on-device health agent that notices what you don't &mdash; reading your nervous-system state from how you sound, without a wearable and without your voice ever leaving your phone.</p>
                 <p style="margin:0 0 16px;">We'll reach out personally when your spot opens up. In the meantime, here's a little more about what we're building:</p>
               </td>
             </tr>
@@ -54,7 +54,7 @@ function welcomeHtml(): string {
                   </tr>
                   <tr>
                     <td style="padding:6px 0;">
-                      <a href="${SITE}/about" style="color:#0d9488;text-decoration:none;font-weight:600;font-size:16px;">&rarr; About HealthOS</a>
+                      <a href="${SITE}/about" style="color:#0d9488;text-decoration:none;font-weight:600;font-size:16px;">&rarr; About Ontor</a>
                       <div style="font-size:14px;color:#6b7280;margin-top:2px;">The mission and the approach to privacy.</div>
                     </td>
                   </tr>
@@ -69,7 +69,7 @@ function welcomeHtml(): string {
             </tr>
             <tr>
               <td style="padding:32px 40px 40px;">
-                <p style="margin:0;font-size:16px;line-height:1.6;color:#374151;">Talk soon,<br/>Sabber &amp; the HealthOS team</p>
+                <p style="margin:0;font-size:16px;line-height:1.6;color:#374151;">Talk soon,<br/>Sabber &amp; the Ontor team</p>
               </td>
             </tr>
             <tr>
@@ -89,7 +89,7 @@ function welcomeText(): string {
   return [
     "You're on the list.",
     "",
-    "Thanks for joining the HealthOS early-access list. We're building a",
+    "Thanks for joining the Ontor early-access list. We're building a",
     "voice-first, on-device health agent that notices what you don't —",
     "reading your nervous-system state from how you sound, without a",
     "wearable and without your voice ever leaving your phone.",
@@ -97,11 +97,11 @@ function welcomeText(): string {
     "We'll reach out personally when your spot opens up. In the meantime:",
     "",
     `  • Read the blog:      ${SITE}/blog`,
-    `  • About HealthOS:     ${SITE}/about`,
+    `  • About Ontor:     ${SITE}/about`,
     "  • Meet the founder:   https://www.linkedin.com/in/sabber-ahamed/",
     "",
     "Talk soon,",
-    "Sabber & the HealthOS team",
+    "Sabber & the Ontor team",
   ].join("\n");
 }
 
@@ -116,7 +116,7 @@ export async function sendWelcomeEmail(to: string): Promise<void> {
     const { error } = await client.emails.send({
       from: FROM,
       to,
-      subject: "Welcome to HealthOS — you're on the list",
+      subject: "Welcome to Ontor — you're on the list",
       html: welcomeHtml(),
       text: welcomeText(),
     });
@@ -143,7 +143,7 @@ export async function sendOwnerNotification(
       replyTo: signupEmail,
       subject: `🎉 New waitlist signup: ${signupEmail}`,
       text: [
-        "Someone just joined the HealthOS waitlist.",
+        "Someone just joined the Ontor waitlist.",
         "",
         `Email:    ${signupEmail}`,
         `Source:   ${meta.source}`,

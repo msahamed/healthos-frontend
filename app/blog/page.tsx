@@ -5,19 +5,19 @@ import Logo from "../components/Logo";
 import { getPublishedPosts } from "../../lib/blog";
 
 const PAGE_DESCRIPTION =
-  "The HealthOS blog — on voice biomarkers, nervous-system state, burnout, and the mind layer your wearable can't read. Science-grounded, practical, no hype.";
+  "The Ontor blog — on voice biomarkers, nervous-system state, burnout, and the mind layer your wearable can't read. Science-grounded, practical, no hype.";
 
 export const metadata: Metadata = {
-  title: "Blog — HealthOS",
+  title: "Blog — Ontor",
   description: PAGE_DESCRIPTION,
   alternates: { canonical: "/blog" },
   openGraph: {
-    title: "Blog — HealthOS",
+    title: "Blog — Ontor",
     description: PAGE_DESCRIPTION,
     url: "https://healthos.live/blog",
-    siteName: "HealthOS",
+    siteName: "Ontor",
     type: "website",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "HealthOS" }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Ontor" }],
   },
 };
 
@@ -30,7 +30,7 @@ export default function BlogIndexPage() {
       <main id="top" className="flex-1">
         <section className="blog-hero">
           <div className="blog-wrap">
-            <span className="blog-eyebrow">The HealthOS blog</span>
+            <span className="blog-eyebrow">The Ontor blog</span>
             <h1 className="font-serif-display">Notes on the signal beneath the noise.</h1>
             <p className="blog-lede">
               Voice biomarkers, nervous-system state, and the things your wearable and your scale can&apos;t see.
@@ -44,7 +44,7 @@ export default function BlogIndexPage() {
             <div className="blog-found-grid">
               <Link href="/voice-biomarkers" className="blog-found-card">
                 <h3>What is a voice biomarker?</h3>
-                <p>How your voice reveals nervous-system state — and how HealthOS reads it on-device.</p>
+                <p>How your voice reveals nervous-system state — and how Ontor reads it on-device.</p>
                 <span className="blog-found-more">Read →</span>
               </Link>
               <Link href="/voice-vs-wearables" className="blog-found-card">
@@ -59,7 +59,7 @@ export default function BlogIndexPage() {
         <section className="blog-body">
           <div className="blog-wrap">
             {posts.length === 0 ? (
-              <p className="blog-empty">First posts are on the way. Meanwhile, see what HealthOS reads from your voice on the <Link href="/voice-biomarkers">voice biomarkers</Link> page.</p>
+              <p className="blog-empty">First posts are on the way. Meanwhile, see what Ontor reads from your voice on the <Link href="/voice-biomarkers">voice biomarkers</Link> page.</p>
             ) : (
               <ul className="blog-list">
                 {posts.map((p) => (
@@ -86,7 +86,7 @@ export default function BlogIndexPage() {
 
       <footer className="post-foot">
         <div className="post-foot-inner">
-          <span className="post-foot-brand"><Logo size={26} /> HealthOS</span>
+          <span className="post-foot-brand"><Logo size={26} /> Ontor</span>
           <div className="post-foot-links">
             <Link href="/#join">Waitlist</Link>
             <a href="https://discord.gg/SyZPw3cgG" target="_blank" rel="noopener noreferrer">Discord</a>

@@ -1,6 +1,6 @@
 # `/api/v1/events`
 
-Analytics intake from the HealthOS mobile app. Accepts a batch of
+Analytics intake from the Ontor mobile app. Accepts a batch of
 events, dedupes by client-supplied id, writes to MongoDB.
 
 ## Schema (one event)

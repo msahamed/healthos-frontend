@@ -90,10 +90,10 @@ A daily note does this. So does a tape measure and a monthly photo for the physi
 
 ## Where a voice check-in fits
 
-This is the problem HealthOS was built for. Instead of asking you to rate yourself, which is the self-report that drifts, it reads energy, stress, and a handful of other nervous-system signals from *how you sound* during a few seconds of normal speech, then scores them against your own 30-day baseline. Not a population average. Your usual, versus today.
+This is the problem Ontor was built for. Instead of asking you to rate yourself, which is the self-report that drifts, it reads energy, stress, and a handful of other nervous-system signals from *how you sound* during a few seconds of normal speech, then scores them against your own 30-day baseline. Not a population average. Your usual, versus today.
 
 <figure class="post-shot">
-  <img src="/screenshots/trend-day.png" alt="A HealthOS trend chart showing the user's readings against their usual range over a day." />
+  <img src="/screenshots/trend-day.png" alt="A Ontor trend chart showing the user's readings against their usual range over a day." />
   <figcaption>Your readings plotted against your own usual range — so a stalled scale and a rising energy line can tell two different stories about the same week.</figcaption>
 </figure>
 
@@ -120,6 +120,6 @@ Pick two or three signals that matter to you, rate them at the same time each da
 
 ---
 
-*HealthOS is a general wellness tool and does not diagnose, treat, or prevent any condition. It is not medical advice. Talk to your clinician about any medication side effects or mood changes that concern you.*
+*Ontor is a general wellness tool and does not diagnose, treat, or prevent any condition. It is not medical advice. Talk to your clinician about any medication side effects or mood changes that concern you.*
 
-**Curious what your own baseline looks like?** [Join the HealthOS beta →](/#join) · [Read the FAQ](/faq)
+**Curious what your own baseline looks like?** [Join the Ontor beta →](/#join) · [Read the FAQ](/faq)

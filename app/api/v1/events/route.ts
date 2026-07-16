@@ -1,4 +1,4 @@
-// POST /api/v1/events — analytics intake from the HealthOS mobile app.
+// POST /api/v1/events — analytics intake from the Ontor mobile app.
 //
 // Body: { events: [<AnalyticsEvent>, ...] }
 //

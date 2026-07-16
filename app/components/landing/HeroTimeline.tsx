@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
-// Ported from the Claude Design "HealthOS Home" hero (v2).
-// A menu-bar window with a split panel — the HealthOS timeline beside a
+// Ported from the Claude Design "Ontor Home" hero (v2).
+// A menu-bar window with a split panel — the Ontor timeline beside a
 // video-call app mock (You + Jordan) — and a 3-mode switcher that animates
 // the panels and auto-cycles. Dots appear only where YOU speak; when the
 // client speaks, the call panel shows "Mic gated — nothing captured".
@@ -116,8 +116,8 @@ export default function HeroTimeline({
   const callAppLabel = mode === 1 ? "Zoom" : "Zoom — your call app";
   const modeLabels = ["Full view", "Side by side", "In the background"];
   const modeCaption = [
-    "HealthOS is its own app — open the full read when you want the detail.",
-    "Two separate apps: HealthOS docked beside Zoom, Meet, Teams — no integration, no bot in the meeting.",
+    "Ontor is its own app — open the full read when you want the detail.",
+    "Two separate apps: Ontor docked beside Zoom, Meet, Teams — no integration, no bot in the meeting.",
     "Or entirely in the background while any call app runs — only the menu bar icon moves, and only when you speak.",
   ][mode];
 
@@ -141,7 +141,7 @@ export default function HeroTimeline({
         {/* mac menu bar */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 12, background: "rgba(255,255,255,.13)", borderRadius: "9px 9px 0 0", padding: "5px 12px" }}>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E8EDEC" strokeWidth="2" strokeLinecap="round"><path d="M5 12.5a11 11 0 0 1 14 0" /><path d="M8.5 16a6 6 0 0 1 7 0" /><circle cx="12" cy="19" r="1" fill="#E8EDEC" /></svg>
-          <span title="HealthOS in your menu bar — it moves only when you speak" style={{ display: "inline-flex", alignItems: "center", gap: 2.5, background: pillBg, borderRadius: 6, padding: "4px 7px", height: 11, transition: "background .3s" }}>
+          <span title="Ontor in your menu bar — it moves only when you speak" style={{ display: "inline-flex", alignItems: "center", gap: 2.5, background: pillBg, borderRadius: 6, padding: "4px 7px", height: 11, transition: "background .3s" }}>
             {speaking ? bars("#fff", true, 10) : [4, 7, 10, 7, 4].map((h, i) => <span key={i} style={{ width: 2.5, height: h, borderRadius: 2, background: "#fff" }} />)}
           </span>
           <span style={{ fontSize: 11, color: "#E8EDEC", fontWeight: 600 }}>Tue 10:04 AM</span>
@@ -155,10 +155,10 @@ export default function HeroTimeline({
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "14px 18px", borderBottom: "1px solid #EDE7DA" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0, overflow: "hidden" }}>
                   <span style={{ width: 8, height: 8, borderRadius: "50%", background: running ? "#F59E0B" : "#14867B", animation: running ? "hospulse 1.2s ease-in-out infinite" : "none", flexShrink: 0 }} />
-                  <span style={{ fontSize: 13.5, fontWeight: 700, color: "#1B1A17", whiteSpace: "nowrap", display: "inline-flex", alignItems: "center", gap: 6 }}>{logo}HealthOS</span>
+                  <span style={{ fontSize: 13.5, fontWeight: 700, color: "#1B1A17", whiteSpace: "nowrap", display: "inline-flex", alignItems: "center", gap: 6 }}>{logo}Ontor</span>
                   <span style={{ display: tlTimerDisp, fontSize: 12.5, color: "#8A8375", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>{timer}</span>
                   {speaking ? (
-                    <span title="You're speaking — HealthOS is reading" style={{ display: hdrPillDisp, alignItems: "center", gap: 2.5, background: "#0F766E", borderRadius: 6, padding: "4px 7px", height: 12, flexShrink: 0 }}>{bars("#fff", true, 11)}</span>
+                    <span title="You're speaking — Ontor is reading" style={{ display: hdrPillDisp, alignItems: "center", gap: 2.5, background: "#0F766E", borderRadius: 6, padding: "4px 7px", height: 12, flexShrink: 0 }}>{bars("#fff", true, 11)}</span>
                   ) : (
                     <span title="Silence or someone else talking — nothing captured" style={{ display: hdrPillDisp, alignItems: "center", gap: 2.5, background: "#E9E4D8", borderRadius: 6, padding: "4px 7px", height: 12, flexShrink: 0 }}>{[4, 7, 9, 7, 4].map((h, i) => <span key={i} style={{ width: 2.5, height: h, borderRadius: 2, background: "#A39B8B" }} />)}</span>
                   )}

@@ -86,7 +86,7 @@ export default function CheckinRecording({
           {!playing && (
             <Image
               src={poster}
-              alt="A day of voice check-ins in HealthOS"
+              alt="A day of voice check-ins in Ontor"
               fill
               style={{ objectFit: "cover", objectPosition: "top center" }}
               sizes="320px"

@@ -20,7 +20,7 @@ faq:
   - q: "Why am I so tired on GLP-1 even when I'm losing weight?"
     a: "Weight loss and fatigue can run together: appetite suppression can drop you to very low calorie and protein intake, and rapid loss can cost muscle and deplete B12, iron, and vitamin D — all of which drain energy even as the scale moves."
   - q: "When should I see a doctor about GLP-1 fatigue?"
-    a: "If fatigue is severe, keeps getting worse, comes with symptoms like dizziness, numbness, a racing heart, or doesn't improve after the adjustment period. Bloodwork can check for B12, iron, and vitamin D deficiencies. HealthOS isn't a substitute for that — talk to your clinician."
+    a: "If fatigue is severe, keeps getting worse, comes with symptoms like dizziness, numbness, a racing heart, or doesn't improve after the adjustment period. Bloodwork can check for B12, iron, and vitamin D deficiencies. Ontor isn't a substitute for that — talk to your clinician."
   - q: "How do I track my energy on a GLP-1?"
     a: "Rate your energy at the same time each day and watch the trend over weeks, not days. Note what changed — protein, sleep, dose. A short daily log works; so does a voice check-in that scores your energy against your own baseline."
 sources:
@@ -78,10 +78,10 @@ This is the difference between "I think I've felt better lately" and actually se
 
 ## Where a voice check-in fits
 
-Logging by hand is the thing everyone starts and most quit by week three. HealthOS is built to remove that friction: it reads energy and a few other nervous-system signals from *how you sound* in a few seconds of normal speech, scored against your own 30-day baseline — your usual, versus today. No wearable, nothing to wear or charge.
+Logging by hand is the thing everyone starts and most quit by week three. Ontor is built to remove that friction: it reads energy and a few other nervous-system signals from *how you sound* in a few seconds of normal speech, scored against your own 30-day baseline — your usual, versus today. No wearable, nothing to wear or charge.
 
 <figure class="post-shot">
-  <img src="/screenshots/signal-reading.png" alt="A HealthOS check-in showing Energy below the user's usual range and Fatigue above it, scored against their own baseline." />
+  <img src="/screenshots/signal-reading.png" alt="A Ontor check-in showing Energy below the user's usual range and Fatigue above it, scored against their own baseline." />
   <figcaption>A single check-in: energy reading below your usual, fatigue above it — measured against your own baseline, not a population average.</figcaption>
 </figure>
 
@@ -108,6 +108,6 @@ Rate it at the same time daily and watch the trend over weeks. Note what changed
 
 ---
 
-*HealthOS is a general wellness tool and does not diagnose, treat, or prevent any condition. It is not medical advice. Talk to your clinician about any medication side effects, persistent fatigue, or possible nutrient deficiencies.*
+*Ontor is a general wellness tool and does not diagnose, treat, or prevent any condition. It is not medical advice. Talk to your clinician about any medication side effects, persistent fatigue, or possible nutrient deficiencies.*
 
-**Want to see your energy trend instead of guessing at it?** [Join the HealthOS beta →](/#join) · [Read the FAQ](/faq)
+**Want to see your energy trend instead of guessing at it?** [Join the Ontor beta →](/#join) · [Read the FAQ](/faq)

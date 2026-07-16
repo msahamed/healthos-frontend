@@ -56,7 +56,7 @@ export default function Nav() {
           }}
         >
           <Logo size={30} />
-          HealthOS
+          Ontor
         </Link>
 
         <nav

@@ -18,7 +18,7 @@ export async function generateMetadata(
   const url = `https://healthos.live/blog/${post.slug}`;
   const img = post.ogImage || post.heroImage || "/og.png";
   return {
-    title: `${post.title} — HealthOS`,
+    title: `${post.title} — Ontor`,
     description: post.description,
     keywords: post.targetKeyword ? [post.targetKeyword, ...(post.secondaryKeywords ?? [])] : undefined,
     alternates: { canonical: `/blog/${post.slug}` },
@@ -27,7 +27,7 @@ export async function generateMetadata(
       title: post.title,
       description: post.description,
       url,
-      siteName: "HealthOS",
+      siteName: "Ontor",
       type: "article",
       publishedTime: post.date,
       modifiedTime: post.updated || post.date,
@@ -60,10 +60,10 @@ export default async function BlogPostPage(
     image: `https://healthos.live${img}`,
     datePublished: post.date,
     dateModified: post.updated || post.date,
-    author: { "@type": "Organization", name: "HealthOS" },
+    author: { "@type": "Organization", name: "Ontor" },
     publisher: {
       "@type": "Organization",
-      name: "HealthOS",
+      name: "Ontor",
       logo: { "@type": "ImageObject", url: "https://healthos.live/og.png" },
     },
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
@@ -123,7 +123,7 @@ export default async function BlogPostPage(
 
       <footer className="post-foot">
         <div className="post-foot-inner">
-          <span className="post-foot-brand"><Logo size={26} /> HealthOS</span>
+          <span className="post-foot-brand"><Logo size={26} /> Ontor</span>
           <div className="post-foot-links">
             <Link href="/blog">Blog</Link>
             <Link href="/#join">Waitlist</Link>

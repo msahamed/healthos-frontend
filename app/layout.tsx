@@ -23,32 +23,32 @@ const hanken = Hanken_Grotesk({
 });
 
 const DESCRIPTION =
-  "HealthOS is performance intelligence from your voice. It sits in your menu bar and reads your nervous-system state — stress, energy, confidence and more — from how you sound across real calls, plus a few-second check-in on mobile. " +
+  "Ontor is performance intelligence from your voice. It sits in your menu bar and reads your nervous-system state — stress, energy, confidence and more — from how you sound across real calls, plus a few-second check-in on mobile. " +
   "It only ever listens to you (speaker-gated), runs on-device, and needs no wearable. macOS, Windows, iOS & Android.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://healthos.live"),
-  title: "HealthOS — Performance intelligence from your voice",
+  title: "Ontor — Performance intelligence from your voice",
   description: DESCRIPTION,
   alternates: { canonical: "/" },
   openGraph: {
-    title: "HealthOS — Performance intelligence from your voice",
+    title: "Ontor — Performance intelligence from your voice",
     description: DESCRIPTION,
     url: "https://healthos.live",
-    siteName: "HealthOS",
+    siteName: "Ontor",
     type: "website",
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "HealthOS — Performance intelligence from your voice.",
+        alt: "Ontor — Performance intelligence from your voice.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "HealthOS — Performance intelligence from your voice",
+    title: "Ontor — Performance intelligence from your voice",
     description: DESCRIPTION,
     images: ["/og.png"],
   },
@@ -58,11 +58,11 @@ export const metadata: Metadata = {
 const ORG_JSONLD = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "HealthOS",
+  name: "Ontor",
   url: "https://healthos.live",
   logo: "https://healthos.live/og.png",
   description:
-    "HealthOS builds voice-first, on-device performance-intelligence technology that reads nervous-system state from how you sound.",
+    "Ontor builds voice-first, on-device performance-intelligence technology that reads nervous-system state from how you sound.",
   founder: { "@type": "Person", name: "Sabber Ahamed" },
   foundingLocation: "Dallas, TX",
   sameAs: [
@@ -75,16 +75,16 @@ const ORG_JSONLD = {
 const WEBSITE_JSONLD = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "HealthOS",
+  name: "Ontor",
   url: "https://healthos.live",
   description: DESCRIPTION,
-  publisher: { "@type": "Organization", name: "HealthOS" },
+  publisher: { "@type": "Organization", name: "Ontor" },
 };
 
 const APP_JSONLD = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "HealthOS",
+  name: "Ontor",
   applicationCategory: "HealthApplication",
   operatingSystem: "macOS, Windows, iOS, Android",
   url: "https://healthos.live",

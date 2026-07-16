@@ -14,7 +14,7 @@ ogImage: "/blog/measure-nervous-system-regulation/og-1200x630.png"
 heroImageAlt: "A client's nervous-system activation over a week — the state a coach regulates, usually invisible between sessions."
 faq:
   - q: "Can you actually measure nervous-system state from someone's voice?"
-    a: "Not a clinical diagnosis — but the autonomic arousal side of it, yes. Decades of speech science show that when the sympathetic nervous system activates under stress or load, it changes the voice in measurable ways: vocal effort, clarity, and spectral balance shift. HealthOS reads those acoustic changes and scores them against the person's own baseline, so it's a relative self-awareness read, not a lab value."
+    a: "Not a clinical diagnosis — but the autonomic arousal side of it, yes. Decades of speech science show that when the sympathetic nervous system activates under stress or load, it changes the voice in measurable ways: vocal effort, clarity, and spectral balance shift. Ontor reads those acoustic changes and scores them against the person's own baseline, so it's a relative self-awareness read, not a lab value."
   - q: "How is this different from HRV or a wearable?"
     a: "A wearable reads the body — heart rate, HRV, sleep — and infers state from it. It can't hear the vocal signature of activation, and it adds hardware every client has to buy, wear, and charge, which doesn't fit a talking, breath-based practice. Voice is the modality your practice already runs on, and it needs nothing but the phone in the client's hand."
   - q: "Why can't the client just tell me how regulated they are?"
@@ -22,7 +22,7 @@ faq:
   - q: "Can I use it to show a regulation protocol is working?"
     a: "That's the point. The client checks in before and after a breathwork series, a vagus-tone practice, or a reset week, and you compare the trend around the protocol — turning 'I think that helped' into something you can show the client and yourself."
   - q: "Does this replace a coach's read?"
-    a: "No — and it shouldn't. Skilled coaches integrate many signals in real time, and even imperfect self-report is workable in their hands. HealthOS is a complementary layer: it extends the read to between sessions and makes a protocol's effect something you can show. It informs a coach's judgment; it doesn't override it."
+    a: "No — and it shouldn't. Skilled coaches integrate many signals in real time, and even imperfect self-report is workable in their hands. Ontor is a complementary layer: it extends the read to between sessions and makes a protocol's effect something you can show. It informs a coach's judgment; it doesn't override it."
 sources:
   - title: "The Rise of Neurowellness — Global Wellness Summit (2026 Trends)"
     url: "https://www.globalwellnesssummit.com/the-rise-of-neurowellness/"
@@ -77,14 +77,14 @@ The client does a few-second voice check-in on their own phone — their habit, 
   <figcaption>What you'd see before the session: the client's activation against their own usual range, and how it moved around a protocol — not a recap they couldn't feel.</figcaption>
 </figure>
 
-That's the idea behind HealthOS. It reads energy, stress, vocal strain, and other nervous-system signals from *how a client sounds* in a few seconds of speech, scored against their own baseline — no wearable, no bloodwork, and it runs entirely on-device, so the client's voice never leaves their phone. For higher-status or guarded clients, that privacy is a feature, not a footnote. It reads the arousal side of the state you regulate — the sympathetic load — and it does it in the modality your practice already uses. You can read more on [how voice biomarkers work](/voice-biomarkers), or how this sits [next to a wearable](/voice-vs-wearables) rather than replacing it.
+That's the idea behind Ontor. It reads energy, stress, vocal strain, and other nervous-system signals from *how a client sounds* in a few seconds of speech, scored against their own baseline — no wearable, no bloodwork, and it runs entirely on-device, so the client's voice never leaves their phone. For higher-status or guarded clients, that privacy is a feature, not a footnote. It reads the arousal side of the state you regulate — the sympathetic load — and it does it in the modality your practice already uses. You can read more on [how voice biomarkers work](/voice-biomarkers), or how this sits [next to a wearable](/voice-vs-wearables) rather than replacing it.
 
-HealthOS is a general-wellness, self-awareness tool, not a clinical or diagnostic device. It doesn't measure a medical construct of "regulation," and it doesn't replace your judgment. It adds an objective layer to the state you already track by ear — reaching into the days between sessions, and turning what you sense into something you can show.
+Ontor is a general-wellness, self-awareness tool, not a clinical or diagnostic device. It doesn't measure a medical construct of "regulation," and it doesn't replace your judgment. It adds an objective layer to the state you already track by ear — reaching into the days between sessions, and turning what you sense into something you can show.
 
 ## FAQ
 
 **Can you really measure nervous-system state from a voice?**
-The autonomic-arousal side of it, yes — sympathetic activation changes the voice in ways speech science has documented for decades ([PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8310524/)). HealthOS reads those changes against the client's own baseline. It's a relative self-awareness read, not a clinical score.
+The autonomic-arousal side of it, yes — sympathetic activation changes the voice in ways speech science has documented for decades ([PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC8310524/)). Ontor reads those changes against the client's own baseline. It's a relative self-awareness read, not a clinical score.
 
 **Why can't the client just tell me?**
 Chronic stress lowers interoception — the ability to feel internal body signals — so the most dysregulated clients are often the least able to report it ([Frontiers](https://pmc.ncbi.nlm.nih.gov/articles/PMC4507149/)). The read gives them a signal their body stopped sending.
@@ -96,10 +96,10 @@ Those read the body and add hardware that doesn't fit a talking, breath-based pr
 The client checks in on their own phone and shares the trend; you review before the session and compare before and after a regulation protocol.
 
 **Does this replace a coach's read?**
-No — and it shouldn't. Skilled coaches integrate many signals in real time, and even imperfect self-report is workable in their hands. HealthOS is a complementary layer: it extends the read to between sessions and makes a protocol's effect something you can show. It informs your judgment; it doesn't override it.
+No — and it shouldn't. Skilled coaches integrate many signals in real time, and even imperfect self-report is workable in their hands. Ontor is a complementary layer: it extends the read to between sessions and makes a protocol's effect something you can show. It informs your judgment; it doesn't override it.
 
 ---
 
-*HealthOS is a general wellness tool for self-awareness. It does not diagnose, treat, or prevent any condition, and it is not a substitute for clinical care or professional judgment.*
+*Ontor is a general wellness tool for self-awareness. It does not diagnose, treat, or prevent any condition, and it is not a substitute for clinical care or professional judgment.*
 
-**Curious whether this fits your practice?** [Join the HealthOS beta →](/#join) · [Read the FAQ](/faq)
+**Curious whether this fits your practice?** [Join the Ontor beta →](/#join) · [Read the FAQ](/faq)

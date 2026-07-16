@@ -4,8 +4,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — HealthOS",
-  description: "HealthOS privacy policy. We process all data on-device. No health data ever leaves your phone.",
+  title: "Privacy Policy — Ontor",
+  description: "Ontor privacy policy. We process all data on-device. No health data ever leaves your phone.",
 };
 
 const TEAL = "#0F766E";
@@ -39,14 +39,14 @@ export default function PrivacyPage() {
             <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5 mb-10 not-prose">
               <p className="text-sm font-semibold text-emerald-800 mb-1">Our core commitment</p>
               <p className="text-sm text-emerald-700">
-                HealthOS is a local-first app. All processing happens on your device. We do not collect,
+                Ontor is a local-first app. All processing happens on your device. We do not collect,
                 transmit, or store your health data on any external server. Your health records belong to you.
               </p>
             </div>
 
             <h2>1. Information We Process</h2>
             <p>
-              HealthOS processes the following types of data entirely on your device:
+              Ontor processes the following types of data entirely on your device:
             </p>
             <ul>
               <li><strong>Health documents</strong> — images, PDFs, and text you scan or import</li>
@@ -55,20 +55,20 @@ export default function PrivacyPage() {
               <li><strong>FHIR data</strong> — if you connect a hospital account via SMART on FHIR, the retrieved data is stored locally on your device only</li>
             </ul>
             <p>
-              None of this data is transmitted to HealthOS servers or third parties.
+              None of this data is transmitted to Ontor servers or third parties.
             </p>
 
             <h2>2. Data Storage</h2>
             <p>
               All data is stored in a local SQLite database on your device. Original document files
               (images, PDFs) are stored in the app&apos;s private sandbox directory. iCloud backup is
-              controlled entirely by your iOS iCloud settings — HealthOS does not independently
+              controlled entirely by your iOS iCloud settings — Ontor does not independently
               upload data to any cloud service.
             </p>
 
             <h2>3. On-Device AI</h2>
             <p>
-              HealthOS uses two on-device AI models:
+              Ontor uses two on-device AI models:
             </p>
             <ul>
               <li><strong>Qwen 2.5 1.5B</strong> — for health data extraction and answering questions about your records</li>
@@ -83,7 +83,7 @@ export default function PrivacyPage() {
               When you connect a hospital account via SMART on FHIR (e.g., Epic, Cerner):
             </p>
             <ul>
-              <li>You authenticate directly with your hospital — HealthOS never sees your hospital credentials</li>
+              <li>You authenticate directly with your hospital — Ontor never sees your hospital credentials</li>
               <li>An access token is stored securely in your device&apos;s keychain</li>
               <li>Retrieved FHIR resources are stored locally on your device only</li>
               <li>You can disconnect any hospital connection at any time from within the app</li>
@@ -91,20 +91,20 @@ export default function PrivacyPage() {
 
             <h2>5. Analytics and Tracking</h2>
             <p>
-              HealthOS does not use any analytics SDKs, advertising identifiers, or tracking pixels.
+              Ontor does not use any analytics SDKs, advertising identifiers, or tracking pixels.
               We do not collect crash reports, usage statistics, or any behavioral data.
             </p>
 
             <h2>6. Camera, Microphone, and Photo Library</h2>
             <p>
-              HealthOS requests access to your camera, microphone, and photo library solely for
+              Ontor requests access to your camera, microphone, and photo library solely for
               document scanning and voice recording. This data is processed on-device and never
               transmitted externally.
             </p>
 
             <h2>7. Children&apos;s Privacy</h2>
             <p>
-              HealthOS is not directed at children under 13. We do not knowingly collect personal
+              Ontor is not directed at children under 13. We do not knowingly collect personal
               information from children.
             </p>
 
@@ -139,14 +139,14 @@ export default function PrivacyPage() {
         <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Logo size={24} />
-            <span className="text-sm font-medium text-slate-700">HealthOS</span>
+            <span className="text-sm font-medium text-slate-700">Ontor</span>
           </div>
           <div className="flex items-center gap-5 text-sm text-slate-400">
             <Link href="/privacy" className="hover:text-slate-600 transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-slate-600 transition-colors">Terms of Use</Link>
             <a href="mailto:sabber@healthos.live" className="hover:text-slate-600 transition-colors">Contact</a>
           </div>
-          <p className="text-sm text-slate-400">© {new Date().getFullYear()} HealthOS</p>
+          <p className="text-sm text-slate-400">© {new Date().getFullYear()} Ontor</p>
         </div>
       </footer>
     </>

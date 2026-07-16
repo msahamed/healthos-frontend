@@ -7,36 +7,36 @@ import type { Metadata } from "next";
 // Answer-shaped, definitional text so AI answer engines can quote it.
 const FAQ: { q: string; a: string }[] = [
   {
-    q: "What is HealthOS?",
-    a: "HealthOS is a voice-first, on-device iOS app that reads your nervous-system state from how you sound. A daily check-in takes just a few seconds — up to thirty — analyzing your unscripted speech to surface eight signals — energy, stress, fatigue, confidence and more — so you catch shifts before you consciously feel them.",
+    q: "What is Ontor?",
+    a: "Ontor is a voice-first, on-device iOS app that reads your nervous-system state from how you sound. A daily check-in takes just a few seconds — up to thirty — analyzing your unscripted speech to surface eight signals — energy, stress, fatigue, confidence and more — so you catch shifts before you consciously feel them.",
   },
   {
     q: "How does voice biomarker analysis work?",
-    a: "HealthOS reads how you sound, not what you say. Each signal is a transparent, literature-grounded formula that blends acoustic features — pitch, loudness, pace, pauses, vocal clarity — scored against your own roughly 30-day baseline. It's a relative read of what's higher or lower than your usual, not a clinical or population score.",
+    a: "Ontor reads how you sound, not what you say. Each signal is a transparent, literature-grounded formula that blends acoustic features — pitch, loudness, pace, pauses, vocal clarity — scored against your own roughly 30-day baseline. It's a relative read of what's higher or lower than your usual, not a clinical or population score.",
   },
   {
     q: "Is my voice data private?",
     a: "Yes. All analysis runs entirely on-device. Your voice audio never leaves your phone and is never uploaded to the cloud.",
   },
   {
-    q: "How is HealthOS different from Oura, WHOOP, or Apple Watch?",
-    a: "Wearables track physiology — heart rate, HRV, sleep — and infer stress from it. HealthOS reads psychological and nervous-system state such as confidence, vocal strain, and expressiveness that a wrist sensor can't detect. There's no hardware to wear, and it works alongside your wearable rather than replacing it.",
+    q: "How is Ontor different from Oura, WHOOP, or Apple Watch?",
+    a: "Wearables track physiology — heart rate, HRV, sleep — and infer stress from it. Ontor reads psychological and nervous-system state such as confidence, vocal strain, and expressiveness that a wrist sensor can't detect. There's no hardware to wear, and it works alongside your wearable rather than replacing it.",
   },
   {
-    q: "What signals does HealthOS track?",
+    q: "What signals does Ontor track?",
     a: "Eight: energy, stress, confidence, fatigue, vocal strain, expressiveness, articulation, and breathing — all read from how you sound.",
   },
   {
-    q: "Who is HealthOS for?",
+    q: "Who is Ontor for?",
     a: "People whose performance and wellbeing depend on catching a bad state early — biohackers and self-trackers, performance-minded professionals, and anyone who wants the mind layer their wearable can't read.",
   },
   {
-    q: "Is HealthOS a medical device?",
-    a: "No. HealthOS is a general wellness tool for self-awareness. It does not diagnose, treat, or make clinical claims.",
+    q: "Is Ontor a medical device?",
+    a: "No. Ontor is a general wellness tool for self-awareness. It does not diagnose, treat, or make clinical claims.",
   },
   {
-    q: "What does HealthOS cost and what platforms does it support?",
-    a: "HealthOS is free while in beta and launches on iPhone (iOS) first, currently via TestFlight.",
+    q: "What does Ontor cost and what platforms does it support?",
+    a: "Ontor is free while in beta and launches on iPhone (iOS) first, currently via TestFlight.",
   },
 ];
 
@@ -51,30 +51,30 @@ const FAQ_JSONLD = {
 };
 
 const PAGE_DESCRIPTION =
-  "Frequently asked questions about HealthOS — the voice-first, on-device app that reads your nervous-system state from how you sound. What it is, how voice biomarkers work, privacy, how it compares to wearables, and more.";
+  "Frequently asked questions about Ontor — the voice-first, on-device app that reads your nervous-system state from how you sound. What it is, how voice biomarkers work, privacy, how it compares to wearables, and more.";
 
 export const metadata: Metadata = {
-  title: "FAQ — HealthOS",
+  title: "FAQ — Ontor",
   description: PAGE_DESCRIPTION,
   alternates: { canonical: "/faq" },
   openGraph: {
-    title: "Frequently Asked Questions — HealthOS",
+    title: "Frequently Asked Questions — Ontor",
     description: PAGE_DESCRIPTION,
     url: "https://healthos.live/faq",
-    siteName: "HealthOS",
+    siteName: "Ontor",
     type: "website",
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "HealthOS — Your voice is the biomarker that speaks first.",
+        alt: "Ontor — Your voice is the biomarker that speaks first.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Frequently Asked Questions — HealthOS",
+    title: "Frequently Asked Questions — Ontor",
     description: PAGE_DESCRIPTION,
     images: ["/og.png"],
   },
@@ -97,7 +97,7 @@ export default function FaqPage() {
               Frequently asked questions.
             </h1>
             <p className="faq-lede">
-              What HealthOS is, how it reads your voice, and how it&apos;s
+              What Ontor is, how it reads your voice, and how it&apos;s
               different from the wearable on your wrist.
             </p>
           </div>
@@ -145,7 +145,7 @@ export default function FaqPage() {
         <div className="faq-wrap faq-foot-inner">
           <span className="faq-foot-brand">
             <Logo size={26} />
-            HealthOS
+            Ontor
           </span>
           <div className="faq-foot-links">
             <Link href="/#signals">What it reveals</Link>

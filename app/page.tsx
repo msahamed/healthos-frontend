@@ -1,8 +1,8 @@
 import InlineWaitlistForm from "./components/InlineWaitlistForm";
 import HeroTimeline from "./components/landing/HeroTimeline";
 
-// HealthOS homepage — performance-intelligence relaunch.
-// Ported from the approved Claude Design "HealthOS Home". The hero visual is
+// Ontor homepage — performance-intelligence relaunch.
+// Ported from the approved Claude Design "Ontor Home". The hero visual is
 // the product itself: an animated call timeline where dots appear only when
 // YOU speak; the gaps are the other person, never captured (mic-gated).
 // Waitlist form = real <InlineWaitlistForm> (POST /api/waitlist). Nav = real <Nav>.
@@ -18,7 +18,7 @@ export default function Home() {
             <svg width="30" height="30" viewBox="0 0 30 30" style={{ display: "block", borderRadius: 6.6, background: teal }}>
               <rect x="5.1" y="10.8" width="2.7" height="8.4" rx="1.35" fill={amber} /><rect x="9.9" y="7.5" width="2.7" height="15" rx="1.35" fill={amber} /><rect x="14.7" y="4.8" width="2.7" height="20.4" rx="1.35" fill={amber} /><rect x="19.5" y="7.5" width="2.7" height="15" rx="1.35" fill={amber} /><rect x="24.3" y="10.8" width="2.7" height="8.4" rx="1.35" fill={amber} />
             </svg>
-            HealthOS
+            Ontor
           </a>
           <nav className="hos-nav" style={{ display: "flex", alignItems: "center", gap: 30, fontSize: 14.5, fontWeight: 500, color: inkSoft }}>
             <a href="#how" style={{ color: "inherit", textDecoration: "none" }}>How it works</a>
@@ -43,7 +43,7 @@ export default function Home() {
                 Performance intelligence <em style={{ fontStyle: "italic", color: "#FCD34D" }}>from your voice.</em>
               </h1>
               <p style={{ margin: "24px 0 0", fontSize: 18, lineHeight: 1.62, color: "#C9D4D2", maxWidth: 520 }}>
-                HealthOS sits in your menu bar. Press Start and it quietly reads your nervous system — stress, energy, confidence — from how you sound through real calls. <strong style={{ color: "#F4F1EA", fontWeight: 600 }}>It only ever listens to you:</strong> when the other person talks, it records nothing. All on-device — no wearable needed.
+                Ontor sits in your menu bar. Press Start and it quietly reads your nervous system — stress, energy, confidence — from how you sound through real calls. <strong style={{ color: "#F4F1EA", fontWeight: 600 }}>It only ever listens to you:</strong> when the other person talks, it records nothing. All on-device — no wearable needed.
               </p>
               <InlineWaitlistForm variant="hero" />
               <div style={{ marginTop: 14, fontSize: 13.5, color: "#94A39F", display: "inline-flex", alignItems: "center", gap: 8 }}>
@@ -76,12 +76,12 @@ export default function Home() {
                     <span style={{ fontSize: 11, color: "#E8EDEC", fontWeight: 600 }}>Tue 9:58 AM</span>
                   </div>
                   <div style={{ background: "rgba(250,250,250,.96)", borderRadius: 10, margin: "6px 34px 0 auto", width: 172, padding: 6, boxShadow: "0 18px 34px rgba(0,0,0,.35)", fontSize: 13, color: ink }}>
-                    <div style={{ padding: "6px 9px", borderRadius: 6 }}>Open HealthOS</div>
+                    <div style={{ padding: "6px 9px", borderRadius: 6 }}>Open Ontor</div>
                     <div style={{ height: 1, background: "#E2E0DB", margin: "3px 6px" }} />
                     <div style={{ padding: "6px 9px", borderRadius: 6, background: teal, color: "#fff", fontWeight: 600 }}>Start</div>
                     <div style={{ padding: "6px 9px", borderRadius: 6, display: "flex", justifyContent: "space-between", alignItems: "center" }}>Microphone <span style={{ color: "#8A8375" }}>›</span></div>
                     <div style={{ height: 1, background: "#E2E0DB", margin: "3px 6px" }} />
-                    <div style={{ padding: "6px 9px", borderRadius: 6, display: "flex", justifyContent: "space-between", alignItems: "center" }}>Quit HealthOS <span style={{ color: "#8A8375", fontSize: 11.5 }}>⌘Q</span></div>
+                    <div style={{ padding: "6px 9px", borderRadius: 6, display: "flex", justifyContent: "space-between", alignItems: "center" }}>Quit Ontor <span style={{ color: "#8A8375", fontSize: 11.5 }}>⌘Q</span></div>
                   </div>
                 </div>
                 <div><h4 style={stepH}>It lives in your menu bar</h4><p style={stepP}>One click before the call — Start. That&rsquo;s the entire workflow. No window, no note-taking bot joining the meeting.</p></div>
@@ -142,7 +142,7 @@ export default function Home() {
             <div>
               <span style={eyebrow("#6FD6C9")}><span style={eyeDot} />Privacy, by architecture</span>
               <h2 className="font-serif-display" style={{ fontWeight: 500, fontSize: "clamp(30px, 3.6vw, 42px)", lineHeight: 1.1, margin: "16px 0 0", color: "#FBF8F1" }}>The other side of every call is never heard, analyzed, or stored.</h2>
-              <p style={{ fontSize: 18, color: "#BFCAC7", margin: "18px 0 0", lineHeight: 1.6 }}>HealthOS is speaker-gated: the moment anyone but you talks, no audio exists to capture. There is nothing to disclose and no one to ask — because nothing of theirs is ever touched. <em style={{ fontStyle: "italic", color: "#F4F1EA" }}>Self-tracking, not surveillance.</em></p>
+              <p style={{ fontSize: 18, color: "#BFCAC7", margin: "18px 0 0", lineHeight: 1.6 }}>Ontor is speaker-gated: the moment anyone but you talks, no audio exists to capture. There is nothing to disclose and no one to ask — because nothing of theirs is ever touched. <em style={{ fontStyle: "italic", color: "#F4F1EA" }}>Self-tracking, not surveillance.</em></p>
               <p style={{ fontSize: 15.5, color: "#8FA09C", margin: "18px 0 0", lineHeight: 1.6 }}>If you sell for a living: this is the opposite of the call-recording stack your manager bought. Nothing here is for them — your calls, your data, your edge.</p>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -166,7 +166,7 @@ export default function Home() {
             <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
               <span style={eyebrow(teal, true)}><span style={eyeDot} />The science</span>
               <h2 className="font-serif-display" style={h2()}>Your voice carries signals. Research has read them for decades.</h2>
-              <p style={{ fontSize: 17.5, color: inkSoft, margin: "20px 0 0", lineHeight: 1.65 }}>Decades of peer-reviewed research show the human voice carries measurable markers of activation, effort, and strain — how energized, tense, or worn down you are shows up in pitch, rhythm, and voice quality. HealthOS turns how you sound into these signals and tracks each against <em style={{ fontStyle: "italic", color: ink }}>your own</em> baseline, so you see when today differs from your normal — never how you compare to anyone else.</p>
+              <p style={{ fontSize: 17.5, color: inkSoft, margin: "20px 0 0", lineHeight: 1.65 }}>Decades of peer-reviewed research show the human voice carries measurable markers of activation, effort, and strain — how energized, tense, or worn down you are shows up in pitch, rhythm, and voice quality. Ontor turns how you sound into these signals and tracks each against <em style={{ fontStyle: "italic", color: ink }}>your own</em> baseline, so you see when today differs from your normal — never how you compare to anyone else.</p>
             </div>
             <div className="hos-3grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, marginTop: 48 }}>
               {SCIENCE.map((c) => (
@@ -180,7 +180,7 @@ export default function Home() {
               ))}
             </div>
             <p style={{ textAlign: "center", margin: "40px auto 0", maxWidth: 640, fontSize: 14, color: inkSoft, lineHeight: 1.6 }}>Built on established acoustic-voice research — the same signal families used across decades of studies on vocal effort, arousal, and speech — adapted for private, personal, day-over-day tracking.</p>
-            <p style={{ textAlign: "center", margin: "14px auto 0", maxWidth: 640, fontSize: 12.5, color: "#8A8375", lineHeight: 1.6 }}>HealthOS is a self-insight and performance tool, not a medical device. It surfaces trends and prompts reflection — it doesn&rsquo;t diagnose.</p>
+            <p style={{ textAlign: "center", margin: "14px auto 0", maxWidth: 640, fontSize: 12.5, color: "#8A8375", lineHeight: 1.6 }}>Ontor is a self-insight and performance tool, not a medical device. It surfaces trends and prompts reflection — it doesn&rsquo;t diagnose.</p>
           </div>
         </section>
 
@@ -223,7 +223,7 @@ export default function Home() {
           <div style={{ display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 10, fontWeight: 700, fontSize: 16, color: ink }}>
               <svg width="26" height="26" viewBox="0 0 26 26" style={{ display: "block", borderRadius: 5.7, background: teal }}><rect x="4.4" y="9.4" width="2.3" height="7.2" rx="1.15" fill={amber} /><rect x="8.6" y="6.5" width="2.3" height="13" rx="1.15" fill={amber} /><rect x="12.8" y="4.2" width="2.3" height="17.6" rx="1.15" fill={amber} /><rect x="17" y="6.5" width="2.3" height="13" rx="1.15" fill={amber} /><rect x="21.2" y="9.4" width="2.3" height="7.2" rx="1.15" fill={amber} /></svg>
-              HealthOS
+              Ontor
             </span>
             <span className="font-serif-display" style={{ fontStyle: "italic", color: inkSoft, fontSize: 16 }}>Self-tracking, not surveillance.</span>
           </div>
