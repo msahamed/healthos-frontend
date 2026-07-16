@@ -1,4 +1,4 @@
-# HealthOS — https://ontor.ai
+# Ontor — https://ontor.ai
 # AI answer engines and search crawlers are welcome.
 # LLM-readable site summary: https://ontor.ai/llms.txt
 
