@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "About the founder — Ontor",
     description: DESCRIPTION,
-    url: "https://ontor.ai/about",
+    url: "https://healthos.live/about",
     siteName: "Ontor",
     type: "profile",
     images: [
@@ -33,8 +33,8 @@ const PERSON_JSONLD = {
   jobTitle: "Founder, Ontor · Applied ML Scientist",
   description:
     "Applied ML scientist in radiology AI and PhD geophysicist specializing in signal processing, computer vision, and on-device machine learning.",
-  url: "https://ontor.ai/about",
-  worksFor: { "@type": "Organization", name: "Ontor", url: "https://ontor.ai" },
+  url: "https://healthos.live/about",
+  worksFor: { "@type": "Organization", name: "Ontor", url: "https://healthos.live" },
   alumniOf: {
     "@type": "CollegeOrUniversity",
     name: "University of Memphis",

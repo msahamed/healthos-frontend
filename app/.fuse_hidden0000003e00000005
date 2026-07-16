@@ -27,14 +27,14 @@ const DESCRIPTION =
   "It only ever listens to you (speaker-gated), runs on-device, and needs no wearable. macOS, Windows, iOS & Android.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://ontor.ai"),
+  metadataBase: new URL("https://healthos.live"),
   title: "Ontor — Performance intelligence from your voice",
   description: DESCRIPTION,
   alternates: { canonical: "/" },
   openGraph: {
     title: "Ontor — Performance intelligence from your voice",
     description: DESCRIPTION,
-    url: "https://ontor.ai",
+    url: "https://healthos.live",
     siteName: "Ontor",
     type: "website",
     images: [
@@ -59,8 +59,8 @@ const ORG_JSONLD = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Ontor",
-  url: "https://ontor.ai",
-  logo: "https://ontor.ai/og.png",
+  url: "https://healthos.live",
+  logo: "https://healthos.live/og.png",
   description:
     "Ontor builds voice-first, on-device performance-intelligence technology that reads nervous-system state from how you sound.",
   founder: { "@type": "Person", name: "Sabber Ahamed" },
@@ -76,7 +76,7 @@ const WEBSITE_JSONLD = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "Ontor",
-  url: "https://ontor.ai",
+  url: "https://healthos.live",
   description: DESCRIPTION,
   publisher: { "@type": "Organization", name: "Ontor" },
 };
@@ -87,7 +87,7 @@ const APP_JSONLD = {
   name: "Ontor",
   applicationCategory: "HealthApplication",
   operatingSystem: "macOS, Windows, iOS, Android",
-  url: "https://ontor.ai",
+  url: "https://healthos.live",
   description: DESCRIPTION,
   featureList: [
     "Desktop menu-bar app reads your nervous-system state across a live call, in real time",

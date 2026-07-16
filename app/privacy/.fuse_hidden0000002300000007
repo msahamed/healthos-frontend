@@ -129,7 +129,7 @@ export default function PrivacyPage() {
             <h2>10. Contact</h2>
             <p>
               Questions about this policy? Contact us at{" "}
-              <a href="mailto:sabber@ontor.ai" style={{ color: TEAL }}>sabber@ontor.ai</a>.
+              <a href="mailto:sabber@healthos.live" style={{ color: TEAL }}>sabber@healthos.live</a>.
             </p>
           </div>
         </section>
@@ -144,7 +144,7 @@ export default function PrivacyPage() {
           <div className="flex items-center gap-5 text-sm text-slate-400">
             <Link href="/privacy" className="hover:text-slate-600 transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-slate-600 transition-colors">Terms of Use</Link>
-            <a href="mailto:sabber@ontor.ai" className="hover:text-slate-600 transition-colors">Contact</a>
+            <a href="mailto:sabber@healthos.live" className="hover:text-slate-600 transition-colors">Contact</a>
           </div>
           <p className="text-sm text-slate-400">© {new Date().getFullYear()} Ontor</p>
         </div>

@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Frequently Asked Questions — Ontor",
     description: PAGE_DESCRIPTION,
-    url: "https://ontor.ai/faq",
+    url: "https://healthos.live/faq",
     siteName: "Ontor",
     type: "website",
     images: [

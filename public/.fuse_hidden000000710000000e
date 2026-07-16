@@ -1,6 +1,6 @@
-# HealthOS — https://ontor.ai
+# HealthOS — https://healthos.live
 # AI answer engines and search crawlers are welcome.
-# LLM-readable site summary: https://ontor.ai/llms.txt
+# LLM-readable site summary: https://healthos.live/llms.txt
 
 User-agent: *
 Allow: /
@@ -45,5 +45,5 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Host: https://ontor.ai
-Sitemap: https://ontor.ai/sitemap.xml
+Host: https://healthos.live
+Sitemap: https://healthos.live/sitemap.xml

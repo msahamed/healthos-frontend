@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Blog — Ontor",
     description: PAGE_DESCRIPTION,
-    url: "https://ontor.ai/blog",
+    url: "https://healthos.live/blog",
     siteName: "Ontor",
     type: "website",
     images: [{ url: "/og.png", width: 1200, height: 630, alt: "Ontor" }],

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "What is a voice biomarker?",
     description: DESCRIPTION,
-    url: "https://ontor.ai/voice-biomarkers",
+    url: "https://healthos.live/voice-biomarkers",
     siteName: "Ontor",
     type: "article",
     images: [{ url: "/og.png", width: 1200, height: 630, alt: "Ontor" }],
@@ -45,9 +45,9 @@ const ARTICLE_JSONLD = {
   headline: "What is a voice biomarker?",
   description: DESCRIPTION,
   about: "Voice biomarkers",
-  author: { "@type": "Organization", name: "Ontor", url: "https://ontor.ai" },
-  publisher: { "@type": "Organization", name: "Ontor", url: "https://ontor.ai" },
-  mainEntityOfPage: "https://ontor.ai/voice-biomarkers",
+  author: { "@type": "Organization", name: "Ontor", url: "https://healthos.live" },
+  publisher: { "@type": "Organization", name: "Ontor", url: "https://healthos.live" },
+  mainEntityOfPage: "https://healthos.live/voice-biomarkers",
 };
 
 const FAQ_JSONLD = {

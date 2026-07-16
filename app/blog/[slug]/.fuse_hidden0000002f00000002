@@ -15,7 +15,7 @@ export async function generateMetadata(
   const { slug } = await params;
   const post = getPostBySlug(slug);
   if (!post) return {};
-  const url = `https://ontor.ai/blog/${post.slug}`;
+  const url = `https://healthos.live/blog/${post.slug}`;
   const img = post.ogImage || post.heroImage || "/og.png";
   return {
     title: `${post.title} — Ontor`,
@@ -49,7 +49,7 @@ export default async function BlogPostPage(
   const post = getPostBySlug(slug);
   if (!post) notFound();
 
-  const url = `https://ontor.ai/blog/${post.slug}`;
+  const url = `https://healthos.live/blog/${post.slug}`;
   const img = post.ogImage || post.heroImage || "/og.png";
 
   const articleJsonLd = {
@@ -57,14 +57,14 @@ export default async function BlogPostPage(
     "@type": "Article",
     headline: post.title,
     description: post.description,
-    image: `https://ontor.ai${img}`,
+    image: `https://healthos.live${img}`,
     datePublished: post.date,
     dateModified: post.updated || post.date,
     author: { "@type": "Organization", name: "Ontor" },
     publisher: {
       "@type": "Organization",
       name: "Ontor",
-      logo: { "@type": "ImageObject", url: "https://ontor.ai/og.png" },
+      logo: { "@type": "ImageObject", url: "https://healthos.live/og.png" },
     },
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
   };
