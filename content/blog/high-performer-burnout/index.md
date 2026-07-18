@@ -8,7 +8,7 @@ targetKeyword: "high performer burnout"
 secondaryKeywords: ["high-functioning burnout", "interoception and stress", "functional freeze", "over-functioning burnout"]
 intent: "problem"
 icp: "coaches"
-status: "draft"
+status: "published"
 heroImage: "/blog/high-performer-burnout/hero-16x9.png"
 ogImage: "/blog/high-performer-burnout/og-1200x630.png"
 heroImageAlt: "A single voice waveform staying smooth and steady on the surface while jagged, high-amplitude activation keeps climbing just beneath it — the visible calm versus the unfelt strain underneath, in Ontor's teal-and-amber palette."
