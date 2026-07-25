@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Terms of Use — Ontor",
-  description: "Ontor terms of use. Read before connecting your hospital account or using the app.",
+  description: "Ontor terms of use. Read before using Ontor.",
 };
 
 const TEAL = "#0F766E";
@@ -28,7 +28,7 @@ export default function TermsPage() {
               </svg>
             </div>
             <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">Terms of Use</h1>
-            <p className="text-slate-500">Last updated: March 27, 2026</p>
+            <p className="text-slate-500">Last updated: July 24, 2026</p>
           </div>
         </section>
 
@@ -39,9 +39,9 @@ export default function TermsPage() {
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-10 not-prose">
               <p className="text-sm font-semibold text-amber-800 mb-1">Not a medical device</p>
               <p className="text-sm text-amber-700">
-                Ontor is a personal health record organizer, not a medical device or clinical tool.
+                Ontor is a performance-insight tool, not a medical device or clinical tool.
                 It does not provide medical advice, diagnosis, or treatment. Always consult a qualified
-                healthcare professional for medical decisions.
+                professional for medical or mental-health decisions.
               </p>
             </div>
 
@@ -54,66 +54,60 @@ export default function TermsPage() {
 
             <h2>2. Description of Service</h2>
             <p>
-              Ontor is a personal health record management application that allows you to:
+              Ontor is a performance-insight product that reads your nervous-system state (for
+              example energy, stress, and confidence) from your voice. It lets you:
             </p>
             <ul>
-              <li>Scan, import, and organize health documents</li>
-              <li>Extract structured health data using on-device AI</li>
-              <li>Connect to hospital EHR systems via SMART on FHIR to retrieve your records</li>
-              <li>Ask questions about your health records using on-device AI</li>
+              <li>Record a short voice check-in, or run a live session on desktop</li>
+              <li>See a read on your state, measured against your own recent baseline</li>
+              <li>Optionally sync your results across your devices</li>
             </ul>
 
             <h2>3. Not Medical Advice</h2>
             <p>
-              Ontor is a personal information management tool. The information and AI-generated
-              summaries provided by the App are for informational purposes only and do not constitute
-              medical advice, diagnosis, or treatment recommendations. Always seek the advice of a
-              physician or other qualified health provider with any questions you may have regarding
-              a medical condition.
+              Ontor is a performance-insight tool, not a medical device. Its readings are for
+              informational purposes only and do not constitute medical advice, diagnosis, or
+              treatment. Always seek the advice of a qualified professional with any questions
+              regarding a medical or mental-health condition.
             </p>
 
-            <h2>4. SMART on FHIR and Hospital Connections</h2>
+            <h2>4. Accuracy</h2>
             <p>
-              When connecting to a hospital or health system via SMART on FHIR:
+              Ontor&apos;s readings are estimates derived from your voice, and can be affected by
+              background noise, recording conditions, and other factors. They may be incomplete or
+              inaccurate, and should be treated as one signal among many, not a definitive
+              measurement.
             </p>
-            <ul>
-              <li>You authorize Ontor to retrieve your health records on your behalf</li>
-              <li>You are responsible for maintaining the confidentiality of your hospital credentials</li>
-              <li>Ontor acts as a data recipient — you are authorizing access under your hospital&apos;s patient portal terms</li>
-              <li>You may revoke access at any time through the App or directly through your hospital&apos;s patient portal</li>
-            </ul>
 
             <h2>5. Your Responsibilities</h2>
             <p>You agree to:</p>
             <ul>
-              <li>Use the App only for personal, non-commercial health record management</li>
-              <li>Not use the App to store records belonging to other individuals without their explicit consent</li>
-              <li>Keep your device secure to protect your health data</li>
-              <li>Not attempt to reverse-engineer, decompile, or modify the App</li>
+              <li>Use Ontor only for your own personal, non-commercial use</li>
+              <li>Not use Ontor to record or analyze other people without their knowledge and consent</li>
+              <li>Keep your device secure to protect your data</li>
+              <li>Not attempt to reverse-engineer, decompile, or modify Ontor</li>
             </ul>
 
             <h2>6. Data Ownership</h2>
             <p>
-              You retain full ownership of all health data stored in the App. Ontor does not
-              claim any ownership of your health records or documents. As a local-first application,
-              your data remains on your device under your control at all times.
+              You retain ownership of your data. Ontor does not claim ownership of your voice or the
+              results derived from it. By default your data stays on your device; if you enable sync,
+              it is stored on Ontor&apos;s servers so it is available across your devices. See our
+              Privacy Policy for details.
             </p>
 
             <h2>7. Disclaimer of Warranties</h2>
             <p>
-              The App is provided &quot;as is&quot; without warranty of any kind. Ontor does not warrant
-              that the App will be error-free, that extracted data will be accurate or complete,
-              or that AI-generated summaries will be free from inaccuracies. AI extraction is
-              assistive and may make errors — always verify important medical information against
-              your original documents.
+              Ontor is provided &quot;as is&quot; without warranty of any kind. Ontor does not warrant
+              that it will be error-free or that its readings will be accurate or complete. The
+              readings are assistive and may make errors.
             </p>
 
             <h2>8. Limitation of Liability</h2>
             <p>
-              To the fullest extent permitted by law, Ontor shall not be liable for any
-              indirect, incidental, special, or consequential damages arising from your use of
-              the App, including but not limited to reliance on AI-extracted health information
-              for medical decisions.
+              To the fullest extent permitted by law, Ontor shall not be liable for any indirect,
+              incidental, special, or consequential damages arising from your use of Ontor, including
+              reliance on its readings for any decision.
             </p>
 
             <h2>9. Intellectual Property</h2>

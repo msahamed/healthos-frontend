@@ -138,9 +138,9 @@ export default function AboutPage() {
           people already carry. Because he owns the full stack — ML modeling,
           signal processing, on-device deployment, and iOS — he could build
           what those teams couldn&apos;t package: a fully on-device voice
-          biomarker app where your audio never leaves your phone. The on-device
-          ML (Whisper for transcription, a small Qwen model, INT4/INT8
-          quantization) is work he has documented in depth.
+          product that reads your nervous-system state, analyzed on your device
+          by default. The on-device ML (a compact voice model, signal
+          processing, INT4/INT8 quantization) is work he has documented in depth.
         </p>
         <p>
           The approach won{" "}

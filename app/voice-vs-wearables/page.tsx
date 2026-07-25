@@ -136,7 +136,7 @@ export default function VoiceVsWearablesPage() {
             </tr>
             <tr>
               <td>Privacy</td>
-              <td>On-device; voice never leaves your phone</td>
+              <td>Analyzed on-device; nothing uploaded unless you opt in</td>
               <td>Synced to the cloud</td>
             </tr>
           </tbody>

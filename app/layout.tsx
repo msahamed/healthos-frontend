@@ -85,7 +85,7 @@ const APP_JSONLD = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   name: "Ontor",
-  applicationCategory: "HealthApplication",
+  applicationCategory: "BusinessApplication",
   operatingSystem: "macOS, Windows, iOS, Android",
   url: "https://ontor.ai",
   description: DESCRIPTION,
@@ -93,7 +93,7 @@ const APP_JSONLD = {
     "Desktop menu-bar app reads your nervous-system state across a live call, in real time",
     "Speaker-gated — only your own voice is analyzed, never the other person on the call",
     "Eight nervous-system signals: energy, stress, confidence, fatigue, vocal strain, expressiveness, articulation, breathing",
-    "On-device voice analysis — audio never leaves your device",
+    "Voice is analyzed on your device by default; nothing is uploaded unless you turn on optional sync",
     "Quick voice check-in on mobile, with pattern detection over your personal baseline",
   ],
   offers: {

@@ -16,7 +16,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Is my voice data private?",
-    a: "Yes. All analysis runs entirely on-device. Your voice audio never leaves your phone and is never uploaded to the cloud.",
+    a: "Your voice is analyzed on your device, and Ontor only ever analyzes you, not others nearby. By default nothing is uploaded; if you turn on optional sync, your results (not your raw audio) sync across your devices.",
   },
   {
     q: "How is Ontor different from Oura, WHOOP, or Apple Watch?",
