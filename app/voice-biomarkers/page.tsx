@@ -74,7 +74,7 @@ export default function VoiceBiomarkersPage() {
       <ContentPage
         eyebrow="Explainer"
         title="What is a voice biomarker?"
-        lede="The science behind reading your nervous-system state from how you sound — and how Ontor turns it into a 30-second daily check-in."
+        lede="The science behind reading your nervous-system state from how you sound — and how Ontor turns it into a natural-voice based analysis."
       >
         <p className="lead">
           A voice biomarker is a measurable feature of how you sound — pitch,

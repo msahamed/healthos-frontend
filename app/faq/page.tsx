@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 const FAQ: { q: string; a: string }[] = [
   {
     q: "What is Ontor?",
-    a: "Ontor is a voice-first, on-device iOS app that reads your nervous-system state from how you sound. A daily check-in takes just a few seconds — up to thirty — analyzing your unscripted speech to surface eight signals — energy, stress, fatigue, confidence and more — so you catch shifts before you consciously feel them.",
+    a: "Ontor is a voice-first, on-device iOS app that reads your nervous-system state from how you sound. Just takes your natural voice, analyzing your unscripted speech to surface eight signals — energy, stress, fatigue, confidence and more — so you catch shifts before you consciously feel them.",
   },
   {
     q: "How does voice biomarker analysis work?",

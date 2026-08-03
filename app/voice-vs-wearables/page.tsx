@@ -35,7 +35,7 @@ const FAQ = [
   },
   {
     q: "Do I need to buy hardware to use Ontor?",
-    a: "No. Ontor runs on the iPhone you already carry — there's no ring or band to buy, charge, or lose. A check-in takes a few seconds of speech, up to thirty, and runs entirely on-device.",
+    a: "No. Ontor runs on the iPhone you already carry — there's no ring or band to buy, charge, or lose. Just takes your natural voice, and runs entirely on-device.",
   },
 ];
 
@@ -126,7 +126,7 @@ export default function VoiceVsWearablesPage() {
             </tr>
             <tr>
               <td>Effort</td>
-              <td>A few seconds of speech, up to ~30s</td>
+              <td>Your natural voice</td>
               <td>Passive, zero-effort</td>
             </tr>
             <tr>
@@ -157,7 +157,7 @@ export default function VoiceVsWearablesPage() {
           before a high-stakes session, after a hard call — so the read is
           causal and contextual, not a number you scroll past. And it surfaces
           confidence, expressiveness, and vocal strain that no wrist sensor can
-          detect. The five seconds of awareness <em>is</em> the intervention.
+          detect. The moment of awareness <em>is</em> the intervention.
         </p>
 
         <h2>The bottom line</h2>

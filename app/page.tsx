@@ -132,7 +132,7 @@ export default function Home() {
                 <div><h4 style={stepH}>See how you held up</h4><p style={stepP}>A minute-by-minute timeline of your state across the whole call — where you were steady, where you slipped, and how it lines up with the outcome.</p></div>
               </div>
             </div>
-            <p style={{ textAlign: "center", margin: "34px 0 0", fontSize: 13.5, color: inkSoft }}>Away from your desk? A 30-second voice read on iPhone or Android — same engine, same baseline.</p>
+            <p style={{ textAlign: "center", margin: "34px 0 0", fontSize: 13.5, color: inkSoft }}>Away from your desk? A natural-voice read on iPhone or Android — same engine, same baseline.</p>
           </div>
         </section>
 
