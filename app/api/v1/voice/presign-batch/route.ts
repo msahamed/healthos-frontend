@@ -5,17 +5,33 @@
 // audio — it only signs).
 //
 // Same key scheme + auth model as the single PUT/GET presign:
-//   key  = `<S3_VOICE_PREFIX><user_id>/<observation_id>.wav`
+//   key  = `<S3_VOICE_PREFIX><user_id>/<observation_id>.<ext>`
 //   auth = `user_id` IS the bearer (random UUIDv4, not enumerable).
+//
+// Extension is NOT hardcoded `.wav` (it was, until the mobile app added
+// Opus-encoded clips ~2026-08 — see presign/route.ts's doc comment for
+// the full story). Unlike the PUT side, this endpoint has no content_type
+// from the caller to key off — presign-batch only gets observation ids —
+// so which extension a given clip actually landed under has to be
+// determined per id: HEAD-check `.opus` first (every clip uploaded after
+// the switchover is Opus) and fall back to `.wav` (every clip from
+// before) when that HEAD 404s or the check itself fails for any reason.
+// A HEAD failure (permissions, transient AWS error, whatever) must never
+// break the batch — it just degrades to the old, always-correct-for-
+// legacy-clips behavior for that one id.
 //
 // Body: { user_id, observation_ids: string[] }
 // Response: { urls: { <observation_id>: <signedUrl> }, expires_at }
 // Unknown / malformed ids are simply omitted from `urls` rather than
-// failing the batch; a 404 on download (clip never uploaded) is handled
-// client-side.
+// failing the batch; a 404 on download (clip never uploaded at all) is
+// handled client-side.
 
 import { NextResponse } from "next/server";
-import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  GetObjectCommand,
+  HeadObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export const runtime = "nodejs";
@@ -33,6 +49,19 @@ function getS3(): S3Client {
   if (!region) throw new Error("AWS_REGION not configured");
   _s3 = new S3Client({ region, requestChecksumCalculation: "WHEN_REQUIRED" });
   return _s3;
+}
+
+/// True if `bucket/key` exists. Best-effort: ANY failure (404 "not
+/// found", 403 "no HeadObject permission", network hiccup, whatever)
+/// reads as false rather than throwing — callers fall back to the
+/// legacy `.wav` key, which is always the safe default.
+async function objectExists(bucket: string, key: string): Promise<boolean> {
+  try {
+    await getS3().send(new HeadObjectCommand({ Bucket: bucket, Key: key }));
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 interface BatchBody {
@@ -90,7 +119,11 @@ export async function POST(req: Request) {
   try {
     const entries = await Promise.all(
       ids.map(async (id) => {
-        const key = `${prefix}${userId}/${id}.wav`;
+        const base = `${prefix}${userId}/${id}`;
+        const opusKey = `${base}.opus`;
+        const key = (await objectExists(bucket, opusKey))
+          ? opusKey
+          : `${base}.wav`;
         const signedUrl = await getSignedUrl(
           getS3(),
           new GetObjectCommand({ Bucket: bucket, Key: key }),

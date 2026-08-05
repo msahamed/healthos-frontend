@@ -1,7 +1,7 @@
 // POST /api/v1/voice/presign — mint a short-lived S3 PUT URL for a
 // single voice clip.
 //
-// The app uploads the .wav directly to S3 with this URL — backend
+// The app uploads the clip directly to S3 with this URL — backend
 // never touches the audio bytes. Two reasons that matters:
 //
 //   1. Vercel function bandwidth is metered + slow for multi-MB
@@ -9,13 +9,24 @@
 //   2. Keeping audio off the API surface narrows the attack surface
 //      and reduces what the backend has to be trusted with.
 //
-// Key scheme: `<S3_VOICE_PREFIX><user_id>/<observation_id>.wav`
+// Key scheme: `<S3_VOICE_PREFIX><user_id>/<observation_id>.<ext>`
 //   - Prefix is configurable so the bucket can mix voice with other
 //     observation artifacts. Defaults to `observations/` to match the
 //     `s3://<bucket>/observations/` layout we use today.
 //   - Partitioned by user_id so a delete-all-my-data is a single
 //     S3 prefix delete.
 //   - One key per observation; idempotent on retry.
+//   - `<ext>` follows `content_type` (see CONTENT_TYPE_EXTENSIONS below),
+//     NOT hardcoded — the mobile app switched its on-device clip format
+//     from raw WAV to an Opus container (~2026-08); see
+//     mobile_app/lib/src/services/audio_recording_service.dart and
+//     mobile_app/lib/src/services/sync/sync_dto.dart, which independently
+//     derives the SAME s3_key it expects this endpoint to have written
+//     (extension from the local clip's actual format) for the pointer it
+//     syncs into the observation doc. Both must agree or restore/playback
+//     look for the wrong object. A build still queuing a pre-switchover
+//     WAV upload sends `audio/wav` and gets `.wav` here, same as before —
+//     old and new installs upload side by side during the rollout.
 //
 // Auth: same model as /api/v1/sync — `user_id` IS the bearer.
 // A leaked user_id buys the holder the ability to upload audio
@@ -31,7 +42,15 @@ export const runtime = "nodejs";
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-const ALLOWED_CONTENT_TYPES = new Set(["audio/wav", "audio/x-wav"]);
+// Extension is derived from content_type, never assumed — see the file
+// doc comment. Keep in sync with the Dart client's own sniff-based
+// extension choice (voice_upload_engine.dart / sync_dto.dart).
+const CONTENT_TYPE_EXTENSIONS: Record<string, string> = {
+  "audio/wav": "wav",
+  "audio/x-wav": "wav",
+  "audio/opus": "opus",
+};
+const ALLOWED_CONTENT_TYPES = new Set(Object.keys(CONTENT_TYPE_EXTENSIONS));
 
 // 15 minutes is enough for any reasonable upload, short enough that a
 // leaked URL is unusable by the next morning.
@@ -125,7 +144,10 @@ export async function POST(req: Request) {
   // current bucket layout. Override via Vercel env var.
   const rawPrefix = process.env.S3_VOICE_PREFIX ?? "observations/";
   const prefix = rawPrefix.replace(/^\/+/, "").replace(/\/*$/, "/");
-  const s3Key = `${prefix}${userId}/${observationId}.wav`;
+  // ALLOWED_CONTENT_TYPES already validated contentType above, so this
+  // is always a hit — the `?? "wav"` is defensive, not a real fallback.
+  const ext = CONTENT_TYPE_EXTENSIONS[contentType] ?? "wav";
+  const s3Key = `${prefix}${userId}/${observationId}.${ext}`;
 
   try {
     const url = await getSignedUrl(
