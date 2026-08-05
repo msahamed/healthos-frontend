@@ -1,7 +1,7 @@
 ---
 title: "Should Today's You Be at the Screens? The Pre-Trade Check Most Traders Skip"
 slug: "pre-trade-readiness-check"
-description: "Traders check the charts before the open. Far fewer check themselves. Here's why your state is part of your edge, and the 5-second pre-trade read that catches a bad day before it costs you."
+description: "Traders check the charts before the open. Far fewer check themselves. Here's why your state is part of your edge, and the natural-voice pre-trade read that catches a bad day before it costs you."
 date: "2026-06-25"
 updated: "2026-06-25"
 targetKeyword: "pre-trade routine"
@@ -58,13 +58,13 @@ Good traders already run a pre-market routine — plan, levels, risk. The missin
 
 If you're off, the answer isn't to push harder. It's to cut size, tighten rules, or sit the session out. None of that costs you anything; pushing through an off day does. The check is small, it's free, and it's the whole intervention.
 
-## A 5-second read before the open
+## A natural-voice read before the open
 
-The trouble with self-assessment is that it drifts — "I'm fine" is what you tell yourself right up until you're not. Ontor is built to make that read objective and fast: it picks up stress, energy, and a few other nervous-system signals from *how you sound* in a few seconds of speech, scored against your own baseline. Your normal, versus today.
+The trouble with self-assessment is that it drifts — "I'm fine" is what you tell yourself right up until you're not. Ontor is built to make that read objective and fast: it picks up stress, energy, and a few other nervous-system signals from *how you sound* when you speak naturally, scored against your own baseline. Your normal, versus today.
 
 <figure class="post-shot">
-  <img src="/screenshots/listening.png" alt="Ontor capturing a few seconds of speech for a quick pre-session state read." />
-  <figcaption>A few seconds before the open — an objective read on your state, while you can still decide how to play the day.</figcaption>
+  <img src="/screenshots/listening.png" alt="Ontor capturing your natural voice for a quick pre-session state read." />
+  <figcaption>A quick, natural read before the open — an objective read on your state, while you can still decide how to play the day.</figcaption>
 </figure>
 
 It runs entirely on-device, so it's a check you can do at your desk before the bell without anything leaving your phone. To be clear about what it is: a general-wellness, self-awareness tool, not financial advice and not a market signal. It won't tell you what to trade or predict anything — it just gives you an honest read on the operator, so the call about whether today's you should be sizing up, sizing down, or stepping back is yours to make with better information. If you want the mechanics, [how voice biomarkers work](/voice-biomarkers) covers the read itself.

@@ -61,7 +61,7 @@ The research and the clinicians converge on the same advice, and none of it mean
 
 ## A read, not a grade
 
-This last point is the whole idea behind Ontor. It doesn't hand you a number to beat. It reads energy, stress, and a handful of other nervous-system signals from *how you sound* in a few seconds of speech, and shows each one relative to *your own* baseline — in your usual range, a little below, a little above. Not a leaderboard. Your normal, and where today sits against it.
+This last point is the whole idea behind Ontor. It doesn't hand you a number to beat. It reads energy, stress, and a handful of other nervous-system signals from *how you sound* when you speak naturally, and shows each one relative to *your own* baseline — in your usual range, a little below, a little above. Not a leaderboard. Your normal, and where today sits against it.
 
 <figure class="post-shot">
   <img src="/screenshots/daily-checkins.png" alt="A Ontor day of quick voice check-ins, each showing signals relative to the user's usual range." />
