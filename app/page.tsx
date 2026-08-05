@@ -25,6 +25,7 @@ export default function Home() {
             <a href="#signals" style={{ color: "inherit", textDecoration: "none" }}>What it reads</a>
             <a href="#privacy" style={{ color: "inherit", textDecoration: "none" }}>Privacy</a>
             <a href="#science" style={{ color: "inherit", textDecoration: "none" }}>Science</a>
+            <a href="/pricing" style={{ color: "inherit", textDecoration: "none" }}>Pricing</a>
             <a href="/blog" style={{ color: "inherit", textDecoration: "none" }}>Blog</a>
           </nav>
           <a href="#join" className="hos-beta" style={{ fontSize: 14, fontWeight: 600, background: teal, color: "#fff", borderRadius: 12, padding: "9px 16px", whiteSpace: "nowrap", boxShadow: "0 6px 18px rgba(15,118,110,.22)", textDecoration: "none" }}>Get the beta</a>

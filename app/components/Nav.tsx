@@ -76,6 +76,9 @@ export default function Nav() {
           <Link href="/faq" className="nav-link">
             FAQ
           </Link>
+          <Link href="/pricing" className="nav-link">
+            Pricing
+          </Link>
         </nav>
 
         <Link
