@@ -70,14 +70,23 @@ export default function Nav() {
             color: "var(--ink-soft)",
           }}
         >
-          <Link href="/#signals" className="nav-link">
-            What it reveals
+          <Link href="/#how" className="nav-link">
+            How it works
           </Link>
-          <Link href="/faq" className="nav-link">
-            FAQ
+          <Link href="/#signals" className="nav-link">
+            What it reads
+          </Link>
+          <Link href="/#privacy" className="nav-link">
+            Privacy
+          </Link>
+          <Link href="/#science" className="nav-link">
+            Science
           </Link>
           <Link href="/pricing" className="nav-link">
             Pricing
+          </Link>
+          <Link href="/blog" className="nav-link">
+            Blog
           </Link>
         </nav>
 

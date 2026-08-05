@@ -1,5 +1,6 @@
 import InlineWaitlistForm from "./components/InlineWaitlistForm";
 import HeroTimeline from "./components/landing/HeroTimeline";
+import Nav from "./components/Nav";
 
 // Ontor homepage — performance-intelligence relaunch.
 // Ported from the approved Claude Design "Ontor Home". The hero visual is
@@ -12,25 +13,7 @@ const ink = "#1B1A17", inkSoft = "#5A554B", teal = "#0F766E", amber = "#F59E0B";
 export default function Home() {
   return (
     <>
-      <header style={{ position: "sticky", top: 0, zIndex: 50, background: "rgba(247,244,238,.88)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", borderBottom: "1px solid #E4DDD0" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 32px", height: 70, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <a href="#top" style={{ display: "inline-flex", alignItems: "center", gap: 10, fontWeight: 700, fontSize: 18, letterSpacing: "-0.01em", color: ink, textDecoration: "none" }}>
-            <svg width="30" height="30" viewBox="0 0 30 30" style={{ display: "block", borderRadius: 6.6, background: teal }}>
-              <rect x="5.1" y="10.8" width="2.7" height="8.4" rx="1.35" fill={amber} /><rect x="9.9" y="7.5" width="2.7" height="15" rx="1.35" fill={amber} /><rect x="14.7" y="4.8" width="2.7" height="20.4" rx="1.35" fill={amber} /><rect x="19.5" y="7.5" width="2.7" height="15" rx="1.35" fill={amber} /><rect x="24.3" y="10.8" width="2.7" height="8.4" rx="1.35" fill={amber} />
-            </svg>
-            Ontor
-          </a>
-          <nav className="hos-nav" style={{ display: "flex", alignItems: "center", gap: 30, fontSize: 14.5, fontWeight: 500, color: inkSoft }}>
-            <a href="#how" style={{ color: "inherit", textDecoration: "none" }}>How it works</a>
-            <a href="#signals" style={{ color: "inherit", textDecoration: "none" }}>What it reads</a>
-            <a href="#privacy" style={{ color: "inherit", textDecoration: "none" }}>Privacy</a>
-            <a href="#science" style={{ color: "inherit", textDecoration: "none" }}>Science</a>
-            <a href="/pricing" style={{ color: "inherit", textDecoration: "none" }}>Pricing</a>
-            <a href="/blog" style={{ color: "inherit", textDecoration: "none" }}>Blog</a>
-          </nav>
-          <a href="#join" className="hos-beta" style={{ fontSize: 14, fontWeight: 600, background: teal, color: "#fff", borderRadius: 12, padding: "9px 16px", whiteSpace: "nowrap", boxShadow: "0 6px 18px rgba(15,118,110,.22)", textDecoration: "none" }}>Get the beta</a>
-        </div>
-      </header>
+      <Nav />
 
       <main id="top">
         {/* ════ HERO ════ */}
@@ -274,10 +257,7 @@ const SCIENCE = [
 ];
 
 const RESPONSIVE_CSS = `
-.hos-nav a:hover{ color:#1B1A17; }
-.hos-beta:hover{ background:#0B5048 !important; }
 .hos-card:hover { border-color:#D6CDBC !important; box-shadow:0 14px 32px rgba(27,26,23,.08); transform:translateY(-3px); }
-@media (max-width: 760px){ .hos-nav { display:none !important; } }
 @media (max-width: 920px){
   .hos-hero-grid, .hos-priv-grid { grid-template-columns:1fr !important; gap:40px !important; padding-top:56px !important; padding-bottom:64px !important; }
   .hos-3grid { grid-template-columns:1fr !important; }

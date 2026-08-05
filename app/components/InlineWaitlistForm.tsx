@@ -62,7 +62,7 @@ export default function InlineWaitlistForm({
   }
 
   const isHero = variant === "hero";
-  const label = buttonLabel ?? (isHero ? "Get early access" : "Join the waitlist");
+  const label = buttonLabel ?? "Join the waitlist";
 
   return (
     <>
