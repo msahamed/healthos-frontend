@@ -35,6 +35,9 @@ interface ObservationDoc {
   updated_at: Date;
   deleted_at: Date | null;
   transcript: string | null;
+  // User-authored note attached to the log for later context (distinct from
+  // the transcript). Optional; absent on docs written before notes synced.
+  user_note?: string | null;
   app_version: string | null;
   platform: string | null;
   extraction: Record<string, unknown>;
@@ -71,6 +74,7 @@ interface IncomingObservation {
   updated_at: string;
   deleted_at?: string | null;
   transcript?: string;
+  user_note?: string;
   app_version?: string;
   platform?: string;
   extraction?: Record<string, unknown>;
@@ -105,6 +109,7 @@ function sanitize(raw: unknown, expectedUserId: string): IncomingObservation | n
     updated_at: updatedAt,
     deleted_at: typeof r.deleted_at === "string" ? r.deleted_at : null,
     transcript: typeof r.transcript === "string" ? r.transcript : undefined,
+    user_note: typeof r.user_note === "string" ? r.user_note : undefined,
     app_version: typeof r.app_version === "string" ? r.app_version : undefined,
     platform: typeof r.platform === "string" ? r.platform : undefined,
     extraction: isPlainObject(r.extraction) ? r.extraction : undefined,
@@ -137,6 +142,7 @@ function toDoc(o: IncomingObservation): ObservationDoc {
     signals: o.signals ?? {},
     markers: o.markers ?? {},
     voice_clip: o.voice_clip ?? null,
+    ...(o.user_note !== undefined && { user_note: o.user_note }),
     ...(o.frames !== undefined && { frames: o.frames }),
     ...(o.marker_ratings !== undefined && { marker_ratings: o.marker_ratings }),
     received_at: new Date(),
