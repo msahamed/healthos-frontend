@@ -28,11 +28,11 @@ const DESCRIPTION =
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ontor.ai"),
-  title: "Ontor — Performance intelligence from your voice",
+  title: "Ontor — See your nervous system while you speak",
   description: DESCRIPTION,
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Ontor — Performance intelligence from your voice",
+    title: "Ontor — See your nervous system while you speak",
     description: DESCRIPTION,
     url: "https://ontor.ai",
     siteName: "Ontor",
@@ -42,13 +42,13 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Ontor — Performance intelligence from your voice.",
+        alt: "Ontor — See your nervous system while you speak.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ontor — Performance intelligence from your voice",
+    title: "Ontor — See your nervous system while you speak",
     description: DESCRIPTION,
     images: ["/og.png"],
   },
