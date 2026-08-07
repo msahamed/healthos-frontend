@@ -24,7 +24,7 @@ export default function Home() {
             <div>
               <span style={eyebrow("#6FD6C9")}><span style={eyeDot} />For work that happens on calls</span>
               <h1 className="font-serif-display" style={{ fontWeight: 500, fontSize: "clamp(38px, 4.6vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.02em", margin: "22px 0 0", color: "#FBF8F1" }}>
-                Performance intelligence <em style={{ fontStyle: "italic", color: "#FCD34D" }}>from your voice.</em>
+                See your nervous system <em style={{ fontStyle: "italic", color: "#FCD34D" }}>while you speak.</em>
               </h1>
               <p style={{ margin: "24px 0 0", fontSize: 18, lineHeight: 1.62, color: "#C9D4D2", maxWidth: 520 }}>
                 Ontor sits in your menu bar. Press Start and it quietly reads your nervous system — stress, energy, confidence — from how you sound through real calls. <strong style={{ color: "#F4F1EA", fontWeight: 600 }}>It only ever listens to you:</strong> when the other person talks, it records nothing. All on-device — no wearable needed.
