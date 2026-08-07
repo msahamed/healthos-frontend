@@ -2,12 +2,18 @@ import Nav from "../components/Nav";
 import Logo from "../components/Logo";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getMongoClient } from "@/lib/mongodb";
 
 // ── /install: beta setup + update steps for invited users (linked from
 // invite emails). Deliberately unlisted: noindex + not in the sitemap or site
-// nav, because the Android link is a closed internal-testing track, not a
-// public listing. Supports ?email=<their@gmail.com> so the invite email can
-// pre-fill the exact Google account the Play Store must be signed into.
+// nav. Supports ?email=<their@gmail.com> so the invite email can pre-fill the
+// exact Google account the Play Store must be signed into.
+//
+// STEALTH GATE: the TestFlight / Play links render ONLY when ?email= matches
+// a waitlist doc that has been invited (invited_at set by the cockpit's
+// invite sender). Everyone else sees the steps with a "use your invite email"
+// placeholder, so a shared or guessed URL leaks nothing joinable. Fails
+// closed if the lookup errors.
 //
 // Layout: one card per platform, Install | Update as side-by-side columns
 // (stacked on phones), every step numbered with a "Step N" badge.
@@ -15,6 +21,19 @@ import type { Metadata } from "next";
 const IOS_LINK = "https://testflight.apple.com/join/JBG3ANFF";
 const ANDROID_LINK =
   "https://play.google.com/apps/internaltest/4701391287312603731";
+
+async function isInvited(email: string): Promise<boolean> {
+  try {
+    const client = await getMongoClient();
+    const doc = await client
+      .db("healthos")
+      .collection("waitlist")
+      .findOne({ email }, { projection: { invited_at: 1 } });
+    return Boolean(doc?.invited_at);
+  } catch {
+    return false;
+  }
+}
 
 export const metadata: Metadata = {
   title: "Install Ontor (beta)",
@@ -34,10 +53,25 @@ export default async function InstallPage({
     typeof raw === "string" && EMAIL_RE.test(raw.trim())
       ? raw.trim().toLowerCase()
       : null;
+  const invited = email ? await isInvited(email) : false;
   const accountName = email ? (
     <strong className="in-email">{email}</strong>
   ) : (
     <strong>the email your invite was sent to</strong>
+  );
+  const iosLink = invited ? (
+    <a href={IOS_LINK} className="in-link">
+      {IOS_LINK.replace("https://", "")}
+    </a>
+  ) : (
+    <em className="in-locked">use the install link from your invite email</em>
+  );
+  const androidLink = invited ? (
+    <a href={ANDROID_LINK} className="in-link">
+      play.google.com/apps/internaltest/&hellip;
+    </a>
+  ) : (
+    <em className="in-locked">use the install link from your invite email</em>
   );
 
   return (
@@ -63,6 +97,14 @@ export default async function InstallPage({
 
         <section className="in-body">
           <div className="in-wrap">
+            {!invited && (
+              <div className="in-gate">
+                Ontor is in private beta, so the install links only show up
+                when you open this page from your invite email. Not invited
+                yet? <Link href="/#join">Join the waitlist</Link> and
+                we&apos;ll reach out when your spot opens.
+              </div>
+            )}
             {/* ── iPhone ── */}
             <div className="in-card" id="iphone">
               <h2> iPhone</h2>
@@ -77,9 +119,7 @@ export default async function InstallPage({
                     <li>
                       <strong>Open the invite link on your iPhone:</strong>
                       <br />
-                      <a href={IOS_LINK} className="in-link">
-                        {IOS_LINK.replace("https://", "")}
-                      </a>
+                      {iosLink}
                     </li>
                     <li>
                       <strong>Install TestFlight if asked.</strong>{" "}If you
@@ -162,9 +202,7 @@ export default async function InstallPage({
                     <li>
                       <strong>Now open this link on the phone:</strong>
                       <br />
-                      <a href={ANDROID_LINK} className="in-link">
-                        play.google.com/apps/internaltest/&hellip;
-                      </a>
+                      {androidLink}
                     </li>
                     <li>
                       On that page, tap{" "}
@@ -207,9 +245,7 @@ export default async function InstallPage({
                     <li>
                       <strong>Tap this link on your phone:</strong>
                       <br />
-                      <a href={ANDROID_LINK} className="in-link">
-                        play.google.com/apps/internaltest/&hellip;
-                      </a>
+                      {androidLink}
                     </li>
                     <li>
                       If it asks, tap{" "}
@@ -319,6 +355,13 @@ const INSTALL_CSS = `
 .in-steps strong { color: var(--ink); }
 .in-link { color: var(--teal); font-weight: 600; text-decoration: none; word-break: break-all; }
 .in-link:hover { text-decoration: underline; }
+.in-locked { color: var(--ink-soft); font-style: italic; }
+.in-gate {
+  border: 1px solid var(--line-strong); background: #fff; border-radius: 12px;
+  padding: 14px 18px; margin-bottom: 22px; font-size: 14.5px; line-height: 1.6;
+  color: var(--ink-soft);
+}
+.in-gate a { color: var(--teal); font-weight: 600; }
 .in-email { color: var(--teal); overflow-wrap: break-word; }
 .in-warn {
   margin-top: 18px; border: 1px solid #E8D9B8; background: #FBF6E9; border-radius: 12px;
