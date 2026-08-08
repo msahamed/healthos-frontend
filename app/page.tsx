@@ -26,14 +26,28 @@ export default function Home() {
               <h1 className="font-serif-display" style={{ fontWeight: 500, fontSize: "clamp(38px, 4.6vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.02em", margin: "22px 0 0", color: "#FBF8F1" }}>
                 See your nervous system <em style={{ fontStyle: "italic", color: "#FCD34D" }}>while you speak.</em>
               </h1>
-              <ul style={{ margin: "24px 0 0", padding: 0, listStyle: "none", fontSize: 18, lineHeight: 1.62, color: "#C9D4D2", maxWidth: 520, display: "grid", gap: 10 }}>
-                <li style={{ display: "flex", gap: 12 }}><span aria-hidden style={{ flexShrink: 0, width: 3, borderRadius: 2, background: "#6FD6C9", alignSelf: "stretch" }} />Stress, energy, confidence. See the patterns build over time.</li>
-                <li style={{ display: "flex", gap: 12 }}><span aria-hidden style={{ flexShrink: 0, width: 3, borderRadius: 2, background: "#6FD6C9", alignSelf: "stretch" }} />Where you&rsquo;re strong, where you slip.</li>
-                <li style={{ display: "flex", gap: 12 }}><span aria-hidden style={{ flexShrink: 0, width: 3, borderRadius: 2, background: "#FCD34D", alignSelf: "stretch" }} />Act on it while it still counts.</li>
-              </ul>
-              <p style={{ margin: "18px 0 0", fontSize: 15.5, lineHeight: 1.6, color: "#94A39F", maxWidth: 520 }}>
-                <strong style={{ color: "#F4F1EA", fontWeight: 600 }}>It only ever listens to you.</strong> When the other person talks, it records nothing.
-              </p>
+              {/* Sub-headline variant 1a — numbered steps */}
+              <div style={{ margin: "28px 0 0", maxWidth: 520, display: "flex", flexDirection: "column" }}>
+                {[
+                  ["See the patterns", "Stress, energy, confidence, and more."],
+                  ["Know where you slip", "And where you hold steady. It shows you both."],
+                  ["Take action, get better", "Your own patterns show you what to work on. So work on it."],
+                ].map(([t, b], i, arr) => {
+                  const last = i === arr.length - 1;
+                  return (
+                    <div key={t} style={{ display: "flex", gap: 16 }}>
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                        <div style={{ width: 32, height: 32, borderRadius: "50%", flex: "0 0 auto", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, fontVariantNumeric: "tabular-nums", ...(last ? { background: "#F59E0B", color: "#1B1A17" } : { border: "1.5px solid #6FD6C9", color: "#6FD6C9" }) }}>{i + 1}</div>
+                        {!last && <div style={{ width: 1.5, flex: 1, background: "rgba(251,248,241,0.14)", margin: "5px 0" }} />}
+                      </div>
+                      <div style={{ paddingBottom: last ? 0 : 20 }}>
+                        <div style={{ color: "#FBF8F1", fontWeight: 600, fontSize: 17.5, marginBottom: 3 }}>{t}</div>
+                        <div style={{ color: "#94A39F", fontSize: 15, lineHeight: 1.55 }}>{b}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
               <InlineWaitlistForm variant="hero" />
               <div style={{ marginTop: 14, fontSize: 13.5, color: "#94A39F", display: "inline-flex", alignItems: "center", gap: 8 }}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6FD6C9" strokeWidth="2"><rect x="4" y="10" width="16" height="11" rx="2.5" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></svg>
