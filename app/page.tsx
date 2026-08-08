@@ -1,6 +1,7 @@
 import InlineWaitlistForm from "./components/InlineWaitlistForm";
 import HeroTimeline from "./components/landing/HeroTimeline";
 import Nav from "./components/Nav";
+import PatternSection from "./components/landing/PatternSection";
 
 // Ontor homepage — performance-intelligence relaunch.
 // Ported from the approved Claude Design "Ontor Home". The hero visual is
@@ -57,6 +58,9 @@ export default function Home() {
             <div style={{ minWidth: 0 }}><HeroTimeline /></div>
           </div>
         </section>
+
+        {/* ════ PATTERNS (what it adds up to) ════ */}
+        <PatternSection />
 
         {/* ════ HOW IT WORKS ════ */}
         <section id="how" style={{ padding: "88px 0", background: "#F1ECE2" }}>
@@ -187,28 +191,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ════ SIGNALS ════ */}
-        <section id="signals" style={{ padding: "88px 0", background: "#E7DEC9" }}>
-          <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 32px" }}>
-            <div style={{ maxWidth: 660, margin: "0 auto", textAlign: "center" }}>
-              <span style={eyebrow(teal, true)}><span style={eyeDot} />What it reads</span>
-              <h2 className="font-serif-display" style={h2()}>Performance signals, from how you sound.</h2>
-              <p style={{ fontSize: 18, color: inkSoft, margin: "18px 0 0", lineHeight: 1.6 }}>Not what you said — how you actually showed up. Each one scored against your own baseline, call after call.</p>
-            </div>
-            <div className="hos-4grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginTop: 54 }}>
-              {SIGNALS.map((s) => (
-                <div key={s.title} className="hos-card" style={{ background: "#fff", border: "1px solid #E4DDD0", borderRadius: 18, padding: "22px 20px 20px", display: "flex", flexDirection: "column", transition: "border-color .2s, box-shadow .2s, transform .2s" }}>
-                  <span style={{ width: 44, height: 44, borderRadius: 12, background: "#E8F1EF", display: "grid", placeItems: "center", marginBottom: 15 }}>
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={teal} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" dangerouslySetInnerHTML={{ __html: s.icon }} />
-                  </span>
-                  <h4 style={{ fontSize: 16.5, fontWeight: 700, margin: 0, letterSpacing: "-0.01em", color: ink }}>{s.title}</h4>
-                  <p style={{ fontSize: 14, color: inkSoft, margin: "6px 0 0", lineHeight: 1.5, flex: 1 }}>{s.body}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* ════ CTA ════ */}
         <section id="join" style={{ padding: "96px 0", textAlign: "center" }}>
           <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 32px" }}>
@@ -257,17 +239,6 @@ const stepN: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacin
 const stepH: React.CSSProperties = { fontSize: 17, fontWeight: 700, margin: 0, letterSpacing: "-0.01em" };
 const stepP: React.CSSProperties = { fontSize: 14.5, color: "#5A554B", margin: "6px 0 0", lineHeight: 1.5 };
 const footLink: React.CSSProperties = { color: "inherit", textDecoration: "none" };
-
-const SIGNALS = [
-  { title: "Energy", body: "What you had in the tank — hour by hour, not how it felt.", icon: '<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>' },
-  { title: "Stress", body: "Pressure in your voice before you’d name it yourself.", icon: '<path d="M3 12h4l3-8 4 16 3-8h4"/>' },
-  { title: "Confidence", body: "Steady and decisive, or hedging your way through.", icon: '<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/>' },
-  { title: "Fatigue", body: "The tiredness under your words by the third call.", icon: '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>' },
-  { title: "Vocal strain", body: "When the instrument itself is wearing down.", icon: '<path d="M4 12h2M9 6v12M13 3v18M17 8v8M20 12h0"/>' },
-  { title: "Expressiveness", body: "Animated and persuasive, or gone flat.", icon: '<path d="M3 12c2.5-7 5-7 7.5 0s5 7 7.5 0"/>' },
-  { title: "Articulation", body: "Crisp and precise, or fraying at the edges.", icon: '<path d="M4 6h16M4 11h11M4 16h14M4 21h7"/>' },
-  { title: "Breathing", body: "Controlled and full, or short and shallow under load.", icon: '<path d="M3 9h11a3 3 0 1 0-3-3"/><path d="M3 15h14a3 3 0 1 1-3 3"/>' },
-];
 
 const SCIENCE = [
   { title: "On your device", body: "Your voice is analyzed on the device itself. Nothing leaves it unless you turn on optional sync.", icon: '<rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10 18.5h4"/>' },
