@@ -9,6 +9,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/`, lastModified, changeFrequency: 'weekly', priority: 1 },
     { url: `${BASE_URL}/faq/`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE_URL}/install/`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${BASE_URL}/install/mac/`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/voice-biomarkers/`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/voice-vs-wearables/`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE_URL}/blog/`, lastModified, changeFrequency: 'weekly', priority: 0.7 },

@@ -1,388 +1,130 @@
 import Nav from "../components/Nav";
-import Logo from "../components/Logo";
-import Link from "next/link";
 import type { Metadata } from "next";
-import { getMongoClient } from "@/lib/mongodb";
+import { extractEmail, withEmail, type SearchParams } from "./_lib/query";
+import { INSTALL_SHARED_CSS } from "./_lib/shared-css";
+import PlatformTile from "./_components/PlatformTile";
+import InstallFooter from "./_components/InstallFooter";
+import { LaptopIcon, PhoneIcon, AndroidIcon, WindowsIcon } from "./_components/icons";
 
-// ── /install: beta setup + update steps for invited users (linked from
-// invite emails). Deliberately unlisted: noindex + not in the sitemap or site
-// nav. Supports ?email=<their@gmail.com> so the invite email can pre-fill the
-// exact Google account the Play Store must be signed into.
+// ── /install: platform chooser, the front door for all installs.
+// Public and indexable — replaces the old single gated page. Everyone
+// lands here first and picks a platform; only Mac unlocks a fully
+// public page underneath, iOS/Android stay invite-only, Windows is
+// coming soon. Old #iphone anchor (pre-split /install page) simply
+// no-ops here, nothing to scroll to and nothing errors.
 //
-// STEALTH GATE: the TestFlight / Play links render ONLY when ?email= matches
-// a waitlist doc that has been invited (invited_at set by the cockpit's
-// invite sender). Everyone else sees the steps with a "use your invite email"
-// placeholder, so a shared or guessed URL leaks nothing joinable. Fails
-// closed if the lookup errors.
-//
-// Layout: one card per platform, Install | Update as side-by-side columns
-// (stacked on phones), every step numbered with a "Step N" badge.
-
-const IOS_LINK = "https://testflight.apple.com/join/JBG3ANFF";
-const ANDROID_LINK =
-  "https://play.google.com/apps/internaltest/4701391287312603731";
-
-async function isInvited(email: string): Promise<boolean> {
-  try {
-    const client = await getMongoClient();
-    const doc = await client
-      .db("healthos")
-      .collection("waitlist")
-      .findOne({ email }, { projection: { invited_at: 1 } });
-    return Boolean(doc?.invited_at);
-  } catch {
-    return false;
-  }
-}
+// Supports ?email=<their@gmail.com> from invite emails, forwarded onto
+// every tile so the platform page never has to ask again.
 
 export const metadata: Metadata = {
-  title: "Install Ontor (beta)",
-  description: "Setup and update steps for Ontor beta access on iPhone and Android.",
-  robots: { index: false, follow: false },
+  title: "Install Ontor",
+  description: "Get Ontor on your machine. Mac is available now; iPhone, Android, and Windows are on the way.",
 };
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
-export default async function InstallPage({
+export default async function InstallChooserPage({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: SearchParams;
 }) {
-  const raw = (await searchParams).email;
-  const email =
-    typeof raw === "string" && EMAIL_RE.test(raw.trim())
-      ? raw.trim().toLowerCase()
-      : null;
-  const invited = email ? await isInvited(email) : false;
-  const accountName = email ? (
-    <strong className="in-email">{email}</strong>
-  ) : (
-    <strong>the email your invite was sent to</strong>
-  );
-  const iosLink = invited ? (
-    <a href={IOS_LINK} className="in-link">
-      {IOS_LINK.replace("https://", "")}
-    </a>
-  ) : (
-    <em className="in-locked">use the install link from your invite email</em>
-  );
-  const androidLink = invited ? (
-    <a href={ANDROID_LINK} className="in-link">
-      play.google.com/apps/internaltest/&hellip;
-    </a>
-  ) : (
-    <em className="in-locked">use the install link from your invite email</em>
-  );
+  const email = await extractEmail(searchParams);
+  const link = (path: string) => withEmail(path, email);
 
   return (
     <>
       <Nav />
 
       <main id="top" className="flex-1">
-        <section className="in-hero">
-          <div className="in-wrap">
-            <span className="in-eyebrow">Beta access</span>
-            <h1 className="font-serif-display">Get Ontor on your phone.</h1>
-            <p className="in-lede">
-              You&apos;re in. Ontor is in private beta, so setup takes a couple
-              of extra steps &mdash; about a minute on iPhone, a few more on
-              Android. Pick your phone:
+        <section className="ch-hero">
+          <div className="inst-wrap">
+            <span className="ch-eyebrow">Install</span>
+            <h1 className="font-serif-display">Get Ontor on your machine.</h1>
+            <p>
+              Pick your platform. Mac is available today. iPhone and Android
+              are invite-only while we&apos;re in private beta.
             </p>
-            <div className="in-jump">
-              <a href="#iphone">iPhone</a>
-              <a href="#android">Android</a>
-            </div>
           </div>
         </section>
 
-        <section className="in-body">
-          <div className="in-wrap">
-            {!invited && (
-              <div className="in-gate">
-                Ontor is in private beta, so the install links only show up
-                when you open this page from your invite email. Not invited
-                yet? <Link href="/#join">Join the waitlist</Link> and
-                we&apos;ll reach out when your spot opens.
-              </div>
-            )}
-            {/* ── iPhone ── */}
-            <div className="in-card" id="iphone">
-              <h2> iPhone</h2>
-              <div className="in-cols">
-                <div className="in-col">
-                  <h3>Install</h3>
-                  <p className="in-note">
-                    Goes through Apple&apos;s TestFlight app. No invitation
-                    code is needed at any point.
-                  </p>
-                  <ol className="in-steps">
-                    <li>
-                      <strong>Open the invite link on your iPhone:</strong>
-                      <br />
-                      {iosLink}
-                    </li>
-                    <li>
-                      <strong>Install TestFlight if asked.</strong>{" "}If you
-                      don&apos;t have Apple&apos;s TestFlight app yet, the link
-                      sends you to the App Store to install it first. This is
-                      normal.
-                    </li>
-                    <li>
-                      <strong>Come back and tap the link again.</strong> After
-                      TestFlight finishes installing, return here and tap the
-                      invite link a second time. It opens TestFlight straight
-                      to Ontor.
-                    </li>
-                    <li>
-                      <strong>Tap Accept, then Install.</strong>{" "}You&apos;ll
-                      see Ontor with an Accept and an Install button. Tap them
-                      and you&apos;re in.
-                    </li>
-                  </ol>
-                  <div className="in-warn">
-                    If you see a <strong>&ldquo;Redeem Code&rdquo;</strong>{" "}box
-                    asking for an invitation code, don&apos;t type anything.
-                    That screen just means TestFlight was opened on its own.
-                    Close it, come back to the invite link above, and tap it
-                    again &mdash; you never need a code.
-                  </div>
-                </div>
-
-                <div className="in-col">
-                  <h3>Update</h3>
-                  <p className="in-note">
-                    We ship new builds often during beta. Takes about 30
-                    seconds:
-                  </p>
-                  <ol className="in-steps">
-                    <li>
-                      On your iPhone, open the <strong>TestFlight</strong> app.
-                    </li>
-                    <li>
-                      Tap <strong>Ontor</strong> in your list.
-                    </li>
-                    <li>
-                      Tap <strong>Update</strong>. If it says Open instead,
-                      you&apos;re already on the latest build.
-                    </li>
-                    <li>
-                      Optional: turn on <strong>Automatic Updates</strong> on
-                      that same page and future builds install themselves.
-                    </li>
-                  </ol>
-                </div>
-              </div>
-            </div>
-
-            {/* ── Android ── */}
-            <div className="in-card" id="android">
-              <h2> Android</h2>
-              <p className="in-note in-note-wide">
-                The key thing for both install and updates: your phone&apos;s
-                Play Store must be signed into {accountName}. That&apos;s the
-                account we added as a tester, and the link only works for it.
-              </p>
-              <div className="in-cols">
-                <div className="in-col">
-                  <h3>Install</h3>
-                  <ol className="in-steps">
-                    <li>
-                      On your Android phone, open the{" "}
-                      <strong>Play Store</strong> app.
-                    </li>
-                    <li>
-                      Tap your <strong>profile picture</strong> (top-right
-                      corner).
-                    </li>
-                    <li>
-                      <strong>Check the email shown there.</strong> It must be{" "}
-                      {accountName}. If it shows a different one, tap it and
-                      switch accounts.
-                    </li>
-                    <li>
-                      <strong>Now open this link on the phone:</strong>
-                      <br />
-                      {androidLink}
-                    </li>
-                    <li>
-                      On that page, tap{" "}
-                      <strong>&ldquo;Become a tester&rdquo;</strong> (or
-                      Accept).
-                    </li>
-                    <li>
-                      <strong>Wait about 5&ndash;10 minutes.</strong> Google
-                      needs a moment to activate it.
-                    </li>
-                    <li>
-                      Go back to that same link and tap{" "}
-                      <strong>&ldquo;Download it on Google Play&rdquo;</strong>{" "}
-                      &rarr; Install.
-                    </li>
-                    <li>Open Ontor 🎉</li>
-                  </ol>
-                  <div className="in-warn">
-                    Still says <strong>&ldquo;not available&rdquo;</strong>?
-                    It&apos;s almost always the wrong email. Double-check step
-                    3, wait a few more minutes, and try again. If your invite
-                    went to a different address than your Play Store account,
-                    reply to the invite email with the Gmail you actually use
-                    on the phone and we&apos;ll add it.
-                  </div>
-                </div>
-
-                <div className="in-col">
-                  <h3>Update</h3>
-                  <p className="in-note">
-                    Getting the latest build takes about a minute:
-                  </p>
-                  <ol className="in-steps">
-                    <li>
-                      Open the <strong>Play Store</strong>, tap your{" "}
-                      <strong>profile circle</strong> (top right), and make
-                      sure it shows {accountName}. If not, switch to that
-                      account.
-                    </li>
-                    <li>
-                      <strong>Tap this link on your phone:</strong>
-                      <br />
-                      {androidLink}
-                    </li>
-                    <li>
-                      If it asks, tap{" "}
-                      <strong>&ldquo;Become a tester&rdquo;</strong>, then{" "}
-                      <strong>&ldquo;Download it on Google Play&rdquo;</strong>.
-                    </li>
-                    <li>
-                      On the Ontor page, tap <strong>Update</strong> (or
-                      Install).
-                    </li>
-                    <li>Open Ontor &mdash; you&apos;re on the latest build.</li>
-                  </ol>
-                </div>
-              </div>
-            </div>
-
-            <div className="in-help">
-              Stuck on any step? Reply to your invite email &mdash; a human
-              (Sabber) reads every one and will get you set up.
+        <section className="inst-body">
+          <div className="inst-wrap">
+            <div className="ch-tiles">
+              <PlatformTile
+                href={link("/install/mac")}
+                state="live"
+                icon={<LaptopIcon />}
+                title="Mac"
+                description="Direct download, notarized by Apple. No invite needed."
+                ctaLabel="Download for Mac"
+              />
+              <PlatformTile
+                href={link("/install/ios")}
+                state="locked"
+                icon={<PhoneIcon />}
+                title="iPhone"
+                description="Invite required right now."
+                ctaLabel="See install steps"
+              />
+              <PlatformTile
+                href={link("/install/android")}
+                state="locked"
+                icon={<AndroidIcon />}
+                title="Android"
+                description="Invite required right now."
+                ctaLabel="See install steps"
+              />
+              <PlatformTile
+                href={link("/install/windows")}
+                state="soon"
+                icon={<WindowsIcon />}
+                title="Windows"
+                description="Join the list, we'll email you."
+                ctaLabel="Get notified"
+              />
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="in-foot">
-        <div className="in-wrap in-foot-inner">
-          <span className="in-foot-brand">
-            <Logo size={26} />
-            Ontor
-          </span>
-          <div className="in-foot-links">
-            <Link href="/faq">FAQ</Link>
-            <Link href="/privacy">Privacy</Link>
-          </div>
-        </div>
-      </footer>
+      <InstallFooter />
 
-      <style>{INSTALL_CSS}</style>
+      <style>{INSTALL_SHARED_CSS + CHOOSER_CSS}</style>
     </>
   );
 }
 
-const INSTALL_CSS = `
-.in-wrap { max-width: 1020px; margin: 0 auto; padding: 0 32px; }
-
-.in-hero {
+const CHOOSER_CSS = `
+.ch-hero {
   background: linear-gradient(168deg, #14272C 0%, #0E1D21 60%, #0A1417 100%);
-  color: #F4F1EA; padding: 72px 0 56px; text-align: center;
+  color: #F4F1EA; padding: 72px 0 48px; text-align: center;
 }
-.in-eyebrow {
+.ch-eyebrow {
   font-size: 12.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
   color: #6FD6C9; display: inline-flex; align-items: center; gap: 9px;
 }
-.in-eyebrow::before {
-  content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--amber);
-}
-.in-hero h1 {
-  font-size: clamp(32px, 4.4vw, 46px); line-height: 1.06; margin: 18px 0 0;
+.ch-eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--amber); }
+.ch-hero h1 {
+  font-size: clamp(32px, 4.4vw, 44px); line-height: 1.08; margin: 18px 0 0;
   color: #FBF8F1; letter-spacing: -0.02em;
 }
-.in-lede {
-  margin: 16px auto 0; max-width: 540px; font-size: 17px; line-height: 1.6; color: #C9D4D2;
-}
-.in-jump { margin-top: 26px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-.in-jump a {
-  color: #E8F2F0; text-decoration: none; font-size: 14px; font-weight: 600;
-  border: 1px solid rgba(232,242,240,.28); border-radius: 999px; padding: 8px 18px;
-  transition: background .15s, border-color .15s;
-}
-.in-jump a:hover { background: rgba(111,214,201,.12); border-color: #6FD6C9; }
+.ch-hero p { margin: 16px auto 0; max-width: 520px; font-size: 16px; line-height: 1.6; color: #C9D4D2; }
 
-.in-body { background: var(--paper-3); padding: 56px 0 72px; }
-.in-card {
-  border: 1px solid var(--line); border-radius: 16px; background: #fff;
-  padding: 28px 28px 26px; margin-bottom: 22px; scroll-margin-top: 24px;
+.ch-tiles { padding: 40px 0 8px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.ch-tile {
+  border-radius: 14px; padding: 20px 18px 18px; display: flex; flex-direction: column; gap: 10px;
+  background: #fff; border: 1px solid var(--line-strong); text-decoration: none; color: inherit;
+  transition: transform .15s ease, box-shadow .15s ease;
 }
-.in-card h2 {
-  margin: 0 0 16px; font-size: clamp(26px, 3.2vw, 32px); font-weight: 700;
-  color: var(--ink); letter-spacing: -0.015em;
-}
-.in-cols {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 0 36px; align-items: start;
-}
-.in-col:first-child { border-right: 1px solid var(--line); padding-right: 36px; }
-.in-col h3 {
-  margin: 0 0 10px; font-size: 12.5px; font-weight: 700; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--teal);
-}
-.in-note { margin: 0 0 16px; font-size: 14.5px; line-height: 1.6; color: var(--ink-soft); }
-.in-note-wide { max-width: 70ch; }
+.ch-tile:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -18px rgba(0,0,0,.35); }
+.ch-tile.is-live { background: var(--teal-surface); border-color: var(--teal); }
+.ch-tile.is-soon { border-style: dashed; opacity: .85; }
+.ch-icon { width: 30px; height: 30px; color: var(--ink); }
+.ch-tile.is-live .ch-icon { color: var(--teal-dark); }
+.ch-tile h3 { font-size: 17px; font-weight: 700; color: var(--ink); margin: 0; }
+.ch-tile p { font-size: 12.5px; color: var(--ink-soft); margin: 0; line-height: 1.5; min-height: 2.6em; }
+.ch-cta { font-size: 12.5px; font-weight: 700; margin-top: auto; display: inline-flex; align-items: center; gap: 5px; }
+.ch-cta.is-live { color: var(--teal-dark); }
+.ch-cta.is-quiet { color: var(--ink-soft); }
 
-/* "Step N" badged list */
-.in-steps { margin: 0; padding: 0; list-style: none; counter-reset: step; }
-.in-steps li {
-  counter-increment: step;
-  position: relative; padding-left: 0; margin-bottom: 16px;
-  font-size: 15px; line-height: 1.6; color: var(--ink-soft);
-}
-.in-steps li::before {
-  content: "Step " counter(step);
-  display: table; margin-bottom: 5px;
-  font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-  color: #B45309; background: var(--amber-soft); border: 1px solid var(--amber-border);
-  border-radius: 999px; padding: 2px 10px;
-}
-.in-steps li:last-child { margin-bottom: 0; }
-.in-steps strong { color: var(--ink); }
-.in-link { color: var(--teal); font-weight: 600; text-decoration: none; word-break: break-all; }
-.in-link:hover { text-decoration: underline; }
-.in-locked { color: var(--ink-soft); font-style: italic; }
-.in-gate {
-  border: 1px solid var(--line-strong); background: #fff; border-radius: 12px;
-  padding: 14px 18px; margin-bottom: 22px; font-size: 14.5px; line-height: 1.6;
-  color: var(--ink-soft);
-}
-.in-gate a { color: var(--teal); font-weight: 600; }
-.in-email { color: var(--teal); overflow-wrap: break-word; }
-.in-warn {
-  margin-top: 18px; border: 1px solid #E8D9B8; background: #FBF6E9; border-radius: 12px;
-  padding: 13px 16px; font-size: 14px; line-height: 1.6; color: #6B5A2E;
-}
-.in-help { text-align: center; margin-top: 36px; font-size: 15px; color: var(--ink-soft); }
-
-.in-foot { border-top: 1px solid var(--line); padding: 32px 0 48px; background: var(--paper); }
-.in-foot-inner { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
-.in-foot-brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; color: var(--ink); }
-.in-foot-links { display: flex; gap: 22px; font-size: 14px; color: var(--ink-soft); }
-.in-foot-links a { color: inherit; text-decoration: none; transition: color .15s; }
-.in-foot-links a:hover { color: var(--ink); }
-
-@media (max-width: 720px) {
-  .in-cols { grid-template-columns: 1fr; gap: 28px 0; }
-  .in-col:first-child { border-right: none; padding-right: 0; border-bottom: 1px solid var(--line); padding-bottom: 28px; }
-}
-@media (max-width: 560px) {
-  .in-wrap { padding: 0 20px; }
-  .in-hero { padding: 56px 0 44px; }
-  .in-card { padding: 22px 18px 20px; }
-}
+@media (max-width: 820px) { .ch-tiles { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .ch-tiles { grid-template-columns: 1fr; } }
 `;
