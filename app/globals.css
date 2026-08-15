@@ -68,7 +68,7 @@ html {
 body {
   background: var(--paper);
   color: var(--ink);
-  /* Hanken Grotesk loaded via next/font in layout.tsx; falls back to system. */
+  /* Hanken Grotesk self-hosted via next/font/local in layout.tsx (app/fonts/). */
   font-family: var(--font-hanken), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
   font-size: 17px;

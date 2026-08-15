@@ -1,25 +1,46 @@
 import type { Metadata } from "next";
-import { Newsreader, Hanken_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
-// Editorial serif for display type (matches the design's Newsreader).
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
+// ── Fonts: self-hosted, no third-party fetch at build or runtime ──
+//
+// These were `next/font/google`, which self-hosts the files it serves
+// but still downloads them from fonts.gstatic.com DURING THE BUILD.
+// That made every deploy depend on Google being reachable, and on
+// 2026-08-15 it wasn't: a production build died with 14 copies of
+// `Module not found: Can't resolve '@vercel/turbopack-next/internal/
+// font/google/font'` — one per @font-face rule — over a font fetch
+// that had nothing to do with the commit being deployed.
+//
+// The .woff2 files now live in app/fonts/ and are committed, so a
+// build needs nothing but this repo. Both are the VARIABLE cuts, so
+// three files cover what previously took ten static weights, and the
+// whole set is ~314 kB.
+//
+// Both faces are SIL Open Font License 1.1 (see app/fonts/OFL-*.txt),
+// which explicitly permits redistribution and self-hosting.
+
+// Editorial serif for display type.
+const newsreader = localFont({
+  src: [
+    { path: "./fonts/Newsreader-Variable.woff2", style: "normal" },
+    { path: "./fonts/Newsreader-Variable-Italic.woff2", style: "italic" },
+  ],
   variable: "--font-newsreader",
   display: "swap",
+  // Metric-matched fallback, so the swap from Georgia doesn't reflow.
+  fallback: ["Georgia", "Times New Roman", "serif"],
 });
 
 // Clean grotesque for body + UI.
-const hanken = Hanken_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const hanken = localFont({
+  src: [{ path: "./fonts/HankenGrotesk-Variable.woff2", style: "normal" }],
   variable: "--font-hanken",
   display: "swap",
+  fallback: ["-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
 });
 
 const DESCRIPTION =
