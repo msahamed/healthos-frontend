@@ -8,11 +8,12 @@
 // Keyed by user_id in its own `profiles` collection (the waitlist row
 // stays a marketing/contact surface; device state doesn't belong there).
 //
-// Auth model matches /sync: the user_id UUID is the bearer. The
+// Auth: gated by authorizeUser() — see /sync. The
 // voiceprint is not reversible to audio (192 floats), so its sensitivity
 // is on par with the acoustic markers already synced.
 
 import { NextResponse } from "next/server";
+import { authorizeUser } from "@/lib/auth";
 import { getMongoClient } from "@/lib/mongodb";
 
 export const runtime = "nodejs";
@@ -34,6 +35,11 @@ export async function GET(req: Request) {
   if (!UUID_RE.test(userId)) {
     return NextResponse.json({ error: "user_id_required" }, { status: 400 });
   }
+  const authz = await authorizeUser(req, userId);
+  if (!authz.ok) {
+    return NextResponse.json({ error: authz.error }, { status: authz.status });
+  }
+
 
   try {
     const client = await getMongoClient();
@@ -64,6 +70,11 @@ export async function PUT(req: Request) {
   if (!UUID_RE.test(userId)) {
     return NextResponse.json({ error: "user_id_required" }, { status: 400 });
   }
+  const authz = await authorizeUser(req, userId);
+  if (!authz.ok) {
+    return NextResponse.json({ error: authz.error }, { status: authz.status });
+  }
+
 
   const vp = body.voiceprint;
   const voiceprint =

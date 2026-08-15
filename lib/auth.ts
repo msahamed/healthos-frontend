@@ -271,3 +271,67 @@ export async function revokeSession(token: string): Promise<void> {
 }
 
 export const SESSION_COOKIE = "ontor_session";
+
+// ── Authorizing a user-scoped request ─────────────────────────────
+//
+// The data endpoints (/sync, /voice/presign*, /profile) were built
+// when a client-generated `user_id` WAS the credential: send someone
+// else's UUID and you got their data, or an S3 PUT URL under their
+// prefix. This is the gate that ends that.
+//
+// It runs in two modes so the fix can ship without bricking installed
+// builds that know nothing about tokens:
+//
+//   AUTH_REQUIRED unset  — accept-both. A request WITH a token must
+//     prove that token owns the user_id it is asking about; a request
+//     WITHOUT one is allowed through and logged, exactly as before.
+//   AUTH_REQUIRED=true   — a token is mandatory. Flip this once the
+//     new build has propagated; it needs no code change or deploy of
+//     the routes themselves.
+//
+// A PRESENT-but-invalid token is rejected rather than quietly
+// downgraded to the legacy path. Falling back there would mean a
+// revoked session still syncs, which would make logout a lie.
+
+export type Authz =
+  | { ok: true; authenticated: boolean }
+  | { ok: false; status: 401 | 403; error: string };
+
+/** True once the legacy unauthenticated path is closed. */
+export function authRequired(): boolean {
+  return process.env.AUTH_REQUIRED === "true";
+}
+
+/**
+ * Decide whether this request may act on [userId]. See the note above
+ * for the two modes.
+ */
+export async function authorizeUser(
+  req: Request,
+  userId: string,
+): Promise<Authz> {
+  const token = bearerToken(req);
+
+  if (token) {
+    const session = await verifySessionToken(token);
+    if (!session) return { ok: false, status: 401, error: "invalid_session" };
+    if (session.userId !== userId) {
+      // A valid token for the wrong partition. This is the exact
+      // attack the gate exists for, so it is worth a log line.
+      console.warn(
+        `[authz] session ${session.email} tried user_id ${userId.slice(0, 8)}…`,
+      );
+      return { ok: false, status: 403, error: "forbidden" };
+    }
+    return { ok: true, authenticated: true };
+  }
+
+  if (authRequired()) {
+    return { ok: false, status: 401, error: "auth_required" };
+  }
+
+  // Legacy install. Logged so the volume of these is visible before
+  // deciding it is safe to set AUTH_REQUIRED.
+  console.info(`[authz] unauthenticated ${userId.slice(0, 8)}…`);
+  return { ok: true, authenticated: false };
+}

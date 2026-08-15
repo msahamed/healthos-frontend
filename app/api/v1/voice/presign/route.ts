@@ -28,12 +28,15 @@
 //     WAV upload sends `audio/wav` and gets `.wav` here, same as before —
 //     old and new installs upload side by side during the rollout.
 //
-// Auth: same model as /api/v1/sync — `user_id` IS the bearer.
-// A leaked user_id buys the holder the ability to upload audio
-// to *that* install's prefix only (key scheme enforces partitioning).
-// Acceptable for v1; revisit when auth lands.
+// Auth: gated by authorizeUser(). A request carrying a session token
+// must prove that session owns the user_id it is asking to write
+// under; without one it still passes while AUTH_REQUIRED is unset, so
+// installed builds that predate sign-in keep working. Before this
+// gate a guessed user_id bought anyone an S3 PUT URL under someone
+// else's prefix — an abuse and a bill, not just a privacy problem.
 
 import { NextResponse } from "next/server";
+import { authorizeUser } from "@/lib/auth";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
@@ -120,6 +123,11 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
+  const authz = await authorizeUser(req, userId);
+  if (!authz.ok) {
+    return NextResponse.json({ error: authz.error }, { status: authz.status });
+  }
+
   if (!UUID_RE.test(observationId)) {
     return NextResponse.json(
       { error: "observation_id_required" },

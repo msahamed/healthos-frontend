@@ -7,12 +7,20 @@
 // into separate SQLite tables locally but flattens for transport so a
 // single Mongo upsert is sufficient.
 //
-// Auth: none. The `user_id` IS the bearer — a UUIDv4 generated on the
-// device, persisted in iCloud Keychain so it survives reinstalls. Anyone
-// who has it can read/write the data tied to it. Acceptable for v1
-// because (a) random 128-bit keys are not enumerable, (b) data is
-// self-awareness/wellness, not regulated, and (c) we'll add a proper
-// auth layer if/when sensitivity warrants it.
+// Auth: gated by authorizeUser() (see lib/auth.ts). A request carrying
+// a session token must prove that session owns the `user_id` it is
+// asking about — a valid token for the wrong partition is a 403, which
+// is the whole point of the gate.
+//
+// It is still a two-mode gate during rollout: with AUTH_REQUIRED unset,
+// a request with NO token is allowed through and logged, so builds that
+// predate sign-in keep syncing. Set AUTH_REQUIRED=true to close the
+// legacy path once the new build has propagated — no code change, and
+// the log lines show when that is safe.
+//
+// A token that is PRESENT but invalid is rejected rather than
+// downgraded to the legacy path. Falling back would mean a revoked
+// session still syncs, which would make logout a lie.
 //
 // Sync semantics: last-write-wins by client `updated_at`. Each push is a
 // full-document replace (not a diff) — the device is always the source
@@ -23,6 +31,7 @@
 
 import { NextResponse } from "next/server";
 import { getMongoClient } from "@/lib/mongodb";
+import { authorizeUser } from "@/lib/auth";
 import type { AnyBulkWriteOperation } from "mongodb";
 
 // Stored observation shape. `_id` is a client-supplied UUIDv4, not an
@@ -170,6 +179,11 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
+  const authz = await authorizeUser(req, userId);
+  if (!authz.ok) {
+    return NextResponse.json({ error: authz.error }, { status: authz.status });
+  }
+
 
   const list = Array.isArray(body.observations) ? body.observations : null;
   if (!list) {
@@ -269,6 +283,11 @@ export async function GET(req: Request) {
       { status: 400 },
     );
   }
+  const authz = await authorizeUser(req, userId);
+  if (!authz.ok) {
+    return NextResponse.json({ error: authz.error }, { status: authz.status });
+  }
+
 
   const sinceRaw = url.searchParams.get("since");
   const since = sinceRaw ? new Date(sinceRaw) : new Date(0);

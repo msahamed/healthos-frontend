@@ -27,6 +27,7 @@
 // handled client-side.
 
 import { NextResponse } from "next/server";
+import { authorizeUser } from "@/lib/auth";
 import {
   GetObjectCommand,
   HeadObjectCommand,
@@ -87,6 +88,11 @@ export async function POST(req: Request) {
   if (!UUID_RE.test(userId)) {
     return NextResponse.json({ error: "user_id_required" }, { status: 400 });
   }
+  const authz = await authorizeUser(req, userId);
+  if (!authz.ok) {
+    return NextResponse.json({ error: authz.error }, { status: authz.status });
+  }
+
 
   const rawIds = Array.isArray(body.observation_ids)
     ? body.observation_ids

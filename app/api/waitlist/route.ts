@@ -10,6 +10,7 @@
 
 import { NextResponse, after } from "next/server";
 import { getMongoClient } from "@/lib/mongodb";
+import { consume, clientIp } from "@/lib/rate-limit";
 import { sendWelcomeEmail, sendOwnerNotification } from "@/lib/email";
 
 export const runtime = "nodejs";
@@ -55,6 +56,16 @@ export async function POST(req: Request) {
     typeof body.feedback === "string" && body.feedback.length <= 2000
       ? body.feedback
       : null;
+
+  // Open, unauthenticated write. Capped per address and per host so
+  // it can't be used to stuff the list or bomb one inbox with welcome
+  // mail. Generous enough that a real person retrying never notices.
+  const ip = clientIp(req);
+  const perEmail = await consume(`waitlist:email:${email}`, 5, 3600);
+  const perIp = await consume(`waitlist:ip:${ip}`, 30, 3600);
+  if (!perEmail.ok || !perIp.ok) {
+    return NextResponse.json({ error: "too_many_requests" }, { status: 429 });
+  }
 
   try {
     const client = await getMongoClient();

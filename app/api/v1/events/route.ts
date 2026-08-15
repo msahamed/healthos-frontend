@@ -25,6 +25,7 @@
 
 import { NextResponse } from "next/server";
 import { getMongoClient } from "@/lib/mongodb";
+import { consume, clientIp } from "@/lib/rate-limit";
 
 // Mongo Node driver needs the Node runtime (no edge support).
 export const runtime = "nodejs";
@@ -106,6 +107,14 @@ export async function POST(req: Request) {
       { error: "batch_too_large", limit: MAX_BATCH_SIZE },
       { status: 413 },
     );
+  }
+
+  // Open ingest, so cap it per host. Deliberately generous: real
+  // devices drain a queue in bursts, and several can share one NAT
+  // address, so this is a bloat backstop rather than a tight quota.
+  const rl = await consume(`events:ip:${clientIp(req)}`, 600, 3600);
+  if (!rl.ok) {
+    return NextResponse.json({ error: "too_many_requests" }, { status: 429 });
   }
 
   const valid: IncomingEvent[] = [];
