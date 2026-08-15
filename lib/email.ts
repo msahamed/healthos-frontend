@@ -155,3 +155,87 @@ export async function sendOwnerNotification(
     console.error("[email] owner notify threw:", err);
   }
 }
+
+// ── Sign-in code ──────────────────────────────────────────────────────
+//
+// Ontor is passwordless, so this email IS the login. Two rules that
+// look like nitpicks but aren't:
+//
+//   1. The code is NOT in the subject line. It would be handier on a
+//      lock screen, and that is exactly the problem — a glance at a
+//      face-down phone shouldn't be enough to sign in as someone.
+//      Stripe and GitHub make the same call.
+//   2. This one throws on failure, unlike the best-effort helpers
+//      above. A welcome email that fails is a missed nicety; a code
+//      that fails is a user who cannot get in. The caller needs to
+//      know so it can say so instead of showing a code screen that
+//      will never accept anything.
+
+function loginCodeHtml(code: string, minutes: number): string {
+  return `<!doctype html>
+<html lang="en">
+  <body style="margin:0;padding:0;background:#f6f7f8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#1a1a1a;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f6f7f8;padding:32px 0;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+            <tr>
+              <td style="padding:40px 40px 8px;">
+                <p style="margin:0;font-size:14px;letter-spacing:0.08em;text-transform:uppercase;color:#0d9488;font-weight:600;">Ontor</p>
+                <h1 style="margin:16px 0 0;font-size:26px;line-height:1.25;font-weight:600;color:#111827;">Your sign-in code</h1>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:24px 40px 0;">
+                <div style="font-size:34px;letter-spacing:0.24em;font-weight:700;color:#111827;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;">${code}</div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:20px 40px 0;font-size:16px;line-height:1.6;color:#374151;">
+                <p style="margin:0 0 16px;">Enter it to finish signing in. It expires in ${minutes} minutes and works once.</p>
+                <p style="margin:0 0 16px;color:#6b7280;font-size:14px;">If you didn't ask to sign in, you can ignore this. Nobody can get into your account with this email alone.</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:24px 40px 40px;">
+                <p style="margin:0;font-size:13px;color:#9ca3af;">Ontor · <a href="${SITE}" style="color:#0d9488;text-decoration:none;">ontor.ai</a></p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+}
+
+/**
+ * Send a sign-in code. Throws if Resend is unconfigured or the send
+ * fails, so the route can return an honest error to the client.
+ */
+export async function sendLoginCode(
+  to: string,
+  code: string,
+  ttlSeconds: number,
+): Promise<void> {
+  const client = getResend();
+  if (!client) throw new Error("RESEND_API_KEY missing — cannot send code");
+
+  const minutes = Math.max(1, Math.round(ttlSeconds / 60));
+  const { error } = await client.emails.send({
+    from: FROM,
+    to,
+    subject: "Your Ontor sign-in code",
+    html: loginCodeHtml(code, minutes),
+    text: [
+      "Your Ontor sign-in code",
+      "",
+      code,
+      "",
+      `Enter it to finish signing in. It expires in ${minutes} minutes and works once.`,
+      "",
+      "If you didn't ask to sign in, you can ignore this.",
+    ].join("\n"),
+  });
+  if (error) throw new Error(`Resend rejected the code email: ${error.message}`);
+}
