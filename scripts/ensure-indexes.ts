@@ -20,7 +20,21 @@ import { MongoClient } from "mongodb";
 
 const DB = "healthos";
 
+// Next loads .env.local for the app, but not for standalone scripts.
+// `process.loadEnvFile` is built into Node 20.12+, so this needs no
+// dotenv dependency — and it parses values containing `&` and `%`
+// correctly, which a shell `source` of the same file does not.
+function loadEnv() {
+  if (process.env.MONGODB_URI) return;
+  try {
+    process.loadEnvFile(".env.local");
+  } catch {
+    // Fall through to the explicit error below.
+  }
+}
+
 async function main() {
+  loadEnv();
   const uri = process.env.MONGODB_URI;
   if (!uri) throw new Error("MONGODB_URI is not set");
 
