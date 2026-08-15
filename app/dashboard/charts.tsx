@@ -78,6 +78,7 @@ export function DeviationBars({ deltas }: { deltas: MarkerDelta[] }) {
     <div className="bars">
       {ordered.map((d) => {
         const pos = d.ratio > 0;
+        const rounded = Math.abs(Math.round(d.ratio * 100));
         const pct = Math.min(Math.abs(d.ratio) / FULL, 1) * 50;
         const color = markColor(d.ratio, d.notable);
         return (
@@ -95,8 +96,8 @@ export function DeviationBars({ deltas }: { deltas: MarkerDelta[] }) {
               />
             </span>
             <span className="val num" style={{ color }}>
-              {pos ? "+" : "−"}
-              {Math.abs(Math.round(d.ratio * 100))}%
+              {/* A rounded zero is "0%", never "−0%". */}
+              {rounded === 0 ? "0%" : `${pos ? "+" : "−"}${Math.abs(Math.round(d.ratio * 100))}%`}
             </span>
           </div>
         );
