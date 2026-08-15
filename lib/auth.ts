@@ -264,6 +264,20 @@ export async function requireSession(req: Request): Promise<Session | null> {
   return verifySessionToken(bearerToken(req));
 }
 
+/**
+ * Session for a SERVER COMPONENT, which has no Request to read from.
+ * Web-only — the app sends a bearer header and never a cookie.
+ *
+ * `cookies()` is async in this version of Next; awaiting it is not
+ * optional. Verifying here also slides the expiry, so simply using
+ * the site keeps you signed in.
+ */
+export async function getSessionFromCookies(): Promise<Session | null> {
+  const { cookies } = await import("next/headers");
+  const store = await cookies();
+  return verifySessionToken(store.get(SESSION_COOKIE)?.value ?? null);
+}
+
 /** Revoke one session (logout). Idempotent. */
 export async function revokeSession(token: string): Promise<void> {
   const col = await sessions();
