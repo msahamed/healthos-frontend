@@ -61,6 +61,16 @@ async function main() {
     .collection("sessions")
     .createIndex({ account_id: 1 }, { name: "account_id" });
 
+  // The dashboard's only read shape: one person's live observations
+  // in a date window, newest first. Without this it is a collection
+  // scan over every user's history on every page load.
+  await db
+    .collection("observations")
+    .createIndex(
+      { user_id: 1, deleted_at: 1, created_at: -1 },
+      { name: "user_live_by_date" },
+    );
+
   await db
     .collection("rate_limits")
     .createIndex({ expires_at: 1 }, { expireAfterSeconds: 0, name: "ttl" });

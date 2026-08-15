@@ -228,6 +228,55 @@ export async function getClientDetail(
   return { ...base, deltas, trend, band };
 }
 
+/**
+ * One fetch that feeds every analytics panel, so the page makes a
+ * single round trip instead of one per chart.
+ *
+ * Projection is deliberately narrow: a timestamp, the marker block,
+ * and the device's local time-of-day label. No transcript, no
+ * voice_clip, no raw signals, no frames. Rows carrying no markers at
+ * all are dropped here rather than in each panel.
+ */
+export async function getReadings(
+  userId: string,
+  days = 90,
+): Promise<import("@/lib/analytics").Reading[]> {
+  const db = await getDb();
+  const since = new Date(Date.now() - days * 864e5);
+  const rows = await db
+    .collection("observations")
+    .find(
+      { user_id: userId, deleted_at: null, created_at: { $gte: since } },
+      {
+        projection: {
+          _id: 0,
+          created_at: 1,
+          markers: 1,
+          "extraction.time_of_day": 1,
+        },
+      },
+    )
+    .sort({ created_at: 1 })
+    .toArray();
+
+  const out: import("@/lib/analytics").Reading[] = [];
+  for (const r of rows) {
+    const markers: Record<string, number> = {};
+    for (const { key } of MARKERS) {
+      const v = (r.markers as Record<string, MarkerVal> | undefined)?.[key]?.value;
+      if (typeof v === "number" && Number.isFinite(v)) markers[key] = v;
+    }
+    if (!Object.keys(markers).length) continue;
+    out.push({
+      at: r.created_at as Date,
+      timeOfDay:
+        (r.extraction as { time_of_day?: string } | undefined)?.time_of_day ?? null,
+      markers,
+    });
+  }
+  return out;
+}
+
 /** Headline numbers across the whole roster. */
 export function aggregate(roster: ClientSummary[]) {
   const since7 = Date.now() - 7 * 864e5;
