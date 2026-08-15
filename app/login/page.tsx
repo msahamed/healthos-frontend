@@ -12,7 +12,7 @@
 // they sign in here.
 //
 // Already signed in? The server component redirects before this
-// renders — see the sibling layout-free check in app/app/page.tsx.
+// renders — see the session gate in app/dashboard/layout.tsx.
 
 "use client";
 
@@ -78,7 +78,7 @@ export default function LoginPage() {
       if (res.ok) {
         // Cookie is set by the response; a full refresh makes the
         // server component pick it up.
-        router.replace("/app");
+        router.replace("/dashboard");
         router.refresh();
         return;
       }
