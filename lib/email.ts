@@ -1,5 +1,12 @@
 // Transactional email for waitlist signups, sent via Resend.
 //
+// Copy note: this used to describe Ontor as a "voice-first, on-device
+// health agent" whose voice "never leaves your phone". Both are
+// retired. Ontor is performance intelligence, not a wellness product,
+// and the absolute privacy claim stopped being true once optional
+// cloud sync shipped. What is said here now is what the product
+// actually does.
+//
 // Two emails fire on a NEW signup (see app/api/waitlist/route.ts):
 //   1. A welcome email to the person who joined.
 //   2. A "someone joined" notification to the founder.
@@ -39,7 +46,8 @@ function welcomeHtml(): string {
             </tr>
             <tr>
               <td style="padding:16px 40px 0;font-size:16px;line-height:1.6;color:#374151;">
-                <p style="margin:0 0 16px;">Thanks for joining the Ontor early-access list. We're building a voice-first, on-device health agent that notices what you don't &mdash; reading your nervous-system state from how you sound, without a wearable and without your voice ever leaving your phone.</p>
+                <p style="margin:0 0 16px;">Thanks for joining the Ontor early-access list. Ontor reads your nervous-system state from how you sound: stress, energy, confidence, fatigue. No wearable, no tracker, no journaling. Just your voice, on real calls or a few-second check-in.</p>
+                <p style="margin:0 0 16px;">The analysis runs on your device. Cloud backup is optional and off unless you turn it on.</p>
                 <p style="margin:0 0 16px;">We'll reach out personally when your spot opens up. In the meantime, here's a little more about what we're building:</p>
               </td>
             </tr>
@@ -89,10 +97,13 @@ function welcomeText(): string {
   return [
     "You're on the list.",
     "",
-    "Thanks for joining the Ontor early-access list. We're building a",
-    "voice-first, on-device health agent that notices what you don't —",
-    "reading your nervous-system state from how you sound, without a",
-    "wearable and without your voice ever leaving your phone.",
+    "Thanks for joining the Ontor early-access list. Ontor reads your",
+    "nervous-system state from how you sound: stress, energy, confidence,",
+    "fatigue. No wearable, no tracker, no journaling. Just your voice, on",
+    "real calls or a few-second check-in.",
+    "",
+    "The analysis runs on your device. Cloud backup is optional and off",
+    "unless you turn it on.",
     "",
     "We'll reach out personally when your spot opens up. In the meantime:",
     "",
