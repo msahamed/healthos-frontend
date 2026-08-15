@@ -61,6 +61,13 @@ export interface AccountDoc {
   user_id: string;
   /** "client" today; "coach" is what the web dashboard will use. */
   role: string;
+  /**
+   * When this person first proved they read the inbox. NULL on rows
+   * backfilled from the waitlist, which were inferred from an install
+   * rather than verified. Check this — not whether the row exists —
+   * wherever verification actually matters.
+   */
+  verified_at?: Date | null;
   created_at: Date;
   last_login_at?: Date;
 }

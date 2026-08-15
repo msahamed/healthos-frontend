@@ -125,12 +125,23 @@ export async function POST(req: Request) {
         email,
         user_id: userId,
         role: "client",
+        // Proven — they just read the code out of that inbox. Backfilled
+        // rows (scripts/backfill-accounts.ts) carry null here instead,
+        // so this field, not row existence, is the verification test.
+        verified_at: now,
         created_at: now,
         last_login_at: now,
       });
       accountId = String(inserted.insertedId);
     } else {
       await accountsCol.updateOne({ email }, { $set: { last_login_at: now } });
+      // First real verification for a row that was backfilled from the
+      // waitlist. Only fills when absent, so it stays a FIRST-verified
+      // timestamp rather than a duplicate of last_login_at.
+      await accountsCol.updateOne(
+        { email, $or: [{ verified_at: { $exists: false } }, { verified_at: null }] },
+        { $set: { verified_at: now } },
+      );
       accountId = String(existing._id);
     }
 
