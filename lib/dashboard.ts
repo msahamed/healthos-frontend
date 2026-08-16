@@ -10,6 +10,7 @@
 // from your own normal carries meaning.
 
 import { getDb } from "@/lib/auth";
+import { displayName, getProfile } from "@/lib/profile";
 
 /** The seven markers the device produces, in display order. */
 export const MARKERS = [
@@ -60,16 +61,6 @@ function initialsOf(name: string): string {
     .join("");
 }
 
-/** "sabbers@gmail.com" reads better as "Sabbers" until we ask for a name. */
-function nameFromEmail(email: string): string {
-  const local = email.split("@")[0] ?? email;
-  return local
-    .split(/[._-]+/)
-    .filter(Boolean)
-    .map((s) => s[0]!.toUpperCase() + s.slice(1))
-    .join(" ");
-}
-
 
 /**
  * Roster + detail summary for one person, computed in Mongo.
@@ -82,6 +73,9 @@ function nameFromEmail(email: string): string {
  */
 async function summaryFor(userId: string, email: string): Promise<ClientSummary> {
   const db = await getDb();
+  // A saved name beats one guessed from the email local part. Cheap:
+  // a single _id lookup on a collection with one doc per user.
+  const profile = await getProfile(userId);
   const since30 = new Date(Date.now() - 30 * 864e5);
   const since7 = new Date(Date.now() - 7 * 864e5);
 
@@ -149,7 +143,7 @@ async function summaryFor(userId: string, email: string): Promise<ClientSummary>
   return {
     userId,
     email,
-    name: nameFromEmail(email),
+    name: displayName(profile, email),
     initials: initialsOf(email),
     count30: (row?.count30 as number) ?? 0,
     count7: (row?.count7 as number) ?? 0,

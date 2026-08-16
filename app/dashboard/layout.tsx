@@ -58,6 +58,13 @@ export default async function DashboardLayout({
             </svg>
             Clients
           </Link>
+          <Link href="/dashboard/profile">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="3.4" />
+              <path d="M5 20c.6-3.8 3.3-6 7-6s6.4 2.2 7 6" />
+            </svg>
+            Profile
+          </Link>
         </nav>
 
         <div className="whoami">
