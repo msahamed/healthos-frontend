@@ -7,7 +7,10 @@
 
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { getSessionFromCookies } from "@/lib/auth";
+import { createInvite, endShare, listForCoach } from "@/lib/shares";
+import { sendShareInvite } from "@/lib/email";
 import { getRoster, aggregate, type ClientSummary } from "@/lib/dashboard";
 import { Sparkline, markColor } from "./charts";
 
@@ -39,11 +42,51 @@ const ARROW = {
   flat: <path d="M5 12h14" />,
 } as const;
 
-export default async function DashboardPage() {
+/** Invite a client. Server action: no endpoint, session from cookie. */
+async function invite(formData: FormData) {
+  "use server";
   const session = await getSessionFromCookies();
   if (!session) redirect("/login");
 
-  const roster = await getRoster(session);
+  const res = await createInvite(session, String(formData.get("email") ?? ""));
+  if (!res.ok) redirect(`/dashboard?err=${encodeURIComponent(res.error)}`);
+
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://ontor.ai"}/share/${res.token}/`;
+  try {
+    await sendShareInvite(String(formData.get("email") ?? "").trim().toLowerCase(), session.email, url);
+  } catch {
+    // The invite row exists but the mail did not go. Say so rather
+    // than reporting success and leaving them waiting for an email
+    // that is never coming.
+    redirect("/dashboard?err=" + encodeURIComponent("Invite saved, but the email could not be sent. Try again."));
+  }
+  revalidatePath("/dashboard");
+  redirect("/dashboard?sent=1");
+}
+
+async function removeShare(formData: FormData) {
+  "use server";
+  const session = await getSessionFromCookies();
+  if (!session) redirect("/login");
+  await endShare(session, String(formData.get("id") ?? ""));
+  revalidatePath("/dashboard");
+  redirect("/dashboard");
+}
+
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ sent?: string; err?: string }>;
+}) {
+  const session = await getSessionFromCookies();
+  if (!session) redirect("/login");
+
+  const [roster, shares, params] = await Promise.all([
+    getRoster(session),
+    listForCoach(session.userId),
+    searchParams,
+  ]);
+  const pending = shares.filter((x) => x.status === "pending");
   const totals = aggregate(roster);
   const soloRoster = roster.length === 1 && roster[0]!.userId === session.userId;
 
@@ -59,10 +102,24 @@ export default async function DashboardPage() {
           </p>
         </div>
         <div className="spacer" />
-        <button className="btn" type="button" aria-disabled="true" title="Not available yet">
-          Invite a client
-        </button>
+        <form action={invite} className="inviteform">
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="client@example.com"
+            aria-label="Client email"
+          />
+          <button className="btn" type="submit">Invite a client</button>
+        </form>
       </div>
+
+      {params.err && <p className="fmsg err" style={{ marginTop: 12 }}>{params.err}</p>}
+      {params.sent && (
+        <p className="fmsg ok" style={{ marginTop: 12 }}>
+          Invite sent. They will show up here once they accept.
+        </p>
+      )}
 
       <div className="tiles">
         <div className="tile">
@@ -141,6 +198,26 @@ export default async function DashboardPage() {
           </table>
         </div>
       </div>
+
+      {pending.length > 0 && (
+        <div className="panel" style={{ marginTop: 16 }}>
+          <div className="panelhead"><h2>Waiting on</h2></div>
+          <ul className="shares">
+            {pending.map((p) => (
+              <li key={p.id}>
+                <span>
+                  <b>{p.clientEmail}</b>
+                  <small>invited {p.createdAt.toISOString().slice(0, 10)} · not accepted yet</small>
+                </span>
+                <form action={removeShare}>
+                  <input type="hidden" name="id" value={p.id} />
+                  <button className="linkbtn" type="submit">Cancel</button>
+                </form>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </>
   );
 }

@@ -15,6 +15,7 @@
 
 import { NextResponse } from "next/server";
 import { getSessionFromCookies } from "@/lib/auth";
+import { canView } from "@/lib/shares";
 import {
   getByHour,
   getMatrix,
@@ -37,7 +38,9 @@ export async function GET(
   if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
   const { clientId } = await params;
-  if (clientId !== session.userId) {
+  // Same answer as the page, from the same function, so the two can
+  // never drift apart on who may see what.
+  if (!(await canView(session, clientId))) {
     return NextResponse.json({ error: "not_found" }, { status: 404 });
   }
 
@@ -61,21 +64,21 @@ export async function GET(
         if (!keys.length) keys.push("confidence");
         // Recover the device's UTC offset first; the hour axis is only
         // meaningful if it explains the buckets the device recorded.
-        const solved = await solveUtcOffset(session.userId, days);
+        const solved = await solveUtcOffset(clientId, days);
         const hours = solved.fit >= 0.9
-          ? await getByHour(session.userId, days, keys, solved.offset)
+          ? await getByHour(clientId, days, keys, solved.offset)
           : [];
         return NextResponse.json({ ...solved, hours }, { headers });
       }
       case "matrix":
         return NextResponse.json(
-          { keys: MARKER_KEYS, matrix: await getMatrix(session.userId, days) },
+          { keys: MARKER_KEYS, matrix: await getMatrix(clientId, days) },
           { headers },
         );
       case "recovery": {
         const m = url.searchParams.get("marker");
         return NextResponse.json(
-          await getRecovery(session.userId, days, isMarker(m) ? m : "stress"),
+          await getRecovery(clientId, days, isMarker(m) ? m : "stress"),
           { headers },
         );
       }

@@ -11,6 +11,7 @@
 
 import { getDb } from "@/lib/auth";
 import { displayName, getProfile } from "@/lib/profile";
+import { canView, viewableUserIds } from "@/lib/shares";
 
 /** The seven markers the device produces, in display order. */
 export const MARKERS = [
@@ -164,7 +165,10 @@ export async function getRoster(session: {
   userId: string;
   email: string;
 }): Promise<ClientSummary[]> {
-  return [await summaryFor(session.userId, session.email)];
+  // Self, plus every client with an active share. One summary each,
+  // in parallel — each is a small aggregation, not a scan.
+  const people = await viewableUserIds(session);
+  return Promise.all(people.map((p) => summaryFor(p.userId, p.email)));
 }
 
 /**
@@ -179,10 +183,14 @@ export async function getClientDetail(
   session: { userId: string; email: string },
   userId: string,
 ): Promise<ClientSummary | null> {
-  // The only permitted subject until sharing exists. This is the
-  // authorization boundary for the dashboard, so it stays explicit.
-  if (userId !== session.userId) return null;
-  return summaryFor(userId, session.email);
+  // canView is the single authorization answer — see lib/shares.ts.
+  if (!(await canView(session, userId))) return null;
+
+  // A client's own address, not the coach's: the header must say who
+  // is being looked at.
+  const people = await viewableUserIds(session);
+  const person = people.find((p) => p.userId === userId);
+  return summaryFor(userId, person?.email ?? session.email);
 }
 
 /** Headline numbers across the whole roster. */

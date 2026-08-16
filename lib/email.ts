@@ -250,3 +250,83 @@ export async function sendLoginCode(
   });
   if (error) throw new Error(`Resend rejected the code email: ${error.message}`);
 }
+
+
+// ── Coach invite ──────────────────────────────────────────────────
+//
+// Sent to a person a coach wants to see the voice data of. It has to
+// work for someone who has never heard of Ontor, so it says who is
+// asking, what they will and will not see, and where to get the tool.
+//
+// The install link matters: a brand-new client can accept and still
+// have nothing to show, because every reading is scored against their
+// own baseline and there is not one yet. Without "install this", they
+// accept and nothing happens for days.
+
+function inviteHtml(coachEmail: string, acceptUrl: string): string {
+  return `<!doctype html>
+<html lang="en">
+  <body style="margin:0;padding:0;background:#f6f7f8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#1a1a1a;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f6f7f8;padding:32px 0;">
+      <tr><td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+          <tr><td style="padding:40px 40px 8px;">
+            <p style="margin:0;font-size:14px;letter-spacing:0.08em;text-transform:uppercase;color:#0d9488;font-weight:600;">Ontor</p>
+            <h1 style="margin:16px 0 0;font-size:26px;line-height:1.3;font-weight:600;color:#111827;">${coachEmail} would like to follow your check-ins</h1>
+          </td></tr>
+          <tr><td style="padding:16px 40px 0;font-size:16px;line-height:1.6;color:#374151;">
+            <p style="margin:0 0 16px;">Ontor reads your nervous-system state from how you sound: stress, energy, confidence, fatigue. If you accept, ${coachEmail} can see how those move against your own usual.</p>
+            <p style="margin:0 0 16px;"><strong>They never see or hear what you said.</strong> No recordings, no transcripts, no words. Only how your voice moved. You can stop sharing at any time.</p>
+          </td></tr>
+          <tr><td style="padding:20px 40px 0;">
+            <a href="${acceptUrl}" style="display:inline-block;background:#0F766E;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:13px 26px;border-radius:12px;">Accept and start sharing</a>
+          </td></tr>
+          <tr><td style="padding:24px 40px 0;font-size:15px;line-height:1.6;color:#374151;">
+            <p style="margin:0 0 8px;"><strong>New to Ontor?</strong> Accepting takes a moment, then install the tool and do a few check-ins so there is something to see.</p>
+            <p style="margin:0;"><a href="${SITE}/install/" style="color:#0d9488;">Install Ontor &rarr;</a></p>
+          </td></tr>
+          <tr><td style="padding:28px 40px 40px;">
+            <p style="margin:0;font-size:13px;color:#9ca3af;">If you were not expecting this, you can ignore it. Nothing is shared until you accept.</p>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </body>
+</html>`;
+}
+
+/** Invite a client to share with a coach. Throws so the caller can say so. */
+export async function sendShareInvite(
+  to: string,
+  coachEmail: string,
+  acceptUrl: string,
+): Promise<void> {
+  const client = getResend();
+  if (!client) throw new Error("RESEND_API_KEY missing — cannot send invite");
+
+  const { error } = await client.emails.send({
+    from: FROM,
+    to,
+    subject: `${coachEmail} would like to follow your Ontor check-ins`,
+    html: inviteHtml(coachEmail, acceptUrl),
+    text: [
+      `${coachEmail} would like to follow your Ontor check-ins.`,
+      "",
+      "Ontor reads your nervous-system state from how you sound: stress,",
+      "energy, confidence, fatigue. If you accept, they can see how those",
+      "move against your own usual.",
+      "",
+      "They never see or hear what you said. No recordings, no transcripts,",
+      "no words. Only how your voice moved. You can stop sharing at any time.",
+      "",
+      `Accept: ${acceptUrl}`,
+      "",
+      `New to Ontor? Install it here: ${SITE}/install/`,
+      "Then do a few check-ins so there is something to see.",
+      "",
+      "If you were not expecting this, ignore it. Nothing is shared until",
+      "you accept.",
+    ].join("\n"),
+  });
+  if (error) throw new Error(`Resend rejected the invite: ${error.message}`);
+}

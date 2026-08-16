@@ -16,8 +16,8 @@
 
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const ink = "#1B1A17",
   inkSoft = "#5A554B",
@@ -26,8 +26,14 @@ const ink = "#1B1A17",
 
 type Step = "email" | "code";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  // An invite link sends people here with ?next= pointing back at the
+  // accept page, so signing in resumes what they were doing instead of
+  // dumping them on the dashboard.
+  const search = useSearchParams();
+  const raw = search.get("next");
+  const next = raw && raw.startsWith("/") && !raw.startsWith("//") ? raw : "/dashboard";
   const [step, setStep] = useState<Step>("email");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -78,7 +84,7 @@ export default function LoginPage() {
       if (res.ok) {
         // Cookie is set by the response; a full refresh makes the
         // server component pick it up.
-        router.replace("/dashboard");
+        router.replace(next);
         router.refresh();
         return;
       }
@@ -244,3 +250,18 @@ const errorStyle: React.CSSProperties = {
   color: ink,
   margin: "12px 0 0",
 };
+
+
+/**
+ * useSearchParams needs a Suspense boundary: this page is otherwise
+ * statically prerendered, and reading the query string at build time
+ * is impossible. The fallback is the same shell without the form so
+ * the page does not flash empty.
+ */
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<main style={{ minHeight: "100vh", background: "var(--paper)" }} />}>
+      <LoginForm />
+    </Suspense>
+  );
+}

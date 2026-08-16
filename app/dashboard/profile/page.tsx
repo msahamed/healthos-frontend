@@ -10,6 +10,7 @@ import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
 import { getSessionFromCookies } from "@/lib/auth";
 import { getProfile, saveProfile, SEX_OPTIONS } from "@/lib/profile";
+import { endShare, listForClient } from "@/lib/shares";
 
 export const dynamic = "force-dynamic";
 
@@ -28,13 +29,14 @@ const SEX_LABEL: Record<string, string> = {
 export default async function ProfilePage({
   searchParams,
 }: {
-  searchParams: Promise<{ saved?: string; err?: string }>;
+  searchParams: Promise<{ saved?: string; err?: string; shared?: string }>;
 }) {
   const session = await getSessionFromCookies();
   if (!session) redirect("/login");
 
-  const [profile, params] = await Promise.all([
+  const [profile, granted, params] = await Promise.all([
     getProfile(session.userId),
+    listForClient(session),
     searchParams,
   ]);
 
@@ -56,6 +58,15 @@ export default async function ProfilePage({
     // The roster and the client header both read the name.
     revalidatePath("/dashboard");
     redirect("/dashboard/profile?saved=1");
+  }
+
+  async function stopSharing(formData: FormData) {
+    "use server";
+    const s = await getSessionFromCookies();
+    if (!s) redirect("/login");
+    await endShare(s, String(formData.get("id") ?? ""));
+    revalidatePath("/dashboard/profile");
+    redirect("/dashboard/profile");
   }
 
   return (
@@ -107,6 +118,43 @@ export default async function ProfilePage({
 
         <button className="btn" type="submit">Save profile</button>
       </form>
+
+      <section className="sect" style={{ maxWidth: 520 }}>
+        <h2 className="sectTitle">Who can see your check-ins</h2>
+        <p className="sub">
+          They see how your voice moves against your own usual. They never see or hear what you
+          said. Stop any of them at any time, and it takes effect immediately.
+        </p>
+        {params.shared && <p className="fmsg ok">Sharing started.</p>}
+        <div className="card">
+          {granted.length === 0 ? (
+            <p className="fhint" style={{ margin: 0 }}>
+              Nobody. You are not sharing your check-ins with anyone.
+            </p>
+          ) : (
+            <ul className="shares" style={{ padding: 0 }}>
+              {granted.map((g) => (
+                <li key={g.id}>
+                  <span>
+                    <b>{g.coachEmail}</b>
+                    <small>
+                      {g.status === "active"
+                        ? `sharing since ${(g.acceptedAt ?? g.createdAt).toISOString().slice(0, 10)}`
+                        : "invited you, not accepted yet"}
+                    </small>
+                  </span>
+                  <form action={stopSharing}>
+                    <input type="hidden" name="id" value={g.id} />
+                    <button className="linkbtn" type="submit">
+                      {g.status === "active" ? "Stop sharing" : "Decline"}
+                    </button>
+                  </form>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
     </>
   );
 }

@@ -71,6 +71,21 @@ async function main() {
       { name: "user_live_by_date" },
     );
 
+  // Sharing. The three read shapes are: by invite token, a coach's
+  // roster, and the permission check for one client.
+  await db
+    .collection("shares")
+    .createIndex({ token_hash: 1 }, { unique: true, name: "token_unique" });
+  await db
+    .collection("shares")
+    .createIndex({ coach_user_id: 1, status: 1 }, { name: "coach_status" });
+  await db
+    .collection("shares")
+    .createIndex({ client_user_id: 1, status: 1 }, { name: "client_status" });
+  await db
+    .collection("shares")
+    .createIndex({ client_email: 1, status: 1 }, { name: "client_email_status" });
+
   await db
     .collection("rate_limits")
     .createIndex({ expires_at: 1 }, { expireAfterSeconds: 0, name: "ttl" });
