@@ -40,6 +40,8 @@ export interface ShareDoc extends Document {
 export interface ShareView {
   id: string;
   coachEmail: string;
+  /** Their name at invite time, when they had set one. */
+  coachName: string | null;
   coachUserId: string | null;
   clientEmail: string;
   clientUserId: string | null;
@@ -57,6 +59,7 @@ async function col() {
 const view = (d: ShareDoc & { _id?: unknown }): ShareView => ({
   id: String(d._id),
   coachEmail: d.coach_email,
+  coachName: d.coach_name ?? null,
   coachUserId: d.coach_user_id,
   clientEmail: d.client_email,
   clientUserId: d.client_user_id,

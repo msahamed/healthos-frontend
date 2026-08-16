@@ -171,7 +171,8 @@ export default async function ProfilePage({
               {granted.map((g) => (
                 <li key={g.id}>
                   <span>
-                    <b>{g.coachEmail}</b>
+                    <b>{g.coachName ?? g.coachEmail}</b>
+                    {g.coachName && <small>{g.coachEmail}</small>}
                     <small>
                       {g.status === "active"
                         ? `sharing since ${(g.acceptedAt ?? g.createdAt).toISOString().slice(0, 10)}`
