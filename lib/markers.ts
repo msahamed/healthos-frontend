@@ -42,10 +42,12 @@ export interface DayRow {
 
 export interface Recovery {
   n: number;
-  floorSec: number;
-  atFloor: boolean;
-  medianSec: number | null;
-  buckets: { label: string; n: number; pct: number }[];
+  /** Seconds per spike, ascending. The design buckets these itself. */
+  times: number[];
+  /** This person's own measurement floor: the median window spacing. */
+  resolutionSec: number;
+  /** Spikes that never settled before the check-in ended. */
+  censored: number;
 }
 
 /** Exported so the server-side panels share one definition. */

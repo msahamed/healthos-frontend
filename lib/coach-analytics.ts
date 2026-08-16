@@ -253,18 +253,21 @@ export async function getRecovery(
     .filter((s) => s.length > 1);
 
   const all = sessions.flatMap((s) => s.map((x) => x.v!));
-  if (!all.length) return { n: 0, floorSec: 10, atFloor: false, medianSec: null, buckets: [] };
+  if (!all.length) return { n: 0, times: [], resolutionSec: 10, censored: 0 };
 
   const baseline = mean(all);
   const swing = sd(all);
   const peakAt = baseline + swing;
 
   const gaps: number[] = [];
-  for (const s of sessions) for (let i = 1; i < s.length; i++) gaps.push((s[i]!.t! - s[i - 1]!.t!) / 1000);
+  for (const s of sessions) {
+    for (let i = 1; i < s.length; i++) gaps.push((s[i]!.t! - s[i - 1]!.t!) / 1000);
+  }
   gaps.sort((a, b) => a - b);
-  const floorSec = gaps.length ? Math.max(1, Math.round(gaps[Math.floor(gaps.length / 2)]!)) : 10;
+  const resolutionSec = gaps.length ? Math.max(1, Math.round(gaps[Math.floor(gaps.length / 2)]!)) : 10;
 
   const times: number[] = [];
+  let censored = 0;
   for (const s of sessions) {
     for (let i = 0; i < s.length; i++) {
       if (s[i]!.v! <= peakAt) continue;
@@ -272,29 +275,10 @@ export async function getRecovery(
       let j = i + 1;
       while (j < s.length && s[j]!.v! > baseline) j++;
       if (j < s.length) times.push((s[j]!.t! - s[i]!.t!) / 1000);
+      else censored += 1; // ended while still elevated
     }
   }
-  if (!times.length) return { n: 0, floorSec, atFloor: false, medianSec: null, buckets: [] };
-
-  const first = Math.round(floorSec * 1.5);
-  const edges = [first, 30, 60, 120];
-  const labels = [`under ${first}s`, `${first}s to 30s`, "30s to 1 min", "1 to 2 min", "over 2 min"];
-  const counts = new Array(labels.length).fill(0) as number[];
-  for (const t of times) {
-    let i = edges.findIndex((e) => t < e);
-    if (i === -1) i = labels.length - 1;
-    counts[i] += 1;
-  }
-  const sorted = times.slice().sort((a, b) => a - b);
-
-  return {
-    n: times.length,
-    floorSec,
-    atFloor: counts[0]! / times.length >= 0.5,
-    medianSec: sorted[Math.floor(sorted.length / 2)]!,
-    buckets: labels
-      .map((label, i) => ({ label, n: counts[i]!, pct: Math.round((counts[i]! / times.length) * 100) }))
-      .filter((b) => b.n > 0),
-  };
+  times.sort((a, b) => a - b);
+  return { n: times.length + censored, times, resolutionSec, censored };
 }
 
