@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getSessionFromCookies } from "@/lib/auth";
+import SignOut from "./sign-out";
 import "./dashboard.css";
 
 export const dynamic = "force-dynamic";
@@ -66,6 +67,7 @@ export default async function DashboardLayout({
             <small>{session.email}</small>
           </div>
         </div>
+        <SignOut />
       </aside>
 
       <main>{children}</main>

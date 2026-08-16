@@ -260,3 +260,8 @@
   @media (prefers-reduced-motion:reduce){.skel::after{animation:none}}
   .srOnly{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
     clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+  .signout{margin-top:8px;width:100%;text-align:left;padding:7px 8px;border:0;border-radius:8px;
+    background:none;font:inherit;font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer}
+  .signout:hover{background:var(--paper-3);color:var(--ink)}
+  .signout:disabled{opacity:.55;cursor:default}
