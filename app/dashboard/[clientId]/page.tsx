@@ -6,7 +6,7 @@
 // so the page cannot be used to probe which user_ids exist.
 
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getSessionFromCookies } from "@/lib/auth";
 import { getClientDetail } from "@/lib/dashboard";
 import { getDayMeans } from "@/lib/coach-analytics";
@@ -33,15 +33,21 @@ export default async function ClientPage({
 
   const { clientId } = await params;
 
-  // Both reads are cheap and independent, so they go together rather
-  // than one after the other. getClientDetail still owns the
-  // authorization decision; the day rows are simply discarded if it
-  // says no.
-  const [client, dayRows] = await Promise.all([
-    getClientDetail(session, clientId),
-    getDayMeans(clientId, 90),
-  ]);
-  if (!client) notFound();
+  // Permission FIRST, then data. Running them together meant a client
+  // you may not see still had their aggregates computed, only to be
+  // thrown away — wasted work on data this session has no business
+  // touching.
+  //
+  // Redirect rather than notFound(): the dashboard layout streams the
+  // shell before this component runs, so the response status is
+  // already committed and notFound() rendered its page under a 200.
+  // Sending them to their own roster is unambiguous, and it says the
+  // same thing to someone probing for real user_ids as to someone who
+  // followed a stale link.
+  const client = await getClientDetail(session, clientId);
+  if (!client) redirect("/dashboard");
+
+  const dayRows = await getDayMeans(clientId, 90);
 
   const isSelf = client.userId === session.userId;
 
