@@ -299,9 +299,10 @@ export const SESSION_COOKIE = "ontor_session";
 //   AUTH_REQUIRED unset  — accept-both. A request WITH a token must
 //     prove that token owns the user_id it is asking about; a request
 //     WITHOUT one is allowed through and logged, exactly as before.
-//   AUTH_REQUIRED=true   — a token is mandatory. Flip this once the
-//     new build has propagated; it needs no code change or deploy of
-//     the routes themselves.
+//   AUTH_REQUIRED=true   — a token is mandatory. Off indefinitely: an
+//     app update does NOT sign anyone in, because onboarding runs once
+//     and .onboarding_done survives the update. See the note in
+//     app/api/v1/sync/route.ts.
 //
 // A PRESENT-but-invalid token is rejected rather than quietly
 // downgraded to the legacy path. Falling back there would mean a

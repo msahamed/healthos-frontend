@@ -12,11 +12,20 @@
 // asking about — a valid token for the wrong partition is a 403, which
 // is the whole point of the gate.
 //
-// It is still a two-mode gate during rollout: with AUTH_REQUIRED unset,
-// a request with NO token is allowed through and logged, so builds that
-// predate sign-in keep syncing. Set AUTH_REQUIRED=true to close the
-// legacy path once the new build has propagated — no code change, and
-// the log lines show when that is safe.
+// Two-mode gate: with AUTH_REQUIRED unset, a request with NO token is
+// allowed through and logged, so installs that predate sign-in keep
+// syncing.
+//
+// That flag is off INDEFINITELY, not "until the update lands". Shipping
+// a new build does not help: onboarding runs once, gated by
+// .onboarding_done, and an app update preserves it — so an updated
+// install goes straight to the home screen, never sees the code screen,
+// and still has no token. Setting the flag would break those users just
+// as surely as it does today.
+//
+// It can only be closed once sign-in is reachable from inside the app
+// (a full-screen signed-out state, not the Settings row that was tried
+// and removed), or once every remaining user has reinstalled.
 //
 // A token that is PRESENT but invalid is rejected rather than
 // downgraded to the legacy path. Falling back would mean a revoked
