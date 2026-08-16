@@ -99,7 +99,7 @@
   .whoami small{display:block;font-size:11.5px;color:var(--ink-mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
   /* ── Main ──────────────────────────────────────────────────── */
-  main{padding:26px 34px 60px;max-width:1180px}
+  .shell main{padding:26px 34px 60px;max-width:1180px}
   .topbar{display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:6px}
   h1{font-family:var(--font-newsreader),Georgia,serif;font-size:31px;font-weight:600;letter-spacing:-.015em;
     line-height:1.1;margin:0;text-wrap:balance}
@@ -159,7 +159,7 @@
   .cols{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;align-items:start}
   @media (max-width:900px){.cols{grid-template-columns:1fr}.shell{grid-template-columns:1fr}
     .rail{position:static;height:auto;flex-direction:row;align-items:center;overflow-x:auto}
-    .navlabel,.whoami{display:none}.nav{flex-direction:row}main{padding:20px}}
+    .navlabel,.whoami{display:none}.nav{flex-direction:row}.shell main{padding:20px}}
 
   .bars{padding:6px 18px 16px}
   .bar{display:grid;grid-template-columns:104px 1fr 62px;align-items:center;gap:12px;padding:9px 0}
@@ -295,8 +295,8 @@
   .linkbtn:hover{background:var(--paper-3)}
 
   /* Accept page (outside the dashboard shell) */
-  .acceptWrap{min-height:100vh;display:flex;align-items:center;justify-content:center;
-    padding:48px 24px;background:var(--paper)}
+  .acceptWrap{min-height:100vh;width:100%;flex:1;display:flex;align-items:center;
+    justify-content:center;padding:48px 24px;background:var(--paper);box-sizing:border-box}
   .acceptCard{width:100%;max-width:520px;background:var(--paper);border:1px solid var(--line);
     border-radius:18px;padding:30px 30px 28px;display:flex;flex-direction:column;gap:14px}
   .acceptCard h1{font-family:var(--font-newsreader),Georgia,serif;font-size:28px;font-weight:500;
