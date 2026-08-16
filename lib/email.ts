@@ -282,7 +282,7 @@ function inviteHtml(who: string, acceptUrl: string): string {
             <a href="${acceptUrl}" style="display:inline-block;background:#0F766E;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:13px 26px;border-radius:12px;">Accept and start sharing</a>
           </td></tr>
           <tr><td style="padding:26px 40px 0;font-size:15px;line-height:1.6;color:#374151;">
-            <p style="margin:0 0 8px;"><strong>New here?</strong> Accept, then install Ontor and do a few check-ins so there is something to see.</p>
+            <p style="margin:0 0 8px;"><strong>New here?</strong> Accept, then install Ontor and speak to it a few times so there is something to see.</p>
             <p style="margin:0;"><a href="${SITE}/install/" style="color:#0d9488;">Install Ontor &rarr;</a></p>
           </td></tr>
           <tr><td style="padding:28px 40px 40px;">
@@ -328,8 +328,8 @@ export async function sendShareInvite(
       "",
       `Accept: ${acceptUrl}`,
       "",
-      `New here? Accept, then install Ontor and do a few check-ins so there is`,
-      `something to see: ${SITE}/install/`,
+      `New here? Accept, then install Ontor and speak to it a few times so`,
+      `there is something to see: ${SITE}/install/`,
       "",
       "Not expecting this? Ignore it. Nothing is shared unless you accept.",
     ].join("\n"),

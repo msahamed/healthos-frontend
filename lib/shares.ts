@@ -342,3 +342,34 @@ export async function linkCoachShares(session: {
     { $set: { coach_user_id: session.userId } },
   );
 }
+
+/**
+ * Accept a pending invite you are already looking at, by id.
+ *
+ * The emailed link is not the only way in: someone signed in can see
+ * the invite on their profile, and offering only Decline there is a
+ * dead end. Same check as the token path — the invite must have been
+ * addressed to this account.
+ */
+export async function acceptById(
+  session: { userId: string; email: string },
+  shareId: string,
+): Promise<boolean> {
+  const { ObjectId } = await import("mongodb");
+  let _id: InstanceType<typeof ObjectId>;
+  try {
+    _id = new ObjectId(shareId);
+  } catch {
+    return false;
+  }
+
+  const c = await col();
+  const doc = await c.findOne({ _id, status: "pending" });
+  if (!doc || doc.client_email !== session.email) return false;
+
+  await c.updateOne(
+    { _id, status: "pending" },
+    { $set: { status: "active", client_user_id: session.userId, accepted_at: new Date() } },
+  );
+  return true;
+}

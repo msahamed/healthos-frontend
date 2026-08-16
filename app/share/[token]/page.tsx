@@ -18,7 +18,7 @@ import "../../dashboard/dashboard.css";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  title: "Share your check-ins — Ontor",
+  title: "Share your Ontor readings — Ontor",
   robots: { index: false, follow: false },
 };
 
@@ -52,8 +52,8 @@ export default async function AcceptPage({
     return (
       <Shell title="You are already sharing">
         <p className="sub">
-          {share.coachEmail} can see how your voice moves against your own usual. You can stop at
-          any time from your profile.
+          {share.coachName ?? share.coachEmail} can see how your voice moves against your own
+          usual. You can stop any time from your profile.
         </p>
         <Link className="btn" href="/dashboard/profile/">Manage sharing</Link>
       </Shell>
@@ -70,15 +70,13 @@ export default async function AcceptPage({
   }
 
   return (
-    <Shell title={`${share.coachEmail} would like to follow your check-ins`}>
+    <Shell title={`${share.coachName ?? share.coachEmail} is inviting you to their program`}>
+      {share.coachName && <p className="sub">{share.coachEmail}</p>}
       <p className="sub">
-        Ontor reads your nervous-system state from how you sound: stress, energy, confidence,
-        fatigue. If you accept, they can see how those move against your own usual, including your
-        history so far.
-      </p>
-      <p className="sub">
-        <strong>They never see or hear what you said.</strong> No recordings, no transcripts, no
-        words. You can stop sharing at any time.
+        Ontor scores stress, energy, confidence and fatigue from how your voice sounds. If you
+        accept, they see how those move against your own usual, including your history so far.
+        They never hear what you said: no recordings, no transcripts, no words. You can stop any
+        time.
       </p>
 
       {sp.err && <p className="fmsg err">{sp.err}</p>}
@@ -101,8 +99,8 @@ export default async function AcceptPage({
       )}
 
       <p className="fhint" style={{ marginTop: 22 }}>
-        New to Ontor? After accepting, <Link href="/install/">install the tool</Link> and do a few
-        check-ins so there is something for them to see.
+        New here? After accepting, <Link href="/install/">install Ontor</Link> and speak to it a
+        few times so there is something to see.
       </p>
     </Shell>
   );

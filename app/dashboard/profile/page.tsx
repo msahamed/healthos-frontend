@@ -10,7 +10,7 @@ import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
 import { getSessionFromCookies } from "@/lib/auth";
 import { getProfile, saveProfile, SEX_OPTIONS } from "@/lib/profile";
-import { endShare, grantToCoach, listForClient } from "@/lib/shares";
+import { acceptById, endShare, grantToCoach, listForClient } from "@/lib/shares";
 
 export const dynamic = "force-dynamic";
 
@@ -75,6 +75,15 @@ export default async function ProfilePage({
     if (!res.ok) redirect(`/dashboard/profile?serr=${encodeURIComponent(res.error)}`);
     revalidatePath("/dashboard/profile");
     redirect(`/dashboard/profile?shared=${res.coachHasAccount ? "1" : "pending"}`);
+  }
+
+  async function acceptShare(formData: FormData) {
+    "use server";
+    const s = await getSessionFromCookies();
+    if (!s) redirect("/login");
+    await acceptById(s, String(formData.get("id") ?? ""));
+    revalidatePath("/dashboard/profile");
+    redirect("/dashboard/profile?shared=1");
   }
 
   async function stopSharing(formData: FormData) {
@@ -176,15 +185,23 @@ export default async function ProfilePage({
                     <small>
                       {g.status === "active"
                         ? `sharing since ${(g.acceptedAt ?? g.createdAt).toISOString().slice(0, 10)}`
-                        : "invited you, not accepted yet"}
+                        : "is inviting you to their program"}
                     </small>
                   </span>
-                  <form action={stopSharing}>
-                    <input type="hidden" name="id" value={g.id} />
-                    <button className="linkbtn" type="submit">
-                      {g.status === "active" ? "Stop sharing" : "Decline"}
-                    </button>
-                  </form>
+                  <span className="rowactions">
+                    {g.status === "pending" && (
+                      <form action={acceptShare}>
+                        <input type="hidden" name="id" value={g.id} />
+                        <button className="linkbtn accept" type="submit">Accept</button>
+                      </form>
+                    )}
+                    <form action={stopSharing}>
+                      <input type="hidden" name="id" value={g.id} />
+                      <button className="linkbtn" type="submit">
+                        {g.status === "active" ? "Stop sharing" : "Decline"}
+                      </button>
+                    </form>
+                  </span>
                 </li>
               ))}
             </ul>

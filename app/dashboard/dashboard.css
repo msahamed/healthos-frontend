@@ -302,3 +302,6 @@
   .acceptCard h1{font-family:var(--font-newsreader),Georgia,serif;font-size:28px;font-weight:500;
     letter-spacing:-.015em;line-height:1.2;margin:6px 0 0;color:var(--ink);text-wrap:balance}
   .acceptCard .btn{align-self:flex-start;text-decoration:none;display:inline-block}
+
+  .rowactions{display:flex;align-items:center;gap:4px;flex:none}
+  .linkbtn.accept{color:var(--teal)}
