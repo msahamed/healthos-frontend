@@ -14,6 +14,7 @@
 //
 // Never reads transcript.
 
+import { unstable_cache } from "next/cache";
 import { getDb } from "@/lib/auth";
 import type { Document } from "mongodb";
 import {
@@ -26,6 +27,31 @@ import {
 } from "@/lib/markers";
 
 export * from "@/lib/markers";
+
+// ── Caching ───────────────────────────────────────────────────────
+//
+// These reads only change when a device syncs, which for one person is
+// a handful of times a day. Recomputing them on every navigation is
+// pure waste: going back to the roster and into the same client
+// re-ran the whole set.
+//
+// Cached per user and per argument list, and tagged so a sync can
+// invalidate it directly (see revalidateTag in the sync route). The
+// TTL is a backstop for anything that writes without going through
+// sync, not the primary mechanism.
+export const obsTag = (userId: string) => `obs:${userId}`;
+const CACHE_TTL = 300;
+
+function cached<A extends unknown[], R>(
+  name: string,
+  fn: (userId: string, ...args: A) => Promise<R>,
+) {
+  return (userId: string, ...args: A): Promise<R> =>
+    unstable_cache(() => fn(userId, ...args), [name, userId, JSON.stringify(args)], {
+      tags: [obsTag(userId)],
+      revalidate: CACHE_TTL,
+    })();
+}
 
 // ── Shared pipeline head ──────────────────────────────────────────
 //
@@ -70,7 +96,7 @@ function windowStages(userId: string, days: number, keys: readonly string[]): Do
  * One row per local day. This is the only call the first paint makes:
  * it is small (a few dozen rows) and three panels read from it.
  */
-export async function getDayMeans(userId: string, days = 90): Promise<DayRow[]> {
+async function getDayMeansUncached(userId: string, days = 90): Promise<DayRow[]> {
   const db = await getDb();
   const group: Document = { _id: "$day", n: { $sum: 1 } };
   for (const k of MARKER_KEYS) group[k] = { $avg: `$w.${k}` };
@@ -88,7 +114,7 @@ export async function getDayMeans(userId: string, days = 90): Promise<DayRow[]> 
 }
 
 /** Totals for the header, in one cheap pass. */
-export async function getTotals(userId: string, days = 90) {
+async function getTotalsUncached(userId: string, days = 90) {
   const db = await getDb();
   const since = new Date(Date.now() - days * 864e5);
   const [row] = await db
@@ -131,7 +157,7 @@ export async function getTotals(userId: string, days = 90) {
  * offset, so an hourly axis built here would silently be in the wrong
  * timezone. Four honest buckets beat twenty-four wrong ones.
  */
-export async function getTimeOfDay(userId: string, days: number, keys: MarkerKey[], minN = 5) {
+async function getTimeOfDayUncached(userId: string, days: number, keys: MarkerKey[], minN = 5) {
   const db = await getDb();
   const group: Document = { _id: "$tod", n: { $sum: 1 } };
   for (const k of keys) group[k] = { $avg: `$w.${k}` };
@@ -158,7 +184,7 @@ export async function getTimeOfDay(userId: string, days: number, keys: MarkerKey
  * numbers rather than every window, so the payload does not grow with
  * the length of the run.
  */
-export async function getMatrix(userId: string, days: number): Promise<number[][]> {
+async function getMatrixUncached(userId: string, days: number): Promise<number[][]> {
   const db = await getDb();
   const group: Document = { _id: null };
   for (let i = 0; i < MARKER_KEYS.length; i++) {
@@ -216,7 +242,7 @@ export async function getMatrix(userId: string, days: number): Promise<number[][
  * spikes land in the first bucket the honest claim is "at least this
  * fast", not a precise median.
  */
-export async function getRecovery(
+async function getRecoveryUncached(
   userId: string,
   days: number,
   key: MarkerKey = "stress",
@@ -318,7 +344,7 @@ export interface OffsetSolve {
   perRow?: boolean;
 }
 
-export async function solveUtcOffset(userId: string, days: number): Promise<OffsetSolve> {
+async function solveUtcOffsetUncached(userId: string, days: number): Promise<OffsetSolve> {
   const db = await getDb();
   const since = new Date(Date.now() - days * 864e5);
 
@@ -382,7 +408,7 @@ export async function solveUtcOffset(userId: string, days: number): Promise<Offs
 }
 
 /** Means per local hour. At most 24 rows out. */
-export async function getByHour(
+async function getByHourUncached(
   userId: string,
   days: number,
   keys: MarkerKey[],
@@ -428,3 +454,14 @@ export async function getByHour(
       return { hour: r._id as number, n: r.n as number, m };
     });
 }
+
+
+// Public, cached entry points. The Uncached originals stay private so
+// there is exactly one way in and nothing bypasses the tag by accident.
+export const getDayMeans = cached("dayMeans", getDayMeansUncached);
+export const getTotals = cached("totals", getTotalsUncached);
+export const getMatrix = cached("matrix", getMatrixUncached);
+export const getRecovery = cached("recovery", getRecoveryUncached);
+export const getByHour = cached("byHour", getByHourUncached);
+export const solveUtcOffset = cached("offset", solveUtcOffsetUncached);
+export const getTimeOfDay = cached("timeOfDay", getTimeOfDayUncached);

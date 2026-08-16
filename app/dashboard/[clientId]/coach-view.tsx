@@ -184,20 +184,37 @@ export default function CoachView({ days, clientId }: { days: DayRow[]; clientId
 
 // ── Lazy panels ───────────────────────────────────────────────────
 
+/**
+ * Fetch a panel's data the first time it is actually looked at.
+ *
+ * Two things this avoids. Fetching on mount pulls the matrix and
+ * recovery for every visit even when nobody scrolls that far, which is
+ * network and Mongo work for nothing. And the cache is module-level,
+ * not per-component, so navigating to the roster and back reuses what
+ * was already fetched instead of asking again.
+ *
+ * The observer margin starts the request slightly before the panel
+ * reaches the viewport, so the data is usually there by the time it is.
+ */
+const panelCache = new Map<string, unknown>();
+
 function useLazyPanel<T>(url: string) {
-  const [data, setData] = useState<T | null>(null);
-  const [state, setState] = useState<"loading" | "idle" | "error">("loading");
-  const cache = useRef(new Map<string, T>());
+  const [data, setData] = useState<T | null>(() => (panelCache.get(url) as T) ?? null);
+  const [state, setState] = useState<"idle" | "loading" | "error">(
+    panelCache.has(url) ? "idle" : "idle",
+  );
+  const ref = useRef<HTMLDivElement | null>(null);
+  const seen = useRef(false);
 
   const load = useCallback(async () => {
-    const hit = cache.current.get(url);
-    if (hit) { setData(hit); setState("idle"); return; }
+    const hit = panelCache.get(url);
+    if (hit) { setData(hit as T); setState("idle"); return; }
     setState("loading");
     try {
       const res = await fetch(url);
       if (!res.ok) throw new Error(String(res.status));
       const json = (await res.json()) as T;
-      cache.current.set(url, json);
+      panelCache.set(url, json);
       setData(json);
       setState("idle");
     } catch {
@@ -205,20 +222,47 @@ function useLazyPanel<T>(url: string) {
     }
   }, [url]);
 
-  useEffect(() => { void load(); }, [load]);
-  return { data, state };
+  // Re-run whenever the url changes (a chip or range switch), but only
+  // once the panel has been seen at least once.
+  useEffect(() => {
+    if (seen.current) void load();
+  }, [load]);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || seen.current) return;
+    if (typeof IntersectionObserver === "undefined") {
+      seen.current = true;
+      void load();
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          seen.current = true;
+          io.disconnect();
+          void load();
+        }
+      },
+      { rootMargin: "300px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [load]);
+
+  return { data, state, ref };
 }
 
 function TimeOfDayPanel({ clientId }: { clientId: string }) {
   const [overlay, setOverlay] = useState<MarkerKey>("breathing");
   const [range, setRange] = useState<Range>(30);
   const keys: MarkerKey[] = ["confidence", overlay];
-  const { data, state } = useLazyPanel<HourData>(
+  const { data, state, ref } = useLazyPanel<HourData>(
     `/api/v1/dashboard/${clientId}/?panel=hour&days=${range}&keys=${keys.join(",")}`,
   );
 
   return (
-    <section className="sect">
+    <section className="sect" ref={ref}>
       <div className="eyebrow">Time of day</div>
       <div className="sectHead">
         <h2 className="sectTitle">When confidence is strongest</h2>
@@ -253,13 +297,13 @@ function TimeOfDayPanel({ clientId }: { clientId: string }) {
 
 function RecoveryPanel({ clientId }: { clientId: string }) {
   const [range, setRange] = useState<Range>(30);
-  const { data, state } = useLazyPanel<Recovery>(
+  const { data, state, ref } = useLazyPanel<Recovery>(
     `/api/v1/dashboard/${clientId}/?panel=recovery&days=${range}&marker=stress`,
   );
   const built = data && data.n > 0 ? buildRecovery(data) : null;
 
   return (
-    <section className="sect">
+    <section className="sect" ref={ref}>
       <div className="eyebrow">Recovery</div>
       <div className="sectHead">
         <h2 className="sectTitle">How fast a spike comes down</h2>
@@ -303,11 +347,11 @@ function RecoveryPanel({ clientId }: { clientId: string }) {
 }
 
 function MatrixPanel({ clientId }: { clientId: string }) {
-  const { data, state } = useLazyPanel<{ keys: MarkerKey[]; matrix: number[][] }>(
+  const { data, state, ref } = useLazyPanel<{ keys: MarkerKey[]; matrix: number[][] }>(
     `/api/v1/dashboard/${clientId}/?panel=matrix&days=90`,
   );
   return (
-    <section className="sect">
+    <section className="sect" ref={ref}>
       <div className="eyebrow">Seven dials, one map</div>
       <h2 className="sectTitle">How the markers move together</h2>
       <p className="sub">

@@ -32,6 +32,8 @@
 import { NextResponse } from "next/server";
 import { getMongoClient } from "@/lib/mongodb";
 import { authorizeUser } from "@/lib/auth";
+import { revalidateTag } from "next/cache";
+import { obsTag } from "@/lib/coach-analytics";
 import type { AnyBulkWriteOperation } from "mongodb";
 
 // Stored observation shape. `_id` is a client-supplied UUIDv4, not an
@@ -261,6 +263,19 @@ export async function POST(req: Request) {
         { upsert: false },
       )
       .catch(() => {});
+
+    // New observations landed, so everything the dashboard cached for
+    // this user is stale. Dropping the tag is what makes that cache
+    // correct rather than merely recent; the TTL is only a backstop
+    // for writes that never come through here.
+    // "max" is stale-while-revalidate: the next dashboard visit is
+    // served instantly from the old entry while the fresh one is built
+    // behind it. The alternative expires immediately and makes that
+    // visit pay a blocking rebuild, which is the wrong trade for a
+    // surface people open to glance at.
+    if (res.upsertedCount > 0 || res.modifiedCount > 0) {
+      revalidateTag(obsTag(userId), "max");
+    }
 
     return NextResponse.json({
       accepted: valid.length,

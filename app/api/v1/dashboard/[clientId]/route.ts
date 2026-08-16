@@ -48,6 +48,11 @@ export async function GET(
     return NextResponse.json({ error: "bad_range" }, { status: 400 });
   }
 
+  // Per-user data behind a session, so private, never shared. Short
+  // enough that a sync is reflected quickly, long enough that toggling
+  // a chip back and forth costs nothing.
+  const headers = { "Cache-Control": "private, max-age=60" };
+
   try {
     switch (panel) {
       case "hour": {
@@ -60,17 +65,18 @@ export async function GET(
         const hours = solved.fit >= 0.9
           ? await getByHour(session.userId, days, keys, solved.offset)
           : [];
-        return NextResponse.json({ ...solved, hours });
+        return NextResponse.json({ ...solved, hours }, { headers });
       }
       case "matrix":
-        return NextResponse.json({
-          keys: MARKER_KEYS,
-          matrix: await getMatrix(session.userId, days),
-        });
+        return NextResponse.json(
+          { keys: MARKER_KEYS, matrix: await getMatrix(session.userId, days) },
+          { headers },
+        );
       case "recovery": {
         const m = url.searchParams.get("marker");
         return NextResponse.json(
           await getRecovery(session.userId, days, isMarker(m) ? m : "stress"),
+          { headers },
         );
       }
       default:

@@ -32,12 +32,16 @@ export default async function ClientPage({
   if (!session) redirect("/login");
 
   const { clientId } = await params;
-  const client = await getClientDetail(session, clientId);
-  if (!client) notFound();
 
-  // First paint pulls day rows only — a few dozen small rows that
-  // three panels read from. Everything heavier loads on demand.
-  const dayRows = await getDayMeans(client.userId, 90);
+  // Both reads are cheap and independent, so they go together rather
+  // than one after the other. getClientDetail still owns the
+  // authorization decision; the day rows are simply discarded if it
+  // says no.
+  const [client, dayRows] = await Promise.all([
+    getClientDetail(session, clientId),
+    getDayMeans(clientId, 90),
+  ]);
+  if (!client) notFound();
 
   const isSelf = client.userId === session.userId;
 
