@@ -16,11 +16,12 @@
 import { NextResponse } from "next/server";
 import { getSessionFromCookies } from "@/lib/auth";
 import {
+  getByHour,
   getMatrix,
   getRecovery,
-  getTimeOfDay,
   isMarker,
   MARKER_KEYS,
+  solveUtcOffset,
 } from "@/lib/coach-analytics";
 
 export const runtime = "nodejs";
@@ -49,11 +50,17 @@ export async function GET(
 
   try {
     switch (panel) {
-      case "tod": {
+      case "hour": {
         const raw = url.searchParams.get("keys")?.split(",") ?? ["confidence"];
         const keys = raw.filter(isMarker).slice(0, 3);
         if (!keys.length) keys.push("confidence");
-        return NextResponse.json({ buckets: await getTimeOfDay(session.userId, days, keys) });
+        // Recover the device's UTC offset first; the hour axis is only
+        // meaningful if it explains the buckets the device recorded.
+        const solved = await solveUtcOffset(session.userId, days);
+        const hours = solved.fit >= 0.9
+          ? await getByHour(session.userId, days, keys, solved.offset)
+          : [];
+        return NextResponse.json({ ...solved, hours });
       }
       case "matrix":
         return NextResponse.json({

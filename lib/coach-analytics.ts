@@ -282,3 +282,94 @@ export async function getRecovery(
   return { n: times.length + censored, times, resolutionSec, censored };
 }
 
+
+// ── Panel: by hour of the local day ───────────────────────────────
+//
+// Observations carry a local DATE and a coarse time-of-day bucket, but
+// no local hour and no UTC offset. The hour is still recoverable,
+// because the device's bucketing rule is known:
+//
+//   morning 5-12 · afternoon 12-17 · evening 17-21 · night otherwise
+//   (health_items_observations_repository.dart)
+//
+// Only one whole-hour offset can put every check-in in the bucket the
+// device chose AND on the local date it recorded. Solving for it costs
+// one small aggregation — counts per (utc hour, bucket), at most 96
+// rows — not a scan of the run.
+//
+// The fit is returned with the answer. A run spanning a daylight-saving
+// change has no single correct offset, so a poor fit is reported rather
+// than papered over, and the caller falls back to buckets.
+
+const BUCKET_OF = (h: number) =>
+  h >= 5 && h < 12 ? "morning" : h >= 12 && h < 17 ? "afternoon" : h >= 17 && h < 21 ? "evening" : "night";
+
+export interface OffsetSolve {
+  offset: number;
+  /** Share of check-ins the offset explains, 0-1. */
+  fit: number;
+}
+
+export async function solveUtcOffset(userId: string, days: number): Promise<OffsetSolve> {
+  const db = await getDb();
+  const since = new Date(Date.now() - days * 864e5);
+  const rows = await db
+    .collection("observations")
+    .aggregate([
+      {
+        $match: {
+          user_id: userId,
+          deleted_at: null,
+          created_at: { $gte: since },
+          "extraction.time_of_day": { $ne: null },
+        },
+      },
+      { $group: { _id: { h: { $hour: "$created_at" }, tod: "$extraction.time_of_day" }, n: { $sum: 1 } } },
+    ])
+    .toArray();
+
+  const total = rows.reduce((s, r) => s + (r.n as number), 0);
+  if (!total) return { offset: 0, fit: 0 };
+
+  let best = { offset: 0, fit: 0 };
+  for (let off = -12; off <= 14; off++) {
+    let ok = 0;
+    for (const r of rows) {
+      const g = r._id as { h: number; tod: string };
+      if (BUCKET_OF((g.h + off + 24) % 24) === g.tod) ok += r.n as number;
+    }
+    const fit = ok / total;
+    if (fit > best.fit) best = { offset: off, fit };
+  }
+  return best;
+}
+
+/** Means per local hour. At most 24 rows out. */
+export async function getByHour(
+  userId: string,
+  days: number,
+  keys: MarkerKey[],
+  offset: number,
+  minN = 3,
+) {
+  const db = await getDb();
+  const group: Document = {
+    _id: { $mod: [{ $add: [{ $hour: "$hAt" }, offset + 24] }, 24] },
+    n: { $sum: 1 },
+  };
+  for (const k of keys) group[k] = { $avg: `$w.${k}` };
+
+  const stages = windowStages(userId, days, keys);
+  // windowStages projects away created_at, so carry the hour through.
+  (stages[1] as { $project: Document }).$project.hAt = "$created_at";
+
+  const rows = await db.collection("observations").aggregate([...stages, { $group: group }, { $sort: { _id: 1 } }]).toArray();
+
+  return rows
+    .filter((r) => (r.n as number) >= minN)
+    .map((r) => {
+      const m: Partial<Record<MarkerKey, number>> = {};
+      for (const k of keys) if (typeof r[k] === "number") m[k] = r[k] as number;
+      return { hour: r._id as number, n: r.n as number, m };
+    });
+}
