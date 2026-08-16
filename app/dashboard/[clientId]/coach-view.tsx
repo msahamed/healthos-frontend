@@ -87,6 +87,17 @@ const ord = (d: string) => Date.parse(d + "T00:00:00Z") / 86400000;
 const short = (d: string) => d.slice(5).replace("-", "/");
 
 type Range = 7 | 30;
+type TodBucket = { bucket: string; n: number; m: Partial<Record<MarkerKey, number>> };
+
+/** The factors offered next to confidence, as the design lists them. */
+const TOD_OVERLAYS: { key: MarkerKey; name: string }[] = [
+  { key: "breathing", name: "Breathing" },
+  { key: "energy", name: "Energy" },
+  { key: "stress", name: "Stress" },
+  { key: "fatigue", name: "Fatigue" },
+  { key: "vocal_strain", name: "Vocal strain" },
+];
+const TOD_ORDER = ["morning", "afternoon", "evening", "night"];
 
 export default function CoachView({ days, clientId }: { days: DayRow[]; clientId: string }) {
   const [range, setRange] = useState<Range>(30);
@@ -164,6 +175,7 @@ export default function CoachView({ days, clientId }: { days: DayRow[]; clientId
         </div>
       </section>
 
+      <TimeOfDayPanel clientId={clientId} />
       <RecoveryPanel clientId={clientId} />
       <MatrixPanel clientId={clientId} />
     </>
@@ -195,6 +207,37 @@ function useLazyPanel<T>(url: string) {
 
   useEffect(() => { void load(); }, [load]);
   return { data, state };
+}
+
+function TimeOfDayPanel({ clientId }: { clientId: string }) {
+  const [overlay, setOverlay] = useState<MarkerKey>("breathing");
+  const keys: MarkerKey[] = ["confidence", overlay];
+  const { data, state } = useLazyPanel<{ buckets: TodBucket[] }>(
+    `/api/v1/dashboard/${clientId}/?panel=tod&days=90&keys=${keys.join(",")}`,
+  );
+
+  return (
+    <section className="sect">
+      <div className="eyebrow">Time of day</div>
+      <h2 className="sectTitle">When confidence is strongest</h2>
+      <p className="sub">
+        All check-ins pooled by the part of day recorded on the device, in their local time. Pick a
+        factor to see it next to confidence. Useful for timing sessions and hard conversations, not
+        for judging progress.
+      </p>
+      <div className="chips">
+        {TOD_OVERLAYS.map((o) => (
+          <button key={o.key} className="chip-btn" aria-pressed={o.key === overlay}
+            onClick={() => setOverlay(o.key)}>{o.name}</button>
+        ))}
+      </div>
+      <div className="card">
+        {state === "loading" && <p className="sub">Loading…</p>}
+        {state === "error" && <p className="sub">Could not load this panel.</p>}
+        {data && <TodChart buckets={data.buckets} overlay={overlay} />}
+      </div>
+    </section>
+  );
 }
 
 function RecoveryPanel({ clientId }: { clientId: string }) {
@@ -394,6 +437,87 @@ function ZoneChart({ days, zoneKey, range }: { days: DayRow[]; zoneKey: MarkerKe
         fontSize="11.5" fill={TEAL_DEEP}>
         {`zone ${Math.round(base - sd)} to ${Math.round(base + sd)}`}
       </text>
+    </svg>
+  );
+}
+
+/**
+ * The design's hourChart, with the four local buckets on the x-axis
+ * where hours would be.
+ *
+ * The geometry, palette, dashed-gap rule, dot size and tooltips are
+ * the design's. Only the axis differs, and it has to: observations
+ * carry a local DATE and a coarse bucket but no local hour and no UTC
+ * offset, so an hourly axis built server-side would silently be in the
+ * wrong timezone. Syncing a local hour from the device is what would
+ * turn this back into the hourly curve.
+ */
+function TodChart({ buckets, overlay }: { buckets: TodBucket[]; overlay: MarkerKey }) {
+  const shown = TOD_ORDER.flatMap((b) => buckets.filter((x) => x.bucket === b));
+  if (shown.length < 2) return <p className="sub">Not enough readings to split by time of day.</p>;
+
+  const W = 1040, H = 320, L = 40, R = 40, T = 26, B = 36;
+  const series = [
+    { key: "confidence" as MarkerKey, name: "Confidence", c: TEAL },
+    { key: overlay, name: TOD_OVERLAYS.find((o) => o.key === overlay)?.name ?? overlay, c: "#F59E0B" },
+  ];
+  const allV = shown.flatMap((b) => series.map((s) => b.m[s.key]).filter((v): v is number => v != null));
+  if (!allV.length) return <p className="sub">Not enough readings for this factor yet.</p>;
+
+  const ymin = Math.max(0, Math.floor((Math.min(...allV) - 8) / 10) * 10);
+  const ymax = Math.min(100, Math.ceil((Math.max(...allV) + 8) / 10) * 10);
+  const y = (v: number) => T + (1 - (v - ymin) / (ymax - ymin || 1)) * (H - T - B);
+  const x = (i: number) => L + (i / Math.max(1, shown.length - 1)) * (W - L - R);
+  const step = ymax - ymin > 45 ? 20 : 10;
+
+  const grid: number[] = [];
+  for (let g = Math.ceil(ymin / step) * step; g <= ymax; g += step) grid.push(g);
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ display: "block", width: "100%", height: "auto" }} role="img"
+      aria-label={`Confidence and ${series[1]!.name.toLowerCase()} by part of the day.`}>
+      {grid.map((g) => (
+        <g key={`g${g}`}>
+          <line x1={L} x2={W - R} y1={y(g)} y2={y(g)} stroke={LINE} />
+          <text x={L - 8} y={y(g) + 5} textAnchor="end" fontSize="14" fill={MUTED}>{g}</text>
+        </g>
+      ))}
+      {shown.map((b, i) => (
+        <text key={`x${i}`} x={x(i)} y={H - 12} textAnchor="middle" fontSize="14" fill={MUTED}>
+          {b.bucket}
+        </text>
+      ))}
+      {series.map((s) => {
+        const pts = shown
+          .map((b, i) => ({ i, v: b.m[s.key], n: b.n }))
+          .filter((p): p is { i: number; v: number; n: number } => p.v != null);
+        return (
+          <g key={s.key}>
+            {pts.slice(1).map((p, k) => {
+              const prev = pts[k]!;
+              const gap = p.i - prev.i > 1;
+              return (
+                <line key={`l${k}`} x1={x(prev.i)} y1={y(prev.v)} x2={x(p.i)} y2={y(p.v)} stroke={s.c}
+                  strokeWidth={gap ? 1.3 : 2.2} strokeDasharray={gap ? "3 6" : undefined}
+                  opacity={gap ? 0.5 : 1} />
+              );
+            })}
+            {pts.map((p, k) => (
+              <circle key={`c${k}`} cx={x(p.i)} cy={y(p.v)} r="3.6" fill={s.c} stroke="#FFFFFF" strokeWidth="2">
+                <title>{`${shown[p.i]!.bucket} · ${s.name.toLowerCase()} ${Math.round(p.v)} · from ${p.n} reading${p.n === 1 ? "" : "s"}`}</title>
+              </circle>
+            ))}
+          </g>
+        );
+      })}
+      <g>
+        {series.map((s, i) => (
+          <g key={`lg${i}`} transform={`translate(${L + i * 170} ${14})`}>
+            <rect width="10" height="10" rx="3" y="-9" fill={s.c} />
+            <text x="16" y="0" fontSize="13.5" fill={MUTED}>{s.name}</text>
+          </g>
+        ))}
+      </g>
     </svg>
   );
 }
