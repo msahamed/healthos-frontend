@@ -25,6 +25,8 @@ export interface ShareDoc extends Document {
   /** Null when the coach has no account yet; filled on their sign-in. */
   coach_user_id: string | null;
   coach_email: string;
+  /** The coach's display name at invite time, for the email. */
+  coach_name?: string | null;
   client_email: string;
   /** Null until accepted — a pending invite has no account behind it. */
   client_user_id: string | null;
@@ -77,9 +79,15 @@ export type InviteResult =
  * not send two different links that both work.
  */
 export async function createInvite(
-  coach: { userId: string; email: string },
+  coach: { userId: string; email: string; name?: string | null },
   rawEmail: string,
 ): Promise<InviteResult> {
+  // An invite from a bare email address reads as spam, and the person
+  // receiving it has no way to tell who is asking. Requiring a name is
+  // one small nudge that decides whether it gets accepted at all.
+  if (!coach.name?.trim()) {
+    return { ok: false, error: "Add your name on the profile page first, so they know who is asking." };
+  }
   const clientEmail = normalizeEmail(rawEmail);
   if (!clientEmail) return { ok: false, error: "That does not look like an email address." };
   if (clientEmail === coach.email) {
@@ -111,6 +119,7 @@ export async function createInvite(
     token_hash: hashToken(token),
     coach_user_id: coach.userId,
     coach_email: coach.email,
+    coach_name: coach.name.trim(),
     client_email: clientEmail,
     client_user_id: null,
     status: "pending",

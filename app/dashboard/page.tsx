@@ -12,6 +12,7 @@ import { getSessionFromCookies } from "@/lib/auth";
 import { createInvite, endShare, listForCoach } from "@/lib/shares";
 import { sendShareInvite } from "@/lib/email";
 import { getRoster, aggregate, type ClientSummary } from "@/lib/dashboard";
+import { getProfile } from "@/lib/profile";
 import { Sparkline, markColor } from "./charts";
 
 export const dynamic = "force-dynamic";
@@ -48,12 +49,18 @@ async function invite(formData: FormData) {
   const session = await getSessionFromCookies();
   if (!session) redirect("/login");
 
-  const res = await createInvite(session, String(formData.get("email") ?? ""));
+  const profile = await getProfile(session.userId);
+  const res = await createInvite(
+    { ...session, name: profile.fullName },
+    String(formData.get("email") ?? ""),
+  );
   if (!res.ok) redirect(`/dashboard?err=${encodeURIComponent(res.error)}`);
 
+  // Name so it reads like a person, address so it can be verified.
+  const who = `${profile.fullName!.trim()} (${session.email})`;
   const url = `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://ontor.ai"}/share/${res.token}/`;
   try {
-    await sendShareInvite(String(formData.get("email") ?? "").trim().toLowerCase(), session.email, url);
+    await sendShareInvite(String(formData.get("email") ?? "").trim().toLowerCase(), who, url);
   } catch {
     // The invite row exists but the mail did not go. Say so rather
     // than reporting success and leaving them waiting for an email
@@ -81,11 +88,13 @@ export default async function DashboardPage({
   const session = await getSessionFromCookies();
   if (!session) redirect("/login");
 
-  const [roster, shares, params] = await Promise.all([
+  const [roster, shares, profile, params] = await Promise.all([
     getRoster(session),
     listForCoach(session.userId),
+    getProfile(session.userId),
     searchParams,
   ]);
+  const canInvite = Boolean(profile.fullName?.trim());
   const pending = shares.filter((x) => x.status === "pending");
   const totals = aggregate(roster);
   const soloRoster = roster.length === 1 && roster[0]!.userId === session.userId;
@@ -102,16 +111,22 @@ export default async function DashboardPage({
           </p>
         </div>
         <div className="spacer" />
-        <form action={invite} className="inviteform">
-          <input
-            type="email"
-            name="email"
-            required
-            placeholder="client@example.com"
-            aria-label="Client email"
-          />
-          <button className="btn" type="submit">Invite a client</button>
-        </form>
+        {canInvite ? (
+          <form action={invite} className="inviteform">
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="client@example.com"
+              aria-label="Client email"
+            />
+            <button className="btn" type="submit">Invite a client</button>
+          </form>
+        ) : (
+          <Link className="btn ghost" href="/dashboard/profile/">
+            Add your name to invite
+          </Link>
+        )}
       </div>
 
       {params.err && <p className="fmsg err" style={{ marginTop: 12 }}>{params.err}</p>}
