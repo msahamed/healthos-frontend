@@ -10,7 +10,7 @@ import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
 import { getSessionFromCookies } from "@/lib/auth";
 import { getProfile, saveProfile, SEX_OPTIONS } from "@/lib/profile";
-import { endShare, listForClient } from "@/lib/shares";
+import { endShare, grantToCoach, listForClient } from "@/lib/shares";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +29,7 @@ const SEX_LABEL: Record<string, string> = {
 export default async function ProfilePage({
   searchParams,
 }: {
-  searchParams: Promise<{ saved?: string; err?: string; shared?: string }>;
+  searchParams: Promise<{ saved?: string; err?: string; shared?: string; serr?: string }>;
 }) {
   const session = await getSessionFromCookies();
   if (!session) redirect("/login");
@@ -58,6 +58,23 @@ export default async function ProfilePage({
     // The roster and the client header both read the name.
     revalidatePath("/dashboard");
     redirect("/dashboard/profile?saved=1");
+  }
+
+  /**
+   * Start sharing with a coach.
+   *
+   * Active immediately, with nothing for them to accept: you do not
+   * need anyone's permission to hand over your own numbers. If they
+   * have no account yet the row waits, invisible, until they sign in.
+   */
+  async function startSharing(formData: FormData) {
+    "use server";
+    const s = await getSessionFromCookies();
+    if (!s) redirect("/login");
+    const res = await grantToCoach(s, String(formData.get("coachEmail") ?? ""));
+    if (!res.ok) redirect(`/dashboard/profile?serr=${encodeURIComponent(res.error)}`);
+    revalidatePath("/dashboard/profile");
+    redirect(`/dashboard/profile?shared=${res.coachHasAccount ? "1" : "pending"}`);
   }
 
   async function stopSharing(formData: FormData) {
@@ -125,7 +142,25 @@ export default async function ProfilePage({
           They see how your voice moves against your own usual. They never see or hear what you
           said. Stop any of them at any time, and it takes effect immediately.
         </p>
-        {params.shared && <p className="fmsg ok">Sharing started.</p>}
+        {params.shared === "1" && <p className="fmsg ok">Sharing started. They can see it now.</p>}
+        {params.shared === "pending" && (
+          <p className="fmsg ok">
+            Sharing started. They do not have an Ontor account yet, so nothing is visible to them
+            until they sign in with that address.
+          </p>
+        )}
+        {params.serr && <p className="fmsg err">{params.serr}</p>}
+
+        <form action={startSharing} className="inviteform" style={{ marginBottom: 14 }}>
+          <input
+            type="email"
+            name="coachEmail"
+            required
+            placeholder="coach@example.com"
+            aria-label="Coach email"
+          />
+          <button className="btn" type="submit">Share with a coach</button>
+        </form>
         <div className="card">
           {granted.length === 0 ? (
             <p className="fhint" style={{ margin: 0 }}>

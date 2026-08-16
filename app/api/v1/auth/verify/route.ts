@@ -43,6 +43,7 @@ import {
   SESSION_TTL_DAYS,
 } from "@/lib/auth";
 import { consume } from "@/lib/rate-limit";
+import { linkCoachShares } from "@/lib/shares";
 
 export const runtime = "nodejs";
 
@@ -152,6 +153,11 @@ export async function POST(req: Request) {
       { email, $or: [{ user_id: { $exists: false } }, { user_id: null }] },
       { $set: { user_id: userId } },
     );
+
+    // Someone may have shared with this address before it had an
+    // account. Attach those now, so a coach who is shared with first
+    // and signs up second still finds their client waiting.
+    await linkCoachShares({ userId, email });
 
     const priorObservation = await db
       .collection("observations")

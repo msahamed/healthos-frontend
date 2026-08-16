@@ -22,7 +22,8 @@ export type ShareStatus = "pending" | "active" | "ended";
 
 export interface ShareDoc extends Document {
   token_hash: string;
-  coach_user_id: string;
+  /** Null when the coach has no account yet; filled on their sign-in. */
+  coach_user_id: string | null;
   coach_email: string;
   client_email: string;
   /** Null until accepted — a pending invite has no account behind it. */
@@ -37,6 +38,7 @@ export interface ShareDoc extends Document {
 export interface ShareView {
   id: string;
   coachEmail: string;
+  coachUserId: string | null;
   clientEmail: string;
   clientUserId: string | null;
   status: ShareStatus;
@@ -53,6 +55,7 @@ async function col() {
 const view = (d: ShareDoc & { _id?: unknown }): ShareView => ({
   id: String(d._id),
   coachEmail: d.coach_email,
+  coachUserId: d.coach_user_id,
   clientEmail: d.client_email,
   clientUserId: d.client_user_id,
   status: d.status,
@@ -260,4 +263,70 @@ export async function viewableUserIds(session: {
     { userId: session.userId, email: session.email },
     ...rows.map((r) => ({ userId: r.client_user_id as string, email: r.client_email })),
   ];
+}
+
+
+// ── The other direction: a client offers access ───────────────────
+//
+// A coach inviting is a REQUEST, because it is not their data. A
+// client sharing is a GRANT, and needs nobody's acceptance — you do
+// not have to ask permission to hand over your own numbers. So this
+// goes straight to active.
+//
+// The coach may not have an account yet. The row is still created; it
+// carries their email and no user_id, and linkCoachShares fills that
+// in the first time they sign in. Nothing is visible to anyone until
+// then, because canView matches on coach_user_id.
+
+export type GrantResult = { ok: true; coachHasAccount: boolean } | { ok: false; error: string };
+
+export async function grantToCoach(
+  client: { userId: string; email: string },
+  rawCoachEmail: string,
+): Promise<GrantResult> {
+  const coachEmail = normalizeEmail(rawCoachEmail);
+  if (!coachEmail) return { ok: false, error: "That does not look like an email address." };
+  if (coachEmail === client.email) return { ok: false, error: "That is your own address." };
+
+  const c = await col();
+  const existing = await c.findOne({
+    client_user_id: client.userId,
+    coach_email: coachEmail,
+    status: { $in: ["pending", "active"] },
+  });
+  if (existing) return { ok: false, error: "You already share with them." };
+
+  const db = await getDb();
+  const account = await db
+    .collection<{ user_id?: string }>("accounts")
+    .findOne({ email: coachEmail }, { projection: { user_id: 1 } });
+
+  await c.insertOne({
+    // No invite link is involved, so there is no token to guess.
+    token_hash: `grant:${client.userId}:${coachEmail}`,
+    coach_user_id: account?.user_id ?? null,
+    coach_email: coachEmail,
+    client_email: client.email,
+    client_user_id: client.userId,
+    status: "active",
+    created_at: new Date(),
+    accepted_at: new Date(),
+  } as ShareDoc);
+
+  return { ok: true, coachHasAccount: Boolean(account?.user_id) };
+}
+
+/**
+ * Attach any shares granted to this address before the coach had an
+ * account. Called on sign-in, so a coach who is shared with first and
+ * signs up second still sees their client.
+ */
+export async function linkCoachShares(session: {
+  userId: string;
+  email: string;
+}): Promise<void> {
+  await (await col()).updateMany(
+    { coach_email: session.email, coach_user_id: null, status: "active" },
+    { $set: { coach_user_id: session.userId } },
+  );
 }
