@@ -7,6 +7,10 @@
 //     so switching costs nothing and hits no network.
 //   - Time of day, the matrix and recovery each load once, lazily,
 //     the first time you ask for them, and are cached per range.
+//
+// The trailing slash in those URLs is required, not cosmetic: the site
+// runs trailingSlash:true, so the bare form 308-redirects and every
+// panel would pay an extra round trip.
 
 "use client";
 
@@ -147,7 +151,7 @@ function TimeOfDayPanel({ clientId }: { clientId: string }) {
   const [overlay, setOverlay] = useState<MarkerKey>("breathing");
   const keys: MarkerKey[] = ["confidence", overlay];
   const { data, state } = useLazyPanel<{ buckets: Bucket[] }>(
-    `/api/v1/dashboard/${clientId}?panel=tod&days=90&keys=${keys.join(",")}`,
+    `/api/v1/dashboard/${clientId}/?panel=tod&days=90&keys=${keys.join(",")}`,
   );
 
   return (
@@ -179,7 +183,7 @@ function TimeOfDayPanel({ clientId }: { clientId: string }) {
 function RecoveryPanel({ clientId }: { clientId: string }) {
   const [range, setRange] = useState<Range>(30);
   const { data, state } = useLazyPanel<Recovery>(
-    `/api/v1/dashboard/${clientId}?panel=recovery&days=${range}&marker=stress`,
+    `/api/v1/dashboard/${clientId}/?panel=recovery&days=${range}&marker=stress`,
   );
 
   return (
@@ -223,7 +227,7 @@ function RecoveryPanel({ clientId }: { clientId: string }) {
 
 function MatrixPanel({ clientId }: { clientId: string }) {
   const { data, state } = useLazyPanel<{ keys: MarkerKey[]; matrix: number[][] }>(
-    `/api/v1/dashboard/${clientId}?panel=matrix&days=90`,
+    `/api/v1/dashboard/${clientId}/?panel=matrix&days=90`,
   );
 
   return (
