@@ -61,16 +61,6 @@ export default async function ClientPage({
 
       <CoachView days={dayRows} clientId={client.userId} />
 
-      <div className="panel" style={{ marginTop: 16 }}>
-        <div className="panelhead">
-          <h2>What a coach cannot see</h2>
-        </div>
-        <p className="note" style={{ paddingTop: 14 }}>
-          Ontor never shares what someone said. No recordings, no transcripts, no words. A coach
-          sees how a voice moved against its own baseline, and nothing else. Sharing can be stopped
-          at any time.
-        </p>
-      </div>
     </>
   );
 }
