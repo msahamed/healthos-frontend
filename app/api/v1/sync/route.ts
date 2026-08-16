@@ -41,6 +41,9 @@ interface ObservationDoc {
   _id: string;
   user_id: string;
   created_at: Date;
+  /** Signed minutes east of UTC at capture. Absent on pre-V45 rows,
+   *  where the offset is genuinely unknown rather than zero. */
+  utc_offset_minutes?: number;
   updated_at: Date;
   deleted_at: Date | null;
   transcript: string | null;
@@ -80,6 +83,8 @@ interface IncomingObservation {
   _id: string;
   user_id: string;
   created_at: string;
+  /** Signed minutes east of UTC in force when created_at was captured. */
+  utc_offset_minutes?: number;
   updated_at: string;
   deleted_at?: string | null;
   transcript?: string;
@@ -115,6 +120,16 @@ function sanitize(raw: unknown, expectedUserId: string): IncomingObservation | n
     _id: id,
     user_id: userId,
     created_at: createdAt,
+    // created_at is a UTC instant, so on its own it cannot place a
+    // check-in in the user's day. Clients from V45 send the offset that
+    // was in force at capture; older ones omit it and it stays absent
+    // rather than defaulting to zero, which would claim UTC.
+    utc_offset_minutes:
+      typeof r.utc_offset_minutes === "number" &&
+      Number.isInteger(r.utc_offset_minutes) &&
+      Math.abs(r.utc_offset_minutes) <= 900
+        ? r.utc_offset_minutes
+        : undefined,
     updated_at: updatedAt,
     deleted_at: typeof r.deleted_at === "string" ? r.deleted_at : null,
     transcript: typeof r.transcript === "string" ? r.transcript : undefined,
@@ -151,6 +166,9 @@ function toDoc(o: IncomingObservation): ObservationDoc {
     signals: o.signals ?? {},
     markers: o.markers ?? {},
     voice_clip: o.voice_clip ?? null,
+    ...(o.utc_offset_minutes !== undefined && {
+      utc_offset_minutes: o.utc_offset_minutes,
+    }),
     ...(o.user_note !== undefined && { user_note: o.user_note }),
     ...(o.frames !== undefined && { frames: o.frames }),
     ...(o.marker_ratings !== undefined && { marker_ratings: o.marker_ratings }),

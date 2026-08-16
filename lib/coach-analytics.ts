@@ -305,14 +305,51 @@ const BUCKET_OF = (h: number) =>
   h >= 5 && h < 12 ? "morning" : h >= 12 && h < 17 ? "afternoon" : h >= 17 && h < 21 ? "evening" : "night";
 
 export interface OffsetSolve {
+  /** Only meaningful when perRow is false. */
   offset: number;
   /** Share of check-ins the offset explains, 0-1. */
   fit: number;
+  /**
+   * True when the rows carry their own offset, so the hour comes from
+   * what the device recorded rather than from a whole-run guess. This
+   * is the only path that survives a daylight-saving change or a
+   * user who travels.
+   */
+  perRow?: boolean;
 }
 
 export async function solveUtcOffset(userId: string, days: number): Promise<OffsetSolve> {
   const db = await getDb();
   const since = new Date(Date.now() - days * 864e5);
+
+  // Prefer what the device actually recorded. Rows from app V45 carry
+  // the offset in force at capture, and the backfill wrote it onto the
+  // older rows whose timezone could be pinned. Solving is the fallback
+  // for whatever is left, not the normal path.
+  const stored = await db
+    .collection("observations")
+    .aggregate([
+      {
+        $match: {
+          user_id: userId,
+          deleted_at: null,
+          created_at: { $gte: since },
+          utc_offset_minutes: { $ne: null },
+        },
+      },
+      { $group: { _id: null, n: { $sum: 1 } } },
+    ])
+    .toArray();
+
+  const totalInRange = await db.collection("observations").countDocuments({
+    user_id: userId,
+    deleted_at: null,
+    created_at: { $gte: since },
+  });
+  const haveOffset = (stored[0]?.n as number) ?? 0;
+  if (totalInRange > 0 && haveOffset / totalInRange >= 0.9) {
+    return { offset: 0, fit: 1, perRow: true };
+  }
   const rows = await db
     .collection("observations")
     .aggregate([
@@ -353,15 +390,33 @@ export async function getByHour(
   minN = 3,
 ) {
   const db = await getDb();
+  // Per-row offset wins; the solved whole-run offset is the fallback
+  // for rows that never recorded one. Adding 1440 before the modulo
+  // keeps a negative offset positive before the wrap.
+  const localHour = {
+    $mod: [
+      {
+        $add: [
+          { $multiply: [{ $hour: "$hAt" }, 60] },
+          { $minute: "$hAt" },
+          { $ifNull: ["$rowOffset", offset * 60] },
+          1440,
+        ],
+      },
+      1440,
+    ],
+  };
   const group: Document = {
-    _id: { $mod: [{ $add: [{ $hour: "$hAt" }, offset + 24] }, 24] },
+    _id: { $floor: { $divide: [localHour, 60] } },
     n: { $sum: 1 },
   };
   for (const k of keys) group[k] = { $avg: `$w.${k}` };
 
   const stages = windowStages(userId, days, keys);
   // windowStages projects away created_at, so carry the hour through.
-  (stages[1] as { $project: Document }).$project.hAt = "$created_at";
+  const proj = (stages[1] as { $project: Document }).$project;
+  proj.hAt = "$created_at";
+  proj.rowOffset = "$utc_offset_minutes";
 
   const rows = await db.collection("observations").aggregate([...stages, { $group: group }, { $sort: { _id: 1 } }]).toArray();
 
