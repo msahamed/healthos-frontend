@@ -7,22 +7,10 @@
 
 import type { BucketMean, Coupling, DayPoint, Trend } from "@/lib/analytics";
 import { labelOf } from "@/lib/analytics";
+import { SERIES } from "@/lib/markers";
 
-/** Fixed hue order. A marker's colour is its identity, not its rank. */
-// Validated as a 7-slot categorical set on both surfaces: lightness
-// band, chroma floor, colour-blind separation, normal-vision floor and
-// contrast all pass. Do not hand-tweak a value without re-running
-// scripts/validate_palette.js — the earlier greyish fatigue and green
-// articulation both failed the chroma floor and read as the same mark.
-export const SERIES: Record<string, string> = {
-  stress: "#C0522A",
-  confidence: "#0E9280",
-  energy: "#8A5FC7",
-  fatigue: "#8F6D14",
-  breathing: "#2F79C4",
-  vocal_strain: "#B5478E",
-  articulation: "#4E8F3F",
-};
+export { SERIES };
+
 
 const W = 560;
 

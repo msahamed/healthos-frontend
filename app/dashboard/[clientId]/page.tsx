@@ -8,22 +8,10 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getSessionFromCookies } from "@/lib/auth";
-import { getClientDetail, getReadings } from "@/lib/dashboard";
-import {
-  byTimeOfDay,
-  couplings,
-  daily,
-  stressVsConfidence,
-  trends,
-} from "@/lib/analytics";
+import { getClientDetail } from "@/lib/dashboard";
+import { getDayMeans } from "@/lib/coach-analytics";
 import { DeviationBars, TrendChart, markColor } from "../charts";
-import {
-  CouplingList,
-  DailyLines,
-  Scatter,
-  TimeOfDayBars,
-  TrendBars,
-} from "../analytics-charts";
+import CoachView from "./coach-view";
 
 export const dynamic = "force-dynamic";
 
@@ -48,14 +36,9 @@ export default async function ClientPage({
   const client = await getClientDetail(session, clientId);
   if (!client) notFound();
 
-  // One fetch feeds every panel below.
-  const readings = await getReadings(client.userId);
-  const days = daily(readings);
-  const tod = byTimeOfDay(readings);
-  const fits = trends(readings);
-  const pairs = couplings(readings).slice(0, 6);
-  const sc = stressVsConfidence(readings);
-  const moving = fits.filter((t) => t.verdict !== "flat").length;
+  // First paint pulls day rows only — a few dozen small rows that
+  // three panels read from. Everything heavier loads on demand.
+  const dayRows = await getDayMeans(client.userId, 90);
 
   const isSelf = client.userId === session.userId;
   const who = isSelf ? "your" : "their";
@@ -121,63 +104,7 @@ export default async function ClientPage({
         </div>
       </div>
 
-      <div className="grid2">
-        <div className="panel">
-          <div className="panelhead"><h2>The dials move day to day</h2></div>
-          <div className="padded">
-            <DailyLines days={days} keys={["stress", "confidence", "energy"]} />
-          </div>
-          <p className="note">
-            Daily averages across {days.length} days with readings. Empty stretches are days with no
-            check-in, drawn as gaps because that is what they are.
-          </p>
-        </div>
-
-        <div className="panel">
-          <div className="panelhead"><h2>The day has a shape</h2></div>
-          <div className="padded">
-            <TimeOfDayBars buckets={tod} keys={["confidence", "breathing", "energy"]} />
-          </div>
-          <p className="note">
-            Pooled by the time of day recorded on the device, in local time. The number under each
-            column is how many readings it rests on.
-          </p>
-        </div>
-      </div>
-
-      <div className="grid2">
-        <div className="panel">
-          <div className="panelhead"><h2>Stress is not the opposite of confidence</h2></div>
-          <div className="padded">
-            <Scatter points={sc.points} r={sc.r} />
-          </div>
-          <p className="note">
-            {sc.r == null
-              ? "Not enough readings to compare the two yet."
-              : `Every scored reading, stress against confidence (r = ${sc.r.toFixed(2)} over ${sc.points.length}). If they were two ends of one dial the cloud would sit on a diagonal. Read this as direction, not proven strength.`}
-          </p>
-        </div>
-
-        <div className="panel">
-          <div className="panelhead"><h2>Is anything actually moving</h2></div>
-          <TrendBars trends={fits} />
-          <p className="note">
-            Points per week, with the range the data supports. When that range crosses zero the
-            honest read is flat, however suggestive the middle looks.{" "}
-            {fits.length > 0 && `${moving} of ${fits.length} markers show a real direction.`}
-          </p>
-        </div>
-      </div>
-
-      <div className="panel" style={{ marginTop: 16 }}>
-        <div className="panelhead"><h2>What moves together</h2></div>
-        <CouplingList items={pairs} />
-        <p className="note">
-          Pairs marked <b>shares inputs</b> are built from some of the same underlying features, so
-          they are one signal seen twice rather than two dials agreeing. The unmarked pairs are the
-          ones worth reading as findings.
-        </p>
-      </div>
+      <CoachView days={dayRows} clientId={client.userId} />
 
       <div className="panel" style={{ marginTop: 16 }}>
         <div className="panelhead">

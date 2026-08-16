@@ -205,3 +205,48 @@
   .cr{font-size:13.5px;font-weight:700}
   .cflag{font-size:11px;font-weight:600;color:var(--ink-mute);background:var(--paper-3);
     border:1px solid var(--line-strong);border-radius:999px;padding:2px 8px;white-space:nowrap}
+
+  /* ── Coach view (ported from the approved design) ──────────── */
+  .eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ink-mute);padding:16px 18px 0}
+  .panelhead.spread{justify-content:space-between}
+  .seg{display:flex;gap:2px;background:var(--paper-3);border-radius:10px;padding:2px}
+  .seg button{font:inherit;font-size:12.5px;font-weight:600;padding:5px 11px;border:0;
+    border-radius:8px;background:none;color:var(--ink-soft);cursor:pointer}
+  .seg button[aria-pressed="true"]{background:var(--paper);color:var(--ink);
+    box-shadow:0 1px 2px rgba(27,26,23,.08)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px;padding:4px 18px 12px}
+  .chip-btn{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:12.5px;
+    font-weight:600;padding:5px 11px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line-strong);background:none;color:var(--ink-soft)}
+  .chip-btn i{width:9px;height:9px;border-radius:3px;flex:none}
+  .chip-btn:hover{border-color:var(--teal);color:var(--ink)}
+  .chip-btn[aria-pressed="true"]{background:var(--teal-surface);border-color:var(--teal);color:var(--teal)}
+
+  /* Dial cards */
+  .dials{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:10px;padding:14px 18px 4px}
+  .dial{border:1px solid var(--line);border-radius:14px;padding:11px 13px 12px;background:var(--paper)}
+  .dialtop{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .dialname{font-size:13px;font-weight:600}
+  .dialbadge{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    padding:2px 7px;border-radius:999px;margin-left:auto}
+  .dialrow{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+  .dialval{font-family:var(--font-newsreader),Georgia,serif;font-size:27px;font-weight:600;
+    line-height:1;letter-spacing:-.02em}
+  .dialdelta{font-size:11.5px;margin-top:4px}
+  .dialmini{display:inline-block;width:68px;height:24px}
+
+  /* Recovery bar */
+  .recbar{display:flex;height:26px;border-radius:8px;overflow:hidden;gap:2px;background:var(--paper-3)}
+  .recbar span{min-width:3px}
+
+  /* Correlation matrix */
+  .matwrap{overflow-x:auto}
+  table.mat{border-collapse:separate;border-spacing:3px;font-size:11.5px}
+  table.mat th{font-size:10.5px;font-weight:700;color:var(--ink-mute);text-align:left;
+    padding:2px 4px;text-transform:none;letter-spacing:0;border:0;white-space:nowrap}
+  table.mat th[scope="row"]{text-align:right;padding-right:8px}
+  table.mat td{width:52px;height:34px;text-align:center;border-radius:7px;padding:0;
+    border:1px solid var(--line)}
+  table.mat td.shared{outline:1.5px dashed var(--line-strong);outline-offset:-4px}
