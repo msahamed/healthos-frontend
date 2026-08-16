@@ -268,13 +268,18 @@ export async function POST(req: Request) {
     // this user is stale. Dropping the tag is what makes that cache
     // correct rather than merely recent; the TTL is only a backstop
     // for writes that never come through here.
-    // "max" is stale-while-revalidate: the next dashboard visit is
-    // served instantly from the old entry while the fresh one is built
-    // behind it. The alternative expires immediately and makes that
-    // visit pay a blocking rebuild, which is the wrong trade for a
-    // surface people open to glance at.
+    // Expire outright rather than stale-while-revalidate. SWR would
+    // serve the pre-sync numbers once and refresh behind the visit,
+    // which means a check-in you just made is missing until you reload
+    // — a confusing thing to explain and to debug.
+    //
+    // The cost is a rebuild on the FIRST dashboard load after a sync,
+    // and these reads are aggregations returning a row or two: roster
+    // 47ms, day means 71ms. Paying that once per sync buys "the
+    // dashboard is always current", which is worth far more than
+    // 100ms. Visits between syncs still come straight from cache.
     if (res.upsertedCount > 0 || res.modifiedCount > 0) {
-      revalidateTag(obsTag(userId), "max");
+      revalidateTag(obsTag(userId), { expire: 0 });
     }
 
     return NextResponse.json({
