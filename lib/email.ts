@@ -275,16 +275,14 @@ function inviteHtml(who: string, acceptUrl: string): string {
           </td></tr>
           <tr><td style="padding:22px 40px 0;font-size:16px;line-height:1.6;color:#374151;">
             <p style="margin:0 0 16px;">Hi,</p>
-            <p style="margin:0 0 16px;"><strong>${who}</strong> would like to work with you on Ontor.</p>
-            <p style="margin:0 0 16px;">Ontor reads your nervous system from how you sound. You do a short voice check-in, and it scores stress, energy, confidence and fatigue against your own usual. No wearable, nothing to write down.</p>
-            <p style="margin:0 0 16px;">If you accept, they see how those move over time, so they know what is worth talking about before your next session instead of guessing.</p>
-            <p style="margin:0 0 16px;"><strong>They never see or hear what you said.</strong> No recordings, no transcripts, no words. Only how your voice moved. You can stop sharing whenever you want.</p>
+            <p style="margin:0 0 16px;"><strong>${who}</strong> is inviting you to their program on Ontor.</p>
+            <p style="margin:0 0 16px;">Ontor scores stress, energy, confidence and fatigue from how your voice sounds. If you accept, they see how those move against your own usual. They never hear what you said: no recordings, no transcripts, no words. You can stop any time.</p>
           </td></tr>
           <tr><td style="padding:8px 40px 0;">
             <a href="${acceptUrl}" style="display:inline-block;background:#0F766E;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:13px 26px;border-radius:12px;">Accept and start sharing</a>
           </td></tr>
           <tr><td style="padding:26px 40px 0;font-size:15px;line-height:1.6;color:#374151;">
-            <p style="margin:0 0 8px;"><strong>New here?</strong> Accepting takes a second. After that, install Ontor and do a few check-ins so there is something to look at.</p>
+            <p style="margin:0 0 8px;"><strong>New here?</strong> Accept, then install Ontor and do a few check-ins so there is something to see.</p>
             <p style="margin:0;"><a href="${SITE}/install/" style="color:#0d9488;">Install Ontor &rarr;</a></p>
           </td></tr>
           <tr><td style="padding:28px 40px 40px;">
@@ -316,29 +314,22 @@ export async function sendShareInvite(
   const { error } = await client.emails.send({
     from: FROM,
     to,
-    subject: `${who} invited you to Ontor`,
+    subject: `${who.split(" (")[0]} invited you to Ontor`,
     html: inviteHtml(who, acceptUrl),
     text: [
       "Hi,",
       "",
-      `${who} would like to work with you on Ontor.`,
+      `${who} is inviting you to their program on Ontor.`,
       "",
-      "Ontor reads your nervous system from how you sound. You do a short",
-      "voice check-in, and it scores stress, energy, confidence and fatigue",
-      "against your own usual. No wearable, nothing to write down.",
-      "",
-      "If you accept, they see how those move over time, so they know what",
-      "is worth talking about before your next session instead of guessing.",
-      "",
-      "They never see or hear what you said. No recordings, no transcripts,",
-      "no words. Only how your voice moved. You can stop sharing whenever",
-      "you want.",
+      "Ontor scores stress, energy, confidence and fatigue from how your voice",
+      "sounds. If you accept, they see how those move against your own usual.",
+      "They never hear what you said: no recordings, no transcripts, no words.",
+      "You can stop any time.",
       "",
       `Accept: ${acceptUrl}`,
       "",
-      `New here? Accepting takes a second. After that, install Ontor:`,
-      `${SITE}/install/`,
-      "Then do a few check-ins so there is something to look at.",
+      `New here? Accept, then install Ontor and do a few check-ins so there is`,
+      `something to see: ${SITE}/install/`,
       "",
       "Not expecting this? Ignore it. Nothing is shared unless you accept.",
     ].join("\n"),
