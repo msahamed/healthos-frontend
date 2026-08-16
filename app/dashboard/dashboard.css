@@ -117,18 +117,17 @@
 
   /* ── Stat tiles ────────────────────────────────────────────── */
   .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:12px;margin:22px 0 26px}
-  .tile{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:15px 17px 16px;
-    box-shadow:var(--shadow)}
+  .tile{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:15px 17px 16px}
   .tile .k{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute)}
   .tile .v{font-family:var(--font-newsreader),Georgia,serif;font-size:33px;font-weight:600;letter-spacing:-.02em;
     line-height:1.15;margin-top:7px}
   .tile .n{font-size:12.5px;color:var(--ink-soft);margin-top:3px}
 
   /* ── Roster ────────────────────────────────────────────────── */
-  .panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);
-    overflow:hidden}
-  .panelhead{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}
-  .panelhead h2{font-size:14.5px;font-weight:700;margin:0}
+  .panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  .panelhead{display:flex;align-items:center;gap:12px;padding:14px 18px 6px}
+  .panelhead h2{font-family:var(--font-newsreader),Georgia,serif;font-size:26px;font-weight:500;
+    letter-spacing:-.01em;margin:0;color:var(--ink)}
   .scroll{overflow-x:auto}
   table{width:100%;border-collapse:collapse;min-width:720px}
   th{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-mute);
@@ -175,7 +174,7 @@
   .legend{display:flex;gap:16px;padding:0 18px 16px;font-size:12.5px;color:var(--ink-soft);flex-wrap:wrap}
   .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
 
-  .note{font-size:12.5px;color:var(--ink-mute);padding:0 18px 16px;max-width:62ch}
+  .note{font-size:13px;line-height:1.55;color:var(--ink-soft);padding:2px 18px 16px;max-width:72ch}
 
   /* ── Analytics panels ──────────────────────────────────────── */
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;margin-top:16px}
@@ -200,22 +199,21 @@
     border:1px solid var(--line-strong);border-radius:999px;padding:2px 8px;white-space:nowrap}
 
   /* ── Coach view (ported from the approved design) ──────────── */
-  .eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-    color:var(--ink-mute);padding:16px 18px 0}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ink-soft);padding:16px 18px 2px}
   .panelhead.spread{justify-content:space-between}
-  .seg{display:flex;gap:2px;background:var(--paper-3);border-radius:10px;padding:2px}
-  .seg button{font:inherit;font-size:12.5px;font-weight:600;padding:5px 11px;border:0;
-    border-radius:8px;background:none;color:var(--ink-soft);cursor:pointer}
-  .seg button[aria-pressed="true"]{background:var(--paper);color:var(--ink);
-    box-shadow:0 1px 2px rgba(27,26,23,.08)}
+  .seg{display:flex;gap:0;flex:none;border:1px solid var(--line-strong);border-radius:10px;overflow:hidden}
+  .seg button{border:none;padding:7px 14px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;
+    white-space:nowrap;background:transparent;color:var(--teal)}
+  .seg button + button{border-left:1px solid var(--line-strong)}
+  .seg button[aria-pressed="true"]{background:var(--teal);color:#FFFFFF}
 
   .chips{display:flex;flex-wrap:wrap;gap:6px;padding:4px 18px 12px}
-  .chip-btn{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:12.5px;
-    font-weight:600;padding:5px 11px;border-radius:999px;cursor:pointer;
-    border:1px solid var(--line-strong);background:none;color:var(--ink-soft)}
-  .chip-btn i{width:9px;height:9px;border-radius:3px;flex:none}
-  .chip-btn:hover{border-color:var(--teal);color:var(--ink)}
-  .chip-btn[aria-pressed="true"]{background:var(--teal-surface);border-color:var(--teal);color:var(--teal)}
+  .chip-btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-strong);
+    border-radius:999px;padding:7px 16px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;
+    white-space:nowrap;background:transparent;color:var(--teal)}
+  .chip-btn:hover{border-color:var(--teal)}
+  .chip-btn[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#FFFFFF}
 
   /* Dial cards */
   .dials{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:10px;padding:14px 18px 4px}
@@ -235,6 +233,19 @@
   .recbar span{min-width:3px}
 
 
-  .dialsentence{font-size:12.5px;line-height:1.5;color:var(--ink-soft);margin:10px 0 0}
   .dials{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
   .dialdelta{color:var(--ink-mute)}
+
+  /* ── Section chrome sits OUTSIDE the card ──────────────────────
+     In the design a section is not a card: the eyebrow, the title and
+     the description are on the page ground, and only the chart lives
+     inside the bordered white box. */
+  .sect{margin-top:30px}
+  .sect > .eyebrow{padding:0 0 6px}
+  .sectHead{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:6px}
+  .sectTitle{font-family:var(--font-newsreader),Georgia,serif;font-size:26px;font-weight:500;
+    letter-spacing:-.01em;line-height:1.15;margin:0 0 6px;color:var(--ink)}
+  .sect > .sub, .sect .sub{margin:0 0 14px;color:var(--ink-soft);font-size:14.5px;line-height:1.55;max-width:78ch}
+  .sect > .chips{padding:0 0 12px}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px 18px 12px}
+  .sect > .dials{padding:0}

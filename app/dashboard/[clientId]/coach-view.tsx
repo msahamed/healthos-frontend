@@ -107,27 +107,16 @@ export default function CoachView({ days, clientId }: { days: DayRow[]; clientId
 
   return (
     <>
-      <section className="panel" style={{ marginTop: 18 }}>
-        <div className="panelhead"><h2>{headline}</h2></div>
+      <section className="sect">
+        <h2 className="sectTitle">{headline}</h2>
         <div className="dials">
           {cards.map((t) => {
             const d = Math.round(Math.abs(t.delta));
-            const dir = t.delta > 0 ? "higher" : "lower";
             const good = HI_BAD[t.key] ? t.delta < 0 : t.delta > 0;
             const badge = t.level === 2 ? (good ? "Improving" : "Worth a look") : t.level === 1 ? "Drifting" : "Steady";
             const badgeBg = t.level === 2 ? (good ? TEAL_TINT : AMBER_TINT) : t.level === 1 ? LINE : TEAL_TINT;
             const badgeColor = t.level === 2 ? (good ? TEAL_DEEP : AMBER_INK) : t.level === 1 ? "#5A554B" : TEAL_DEEP;
             const border = t.level === 2 ? (good ? TEAL : AMBER_LINE) : CARD_LINE;
-            const swing = Math.round(t.swing);
-            const sentence =
-              t.level === 2
-                ? good
-                  ? `About ${d} points ${dir} than usual, more than their normal swing of ±${swing}. A real move in the right direction.`
-                  : `About ${d} points ${dir} than usual, more than their normal swing of ±${swing}. Worth raising in your next session.`
-                : t.level === 1
-                  ? `${d} points ${dir} than usual. Inside their normal swing of ±${swing}, but keep an eye on it.`
-                  : `Within their normal day to day swing of ±${swing}. A ${d} point difference here is noise, not news.`;
-
             return (
               <div className="dial" key={t.key} style={{ borderColor: border }}>
                 <div className="dialtop">
@@ -143,28 +132,22 @@ export default function CoachView({ days, clientId }: { days: DayRow[]; clientId
                   </div>
                   <Spark points={sparkPoints(days, t.key, 10)} w={92} h={30} color={t.c} />
                 </div>
-                <p className="dialsentence">{sentence}</p>
               </div>
             );
           })}
         </div>
-        <p className="note">
-          Scores run 0 to 100 and are read from the sound of the voice only. Usual is this
-          person&apos;s own average on this run, and the comparison respects their normal day to day
-          swing, so a small difference is treated as noise, not news.
-        </p>
       </section>
 
-      <section className="panel" style={{ marginTop: 16 }}>
+      <section className="sect">
         <div className="eyebrow">Day by day, against their own usual</div>
-        <div className="panelhead spread">
-          <h2>Each dial, in one look</h2>
+        <div className="sectHead">
+          <h2 className="sectTitle">Each dial, in one look</h2>
           <div className="seg">
             <button onClick={() => setRange(7)} aria-pressed={range === 7}>Last 7 days</button>
             <button onClick={() => setRange(30)} aria-pressed={range === 30}>Last 30 days</button>
           </div>
         </div>
-        <p className="note">
+        <p className="sub">
           Each dot is one day&apos;s average. The green band is their usual zone for that dial, one
           standard swing either side of their own baseline across the whole run. A dot outside the
           zone is labeled with its day: red means it moved the wrong way for that dial, teal means
@@ -176,7 +159,7 @@ export default function CoachView({ days, clientId }: { days: DayRow[]; clientId
               onClick={() => setZoneKey(z.key)}>{z.name}</button>
           ))}
         </div>
-        <div className="padded">
+        <div className="card">
           <ZoneChart days={days} zoneKey={zoneKey} range={range} />
         </div>
       </section>
@@ -222,33 +205,33 @@ function RecoveryPanel({ clientId }: { clientId: string }) {
   const built = data && data.n > 0 ? buildRecovery(data) : null;
 
   return (
-    <section className="panel" style={{ marginTop: 16 }}>
+    <section className="sect">
       <div className="eyebrow">Recovery</div>
-      <div className="panelhead spread">
-        <h2>How fast a spike comes down</h2>
+      <div className="sectHead">
+        <h2 className="sectTitle">How fast a spike comes down</h2>
         <div className="seg">
           <button onClick={() => setRange(7)} aria-pressed={range === 7}>Last 7 days</button>
           <button onClick={() => setRange(30)} aria-pressed={range === 30}>Last 30 days</button>
         </div>
       </div>
-      {state === "loading" && <p className="note">Loading…</p>}
-      {state === "error" && <p className="note">Could not load this panel.</p>}
+      {state === "loading" && <p className="sub">Loading…</p>}
+      {state === "error" && <p className="sub">Could not load this panel.</p>}
       {data && data.n === 0 && (
-        <p className="note">
+        <p className="sub">
           No stress spikes with enough surrounding detail in this range. Recovery needs a check-in
           long enough to be scored more than once.
         </p>
       )}
       {built && (
         <>
-          <p className="note">
+          <p className="sub">
             Everyone spikes. The trainable part is how fast the voice settles back to its own
             baseline. All {built.total} {built.total === 1 ? "spike" : "spikes"} from this run in one
             bar, sorted by how long they took to come down. About {built.floor} seconds is the
             fastest these check-ins can measure, so the first segment means &ldquo;at least that
             fast&rdquo;. That floor is per client, not a fixed number.
           </p>
-          <div className="padded">
+          <div className="card">
             <RecBar built={built} />
             <div className="legend" style={{ paddingTop: 12 }}>
               {built.buckets.map((b) => (
@@ -270,16 +253,16 @@ function MatrixPanel({ clientId }: { clientId: string }) {
     `/api/v1/dashboard/${clientId}/?panel=matrix&days=90`,
   );
   return (
-    <section className="panel" style={{ marginTop: 16 }}>
+    <section className="sect">
       <div className="eyebrow">Seven dials, one map</div>
-      <div className="panelhead"><h2>How the markers move together</h2></div>
-      <p className="note">
+      <h2 className="sectTitle">How the markers move together</h2>
+      <p className="sub">
         Every marker against every other, across the whole run. A dashed ring means the pair shares
         inputs, so part of that agreement is by construction.
       </p>
-      <div className="padded">
-        {state === "loading" && <p className="note">Loading…</p>}
-        {state === "error" && <p className="note">Could not load this panel.</p>}
+      <div className="card">
+        {state === "loading" && <p className="sub">Loading…</p>}
+        {state === "error" && <p className="sub">Could not load this panel.</p>}
         {data && <MatChart m={data.matrix} />}
       </div>
     </section>
