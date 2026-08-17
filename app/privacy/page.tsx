@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Privacy Policy — Ontor",
-  description: "Ontor privacy policy. Your voice is analyzed on your device; nothing is uploaded unless you turn on optional sync.",
+  description: "Ontor privacy policy. Your voice is analyzed on your device; your recordings and results are uploaded only if you turn on optional sync.",
 };
 
 const TEAL = "#0F766E";
@@ -28,7 +28,7 @@ export default function PrivacyPage() {
               </svg>
             </div>
             <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">Privacy Policy</h1>
-            <p className="text-slate-500">Last updated: July 24, 2026</p>
+            <p className="text-slate-500">Last updated: August 17, 2026</p>
           </div>
         </section>
 
@@ -39,8 +39,9 @@ export default function PrivacyPage() {
             <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5 mb-10 not-prose">
               <p className="text-sm font-semibold text-emerald-800 mb-1">Our core commitment</p>
               <p className="text-sm text-emerald-700">
-                Ontor analyzes your voice on your device. By default, nothing is uploaded: your
-                voice and results stay on your device unless you choose to turn on optional sync.
+                Ontor analyzes your voice on your device. Your recordings and results stay on your
+                device unless you turn on optional sync, which is off by default. Ontor is not a
+                medical device and does not diagnose or treat any condition.
               </p>
             </div>
 
@@ -49,6 +50,8 @@ export default function PrivacyPage() {
               <li><strong>Your voice</strong> — short audio captured while you record a check-in or run a session, analyzed on your device to estimate your nervous-system state.</li>
               <li><strong>Only you</strong> — Ontor is speaker-gated. It analyzes your voice only. When someone else is speaking, Ontor does not record or analyze them.</li>
               <li><strong>Your results</strong> — the signals Ontor derives (for example energy, stress, confidence, fatigue) and your personal history, used to compare each reading against your own baseline.</li>
+              <li><strong>Your email address</strong> — if you provide one during setup, used to identify your account, send you a sign-in code, and restore your history on a new device.</li>
+              <li><strong>App usage and reliability data</strong> — see section 5.</li>
             </ul>
 
             <h2>2. On-Device Analysis</h2>
@@ -59,10 +62,11 @@ export default function PrivacyPage() {
 
             <h2>3. Optional Sync</h2>
             <p>
-              If you choose to turn on sync, some of your data (such as your results and history) is
-              sent to and stored on Ontor&apos;s servers so it can be available across your devices.
-              Sync is off by default and only happens if you enable it. You can turn it off at any
-              time. Raw audio is not part of sync.
+              Sync is off by default. If you turn it on in Settings, your results and history
+              <strong> and the voice recordings from your check-ins</strong> are uploaded to and
+              stored on Ontor&apos;s servers, so your history can be restored on another device.
+              You can turn sync off at any time; while it is off, nothing from your check-ins is
+              uploaded.
             </p>
 
             <h2>4. Data Storage</h2>
@@ -73,6 +77,15 @@ export default function PrivacyPage() {
             </p>
 
             <h2>5. Analytics and Tracking</h2>
+            <p>
+              Ontor sends usage and reliability data (such as which screens you open, when a
+              check-in completes, and crash reports) to Ontor&apos;s own servers, tied to a
+              randomly generated device identifier. This is independent of sync and happens
+              whether or not sync is on. This identifier is not linked to your name, and we do not
+              combine it with data from other companies. To request that we stop collecting usage
+              data from your device, or delete what we already hold, email us at the address in
+              section 10.
+            </p>
             <p>
               Ontor does not use advertising identifiers or third-party advertising SDKs, and does
               not sell your data.
@@ -92,12 +105,12 @@ export default function PrivacyPage() {
 
             <h2>8. Your Rights</h2>
             <ul>
-              <li><strong>Delete</strong> — delete your data from within Ontor; if you use sync, your synced data can be deleted too.</li>
-              <li><strong>Turn off sync</strong> — stop syncing at any time in settings.</li>
+              <li><strong>Delete any check-in</strong> — delete an individual check-in directly in Ontor. It is removed from your device, and if sync is on, the recording, transcript, and derived signals for that check-in are cleared from your synced history too.</li>
+              <li><strong>Turn off sync</strong> — stop syncing at any time in Settings. Nothing further is uploaded from that point.</li>
+              <li><strong>Delete local data</strong> — uninstalling Ontor removes everything stored on that device.</li>
+              <li><strong>Delete your account entirely</strong> — email us at the address in section 10 and we will delete your account and everything we hold for it, including any backed-up recordings.</li>
+              <li><strong>Access</strong> — request a copy of the data we hold for your account by emailing the same address.</li>
             </ul>
-            <p>
-              Uninstalling Ontor removes the data stored on that device.
-            </p>
 
             <h2>9. Changes to This Policy</h2>
             <p>

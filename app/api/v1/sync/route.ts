@@ -44,6 +44,18 @@ import { authorizeUser } from "@/lib/auth";
 import { revalidateTag } from "next/cache";
 import { obsTag } from "@/lib/coach-analytics";
 import type { AnyBulkWriteOperation } from "mongodb";
+import { DeleteObjectsCommand, S3Client } from "@aws-sdk/client-s3";
+
+// Mirrors voice/presign's client: same region, same credential chain. Held in
+// a module-level singleton so a warm lambda reuses the connection.
+let _s3: S3Client | null = null;
+function getS3(): S3Client {
+  if (_s3) return _s3;
+  const region = process.env.AWS_REGION;
+  if (!region) throw new Error("AWS_REGION not configured");
+  _s3 = new S3Client({ region });
+  return _s3;
+}
 
 // Stored observation shape. `_id` is a client-supplied UUIDv4, not an
 // ObjectId — the collection is parameterized with this so the Mongo
@@ -242,10 +254,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ accepted: 0, dropped, upserted: 0, modified: 0 });
   }
 
+  // A delete is permanent and total: the user asked for the log to be gone,
+  // so the doc is removed outright rather than kept as a stripped tombstone,
+  // and the S3 audio goes with it (below). Deleting on one device therefore
+  // does NOT teach a second device to drop its local copy — that convergence
+  // was the only thing tombstones bought, and it is not worth keeping a
+  // record of a log the user deleted.
+  const deletes = valid.filter((o) => o.deleted_at != null);
+  const upserts = valid.filter((o) => o.deleted_at == null);
+
   // bulkWrite with replaceOne(upsert) per doc. Each push is a full-doc
   // state replacement — devices send the canonical state of their rows,
   // never diffs. Last-write-wins falls out naturally.
-  const ops: AnyBulkWriteOperation<ObservationDoc>[] = valid.map((o) => ({
+  const ops: AnyBulkWriteOperation<ObservationDoc>[] = upserts.map((o) => ({
     replaceOne: {
       filter: { _id: o._id },
       replacement: toDoc(o),
@@ -258,7 +279,49 @@ export async function POST(req: Request) {
     const col = client
       .db("healthos")
       .collection<ObservationDoc>("observations");
-    const res = await col.bulkWrite(ops, { ordered: false });
+    const res = ops.length
+      ? await col.bulkWrite(ops, { ordered: false })
+      : { upsertedCount: 0, modifiedCount: 0 };
+
+    // Permanent deletes. The tombstone the client sends carries
+    // `voice_clip: null`, so the S3 key has to come from the stored doc —
+    // read it BEFORE the docs are removed or the audio is orphaned in the
+    // bucket forever with nothing left pointing at it.
+    let deletedCount = 0;
+    if (deletes.length > 0) {
+      const ids = deletes.map((o) => o._id);
+      const doomed = await col
+        .find({ _id: { $in: ids }, user_id: userId }, { projection: { voice_clip: 1 } })
+        .toArray();
+
+      const keys = doomed
+        .map((d) => (d.voice_clip as { s3_key?: unknown } | null)?.s3_key)
+        .filter((k): k is string => typeof k === "string" && k.length > 0);
+
+      if (keys.length > 0) {
+        // Best-effort: a failed S3 delete must not block the Mongo delete,
+        // otherwise the user's log survives because a bucket call flaked.
+        // Logged loudly instead — an orphaned object is a cleanup job, a
+        // surviving log is a broken promise.
+        try {
+          const bucket = process.env.S3_VOICE_BUCKET;
+          if (!bucket) throw new Error("S3_VOICE_BUCKET not configured");
+          await getS3().send(
+            new DeleteObjectsCommand({
+              Bucket: bucket,
+              Delete: { Objects: keys.map((Key) => ({ Key })), Quiet: true },
+            }),
+          );
+        } catch (err) {
+          console.error("[sync] S3 delete failed, objects orphaned:", keys, err);
+        }
+      }
+
+      // Scoped by user_id as well as _id so a client can only ever delete
+      // its own rows, even though _id is a client-supplied UUID.
+      const del = await col.deleteMany({ _id: { $in: ids }, user_id: userId });
+      deletedCount = del.deletedCount ?? 0;
+    }
 
     // Touch the install's last_seen_at so the waitlist row tracks
     // active devices. Fire-and-forget — failure here doesn't affect
@@ -287,7 +350,7 @@ export async function POST(req: Request) {
     // 47ms, day means 71ms. Paying that once per sync buys "the
     // dashboard is always current", which is worth far more than
     // 100ms. Visits between syncs still come straight from cache.
-    if (res.upsertedCount > 0 || res.modifiedCount > 0) {
+    if (res.upsertedCount > 0 || res.modifiedCount > 0 || deletedCount > 0) {
       revalidateTag(obsTag(userId), { expire: 0 });
     }
 
@@ -296,6 +359,7 @@ export async function POST(req: Request) {
       dropped,
       upserted: res.upsertedCount,
       modified: res.modifiedCount,
+      deleted: deletedCount,
     });
   } catch (err) {
     console.error("[sync push]", err);

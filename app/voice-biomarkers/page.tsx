@@ -35,7 +35,7 @@ const FAQ = [
   },
   {
     q: "Can a voice biomarker app run without sending my audio to the cloud?",
-    a: "Yes. Ontor runs entirely on-device — the acoustic features are extracted on your phone and your voice audio never leaves it. Many clinical voice-biomarker systems are cloud-based; on-device analysis is what makes a private, consumer version possible.",
+    a: "Yes. Ontor extracts the acoustic features on your phone, so the analysis needs no upload at all — cloud backup is an optional setting that is off by default. Many clinical voice-biomarker systems must upload your audio before they can analyze it; on-device analysis is what makes a private, consumer version possible.",
   },
 ];
 
@@ -125,10 +125,12 @@ export default function VoiceBiomarkersPage() {
         <h2>Why on-device matters</h2>
         <p>
           Most established voice-biomarker technology is clinical and
-          cloud-based — your audio is uploaded for analysis. Ontor runs
-          entirely on-device: the features are extracted on your phone and your
-          voice audio never leaves it. That privacy model is what makes a
-          consumer voice-biomarker app possible in the first place.
+          cloud-based — your audio has to be uploaded before it can be analyzed
+          at all. Ontor inverts that: the features are extracted on your phone,
+          so the analysis works with nothing leaving the device. Backing your
+          history up to the cloud is an optional setting, off by default, rather
+          than a precondition for using the product. That is what makes a
+          consumer voice-biomarker tool possible in the first place.
         </p>
 
         <h2>Voice biomarkers vs. wearables</h2>
