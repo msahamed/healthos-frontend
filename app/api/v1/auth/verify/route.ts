@@ -87,20 +87,41 @@ export async function POST(req: Request) {
   }
 
   try {
-    const codes = await authCodes();
     const now = new Date();
-    const doc = await codes.findOne({ email, expires_at: { $gt: now } });
 
-    // One generic failure for wrong / expired / never-issued. The
-    // caller can't act on the difference, and the difference is
-    // worth something to someone guessing.
-    if (!doc || !codeMatches(email, code, doc.code_hash)) {
-      return NextResponse.json({ error: "invalid_code" }, { status: 400 });
+    // App Store / Play review bypass. A reviewer cannot read the code we
+    // mail, so onboarding is otherwise unreviewable — it stalls at step 2
+    // of 5 and the app gets rejected without ever being opened.
+    //
+    // One reserved address accepts one fixed code. Both come from env, so
+    // neither is in the repo, and BOTH must be well-formed for the bypass
+    // to arm: a blank or missing var can never widen this into "any code
+    // works for this address", or worse, "the empty code works for
+    // everyone". Everything downstream is the normal path — the reviewer
+    // gets an ordinary session, not a privileged one.
+    const demoEmail = normalizeEmail(process.env.REVIEW_DEMO_EMAIL);
+    const demoCode = (process.env.REVIEW_DEMO_CODE ?? "").trim();
+    const isDemo =
+      !!demoEmail &&
+      CODE_RE.test(demoCode) &&
+      email === demoEmail &&
+      code === demoCode;
+
+    if (!isDemo) {
+      const codes = await authCodes();
+      const doc = await codes.findOne({ email, expires_at: { $gt: now } });
+
+      // One generic failure for wrong / expired / never-issued. The
+      // caller can't act on the difference, and the difference is
+      // worth something to someone guessing.
+      if (!doc || !codeMatches(email, code, doc.code_hash)) {
+        return NextResponse.json({ error: "invalid_code" }, { status: 400 });
+      }
+
+      // Single use. Delete before issuing the session so a replay of
+      // the same code can never mint a second one.
+      await codes.deleteMany({ email });
     }
-
-    // Single use. Delete before issuing the session so a replay of
-    // the same code can never mint a second one.
-    await codes.deleteMany({ email });
 
     const db = await getDb();
     const accountsCol = await accounts();
