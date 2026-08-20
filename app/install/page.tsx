@@ -8,9 +8,8 @@ import { LaptopIcon, PhoneIcon, AndroidIcon, WindowsIcon } from "./_components/i
 
 // ── /install: platform chooser, the front door for all installs.
 // Public and indexable — replaces the old single gated page. Everyone
-// lands here first and picks a platform; only Mac unlocks a fully
-// public page underneath, iOS/Android stay invite-only, Windows is
-// coming soon. Old #iphone anchor (pre-split /install page) simply
+// lands here first and picks a platform; desktop builds are public,
+// while iOS/Android stay invite-only. Old #iphone anchor (pre-split /install page) simply
 // no-ops here, nothing to scroll to and nothing errors.
 //
 // Supports ?email=<their@gmail.com> from invite emails, forwarded onto
@@ -18,7 +17,7 @@ import { LaptopIcon, PhoneIcon, AndroidIcon, WindowsIcon } from "./_components/i
 
 export const metadata: Metadata = {
   title: "Install Ontor",
-  description: "Get Ontor on your machine. Mac is available now; iPhone, Android, and Windows are on the way.",
+  description: "Get Ontor for Mac or Windows. iPhone and Android are currently available by invitation.",
 };
 
 export default async function InstallChooserPage({
@@ -39,8 +38,8 @@ export default async function InstallChooserPage({
             <span className="ch-eyebrow">Install</span>
             <h1 className="font-serif-display">Get Ontor on your machine.</h1>
             <p>
-              Pick your platform. Mac is available today. iPhone and Android
-              are invite-only while we&apos;re in private beta.
+              Pick your platform. Mac and Windows are available today. iPhone
+              and Android are invite-only while we&apos;re in private beta.
             </p>
           </div>
         </section>
@@ -74,11 +73,11 @@ export default async function InstallChooserPage({
               />
               <PlatformTile
                 href={link("/install/windows")}
-                state="soon"
+                state="live"
                 icon={<WindowsIcon />}
                 title="Windows"
-                description="Join the list, we'll email you."
-                ctaLabel="Get notified"
+                description="Direct beta download. No invite needed."
+                ctaLabel="Download for Windows"
               />
             </div>
           </div>
