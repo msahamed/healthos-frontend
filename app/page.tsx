@@ -23,16 +23,18 @@ export default function Home() {
           <div style={{ position: "absolute", bottom: "-30%", left: "-12%", width: "50%", height: "80%", background: "radial-gradient(circle, rgba(245,158,11,.1), transparent 70%)", filter: "blur(20px)", pointerEvents: "none" }} />
           <div className="hos-hero-grid" style={{ position: "relative", zIndex: 1, maxWidth: 1160, margin: "0 auto", padding: "76px 32px 88px", display: "grid", gridTemplateColumns: "1fr 1.22fr", gap: 48, alignItems: "center" }}>
             <div>
-              <span style={eyebrow("#6FD6C9")}><span style={eyeDot} />For work that happens on calls</span>
+              <span style={eyebrow("#6FD6C9")}><span style={eyeDot} />For calls where your focus matters</span>
               <h1 className="font-serif-display" style={{ fontWeight: 500, fontSize: "clamp(38px, 4.6vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.02em", margin: "22px 0 0", color: "#FBF8F1" }}>
-                See your nervous system <em style={{ fontStyle: "italic", color: "#FCD34D" }}>while you speak.</em>
+                Do you get tired <em style={{ fontStyle: "italic", color: "#FCD34D" }}>after call after call?</em>
               </h1>
-              {/* Sub-headline variant 1a — numbered steps */}
+              <p style={{ maxWidth: 500, margin: "22px 0 0", color: "#C5D0CD", fontSize: 17.5, lineHeight: 1.55 }}>
+                Ontor helps you notice when stress is rising and energy is dropping, so you can adjust in the moment and improve your cognitive performance over time.
+              </p>
               <div style={{ margin: "28px 0 0", maxWidth: 520, display: "flex", flexDirection: "column" }}>
                 {[
-                  ["See the patterns", "Stress, energy, confidence, and more."],
-                  ["Know where you slip", "And where you hold steady. It shows you both."],
-                  ["Take action, get better", "Your own patterns show you what to work on. So work on it."],
+                  ["Notice the shift", "See when stress is rising and energy is dropping."],
+                  ["Make a small adjustment", "Slow down, breathe out, or give yourself a moment."],
+                  ["See what helps", "Review your patterns and build better ways to work."],
                 ].map(([t, b], i, arr) => {
                   const last = i === arr.length - 1;
                   return (
