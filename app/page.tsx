@@ -28,7 +28,7 @@ export default function Home() {
                 Call after call. A long day at your computer. Tired? Is your focus starting <em style={{ fontStyle: "italic", color: "#FCD34D" }}>to slip?</em>
               </h1>
               <p style={{ maxWidth: 500, margin: "22px 0 0", color: "#C5D0CD", fontSize: 17.5, lineHeight: 1.55 }}>
-                Ontor helps you notice when stress is rising and energy is dropping, so you can adjust in the moment and improve your cognitive performance over time.
+                Ontor helps you notice when stress is rising and energy is dropping, so you can make a small adjustment in the moment and improve your cognitive performance over time.
               </p>
               <div style={{ margin: "28px 0 0", maxWidth: 520, display: "flex", flexDirection: "column" }}>
                 {[
