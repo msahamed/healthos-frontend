@@ -24,11 +24,11 @@ export default function Home() {
           <div className="hos-hero-grid" style={{ position: "relative", zIndex: 1, maxWidth: 1160, margin: "0 auto", padding: "76px 32px 88px", display: "grid", gridTemplateColumns: "1fr 1.22fr", gap: 48, alignItems: "center" }}>
             <div>
               <span style={eyebrow("#6FD6C9")}><span style={eyeDot} />For calls where your focus matters</span>
-              <h1 className="font-serif-display" style={{ fontWeight: 500, fontSize: "clamp(38px, 4.6vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.02em", margin: "22px 0 0", color: "#FBF8F1" }}>
+              <h1 style={{ fontWeight: 600, fontSize: "clamp(38px, 4.6vw, 56px)", lineHeight: 1.1, letterSpacing: "-0.02em", margin: "30px 0 0", color: "#FBF8F1" }}>
                 Call after call. Tired? Is your focus <em style={{ fontStyle: "italic", color: "#FCD34D" }}>slipping?</em>
               </h1>
               <p style={{ maxWidth: 500, margin: "22px 0 0", color: "#C5D0CD", fontSize: 17.5, lineHeight: 1.55 }}>
-                Ontor helps you notice when stress is rising and energy is running low by listening to your natural voice. You can slow down or change pace before your focus starts to slip.
+                Ontor hears stress in your voice and tells you when to slow down.
               </p>
               <div style={{ margin: "28px 0 0", maxWidth: 520, display: "flex", flexDirection: "column" }}>
                 {[
