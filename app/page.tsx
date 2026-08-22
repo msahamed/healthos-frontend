@@ -25,7 +25,7 @@ export default function Home() {
             <div>
               <span style={eyebrow("#6FD6C9")}><span style={eyeDot} />For calls where your focus matters</span>
               <h1 className="font-serif-display" style={{ fontWeight: 500, fontSize: "clamp(38px, 4.6vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.02em", margin: "22px 0 0", color: "#FBF8F1" }}>
-                Call after call at your computer. Tired? Is your focus <em style={{ fontStyle: "italic", color: "#FCD34D" }}>slipping?</em>
+                Call after call. Tired? Is your focus <em style={{ fontStyle: "italic", color: "#FCD34D" }}>slipping?</em>
               </h1>
               <p style={{ maxWidth: 500, margin: "22px 0 0", color: "#C5D0CD", fontSize: 17.5, lineHeight: 1.55 }}>
                 Ontor helps you notice when stress is rising and energy is running low by listening to your natural voice. You can slow down or change pace before your focus starts to slip.
