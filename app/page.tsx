@@ -28,7 +28,7 @@ export default function Home() {
                 Call after call. Tired? Is your focus <em style={{ fontStyle: "italic", color: "#FCD34D" }}>slipping?</em>
               </h1>
               <p style={{ maxWidth: 500, margin: "22px 0 0", color: "#C5D0CD", fontSize: 17.5, lineHeight: 1.55 }}>
-                Ontor hears stress in your voice and tells you when to slow down.
+                Ontor listens for nervous-system signals in your voice and tells you when to slow down and reset, so you can stay sharp through the day.
               </p>
               <div style={{ margin: "28px 0 0", maxWidth: 520, display: "flex", flexDirection: "column" }}>
                 {[
