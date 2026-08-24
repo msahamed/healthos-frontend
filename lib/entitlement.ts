@@ -92,18 +92,23 @@ export function entitlementFor(
     };
   }
 
-  // A paid-for period that has not ended yet grants access, whatever
-  // Stripe's status string says. Status alone is the wrong test in three
-  // ordinary cases: `past_due` means a card is being retried, and locking
-  // someone out mid-dunning churns a customer who meant to pay;
-  // cancel-at-period-end leaves a real, already-paid period to serve out;
-  // and an immediate cancellation can leave a future period end behind.
-  // The date is what they bought, so the date is what we honour. It errs
-  // toward giving a few extra days rather than locking out someone who
-  // paid — the cheaper mistake by far.
+  // A paid-for period that has not ended yet grants access even when
+  // Stripe's status looks unhappy: `past_due` means a card is being
+  // retried, and locking someone out mid-dunning churns a customer who
+  // meant to pay; cancel-at-period-end leaves real, already-paid time to
+  // serve out (Stripe keeps the status on "active" for that).
+  //
+  // `canceled` is different and must NOT be honoured. Stripe sets it the
+  // moment a subscription is terminated outright — a refund, a dashboard
+  // cancellation — and leaves current_period_end at whatever it was, so
+  // the date alone reads as a month of remaining access. Trusting it was
+  // generous in isolation and a trap in practice: checkout refuses while
+  // access looks live, so the person could neither resume the dead
+  // subscription nor buy a new one until the phantom period ran out.
   const periodEnd = account.current_period_end ?? null;
   const paid = account.subscription_status != null;
-  if (periodEnd && periodEnd.getTime() > now.getTime()) {
+  const terminated = account.subscription_status === "canceled";
+  if (!terminated && periodEnd && periodEnd.getTime() > now.getTime()) {
     return {
       state: "active",
       days_left: daysUntil(periodEnd, now),
