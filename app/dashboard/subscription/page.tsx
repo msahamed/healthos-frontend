@@ -20,6 +20,7 @@ import {
   entitlementFor,
   type Entitlement,
 } from "@/lib/entitlement";
+import Controls from "./Controls";
 import ManageButton from "./ManageButton";
 
 export const dynamic = "force-dynamic";
@@ -61,7 +62,7 @@ function copyFor(e: Entitlement): {
             // the day it stops working.
             status: "Cancelled",
             tone: "warn",
-            detail: `You keep access until ${when(e.expires_at)}. It won't renew after that. To keep it going, choose "Don't cancel subscription" on the next page — that is Stripe's wording for resuming.`,
+            detail: `You keep access until ${when(e.expires_at)}. It won't renew after that.`,
             cta: "resume",
           }
         : {
@@ -149,33 +150,31 @@ export default async function SubscriptionPage() {
         </p>
 
         <div style={{ marginTop: 20 }}>
-          {c.cta === "manage" && <ManageButton label="Manage subscription" />}
-          {c.cta === "resume" && (
-            <>
-              <ManageButton label="Resume subscription" />
-              <p style={{ color: "#8A8378", fontSize: 14, marginTop: 12 }}>
-                Nothing to re-enter. Your card and history are still there.
-              </p>
-            </>
+          {(c.cta === "manage" || c.cta === "resume") && (
+            <Controls
+              cancelled={c.cta === "resume"}
+              accessUntil={when(ent.expires_at)}
+            />
           )}
           {c.cta === "checkout" && (
             <>
               <Link href="/pricing/" className="primary" style={{ display: "inline-block" }}>
                 {ent.state === "none" ? "See plans" : "Subscribe"}
               </Link>
-              {hasCustomer && (
-                <div style={{ marginTop: 12 }}>
-                  <ManageButton label="Billing history" />
-                </div>
-              )}
             </>
           )}
         </div>
       </section>
 
-      <p style={{ color: "#8A8378", fontSize: 14, marginTop: 18, lineHeight: 1.6 }}>
-        Payment methods, invoices and cancellation are handled by Stripe.
-      </p>
+      {hasCustomer && (
+        <section style={{ marginTop: 22 }}>
+          <ManageButton label="Payment method and invoices" />
+          <p style={{ color: "#8A8378", fontSize: 14, marginTop: 10, lineHeight: 1.6 }}>
+            Card details and receipts are held by Stripe, not by us. That page
+            opens on their site.
+          </p>
+        </section>
+      )}
     </div>
   );
 }
