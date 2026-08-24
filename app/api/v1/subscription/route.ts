@@ -97,6 +97,9 @@ export async function POST(req: Request) {
       $set: {
         cancel_at_period_end: Boolean(updated.cancel_at_period_end),
         current_period_end: periodEndOf(updated),
+        // Stamped so a webhook for an EARLIER change, arriving late,
+        // cannot undo what was just done here.
+        subscription_synced_at: new Date(),
       },
     },
   );

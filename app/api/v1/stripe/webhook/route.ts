@@ -72,7 +72,10 @@ async function findAccountEmail(sub: Stripe.Subscription): Promise<string | null
   return null;
 }
 
-async function applySubscription(sub: Stripe.Subscription): Promise<void> {
+async function applySubscription(
+  sub: Stripe.Subscription,
+  eventAt: Date,
+): Promise<void> {
   const email = await findAccountEmail(sub);
   if (!email) {
     // Nothing to write this to. Throwing would make Stripe retry forever
@@ -97,8 +100,20 @@ async function applySubscription(sub: Stripe.Subscription): Promise<void> {
     { projection: { subscription_status: 1, cancel_at_period_end: 1 } },
   );
 
-  await col.updateOne(
-    { email },
+  // Refuse to apply an event older than the state we already hold.
+  // Stripe makes no ordering promise, so a cancel and a resume issued
+  // seconds apart can arrive backwards — and the loser of that race
+  // silently becomes the truth. Doing the comparison inside the filter
+  // keeps it atomic: two events landing together cannot both read
+  // "nothing newer yet" and then both write.
+  const res = await col.updateOne(
+    {
+      email,
+      $or: [
+        { subscription_synced_at: { $exists: false } },
+        { subscription_synced_at: { $lte: eventAt } },
+      ],
+    },
     {
       $set: {
         subscription_status: status,
@@ -106,11 +121,17 @@ async function applySubscription(sub: Stripe.Subscription): Promise<void> {
         // Cancelling at period end leaves Stripe's status on "active",
         // so this flag is the only way to tell "renews" from "ends".
         cancel_at_period_end: cancelling,
+        subscription_synced_at: eventAt,
         stripe_subscription_id: sub.id,
         ...(customerId ? { stripe_customer_id: customerId } : {}),
       },
     },
   );
+
+  if (res.matchedCount === 0) {
+    console.warn("[stripe] ignored out-of-order event for", sub.id);
+    return;
+  }
 
   const justCancelled = cancelling && !before?.cancel_at_period_end;
   const justEnded =
@@ -148,6 +169,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "bad_signature" }, { status: 400 });
   }
 
+  const eventAt = new Date(event.created * 1000);
+
   try {
     switch (event.type) {
       case "checkout.session.completed": {
@@ -167,7 +190,7 @@ export async function POST(req: Request) {
         // access immediate rather than waiting on event ordering.
         if (typeof s.subscription === "string") {
           const sub = await stripe().subscriptions.retrieve(s.subscription);
-          await applySubscription(sub);
+          await applySubscription(sub, eventAt);
           // Checkout completing is the one unambiguous "they just
           // subscribed" moment. subscription.created also fires, but it
           // fires for dashboard-created subscriptions too, where a
@@ -179,7 +202,7 @@ export async function POST(req: Request) {
       case "customer.subscription.created":
       case "customer.subscription.updated":
       case "customer.subscription.deleted":
-        await applySubscription(event.data.object);
+        await applySubscription(event.data.object, eventAt);
         break;
       default:
         break;
