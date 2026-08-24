@@ -60,7 +60,7 @@ export async function POST(req: Request) {
     subscription_data: { metadata: { ontor_email: session.email } },
     metadata: { ontor_email: session.email },
     allow_promotion_codes: true,
-    success_url: `${siteUrl()}/upgrade/done?session_id={CHECKOUT_SESSION_ID}`,
+    success_url: `${siteUrl()}/upgrade/done/?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${siteUrl()}/pricing`,
   });
 
