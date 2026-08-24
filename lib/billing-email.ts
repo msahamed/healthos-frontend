@@ -115,7 +115,7 @@ export async function sendTrialStarted(to: string, endsAt: Date, days: number) {
         // eleven has spent the whole trial judging the product without
         // knowing what it costs, and then gets a surprise at the worst
         // possible moment.
-        `After that it is $20 a month, or $168 for the year. Nothing happens automatically — we have no card.`,
+        `After that it is $20 a month, or $168 for the year. Nothing happens automatically, because we have no card.`,
       ],
       footnote: "Questions? Just reply to this email.",
     }),

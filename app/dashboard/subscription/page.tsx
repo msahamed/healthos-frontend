@@ -13,7 +13,6 @@
 // card details, which is the one thing worth never touching.
 
 import type { Metadata } from "next";
-import Link from "next/link";
 import { accounts, getSessionFromCookies } from "@/lib/auth";
 import {
   ENTITLEMENT_FIELDS,
@@ -21,6 +20,7 @@ import {
   type Entitlement,
 } from "@/lib/entitlement";
 import Controls from "./Controls";
+import Subscribe from "./Subscribe";
 import ManageButton from "./ManageButton";
 
 export const dynamic = "force-dynamic";
@@ -75,7 +75,7 @@ function copyFor(e: Entitlement): {
       return {
         status: "Free trial",
         tone: "good",
-        detail: `${e.days_left} ${e.days_left === 1 ? "day" : "days"} left — ends ${when(e.expires_at)}.`,
+        detail: `${e.days_left} ${e.days_left === 1 ? "day" : "days"} left. Ends ${when(e.expires_at)}.`,
         cta: "checkout",
       };
     case "expired":
@@ -115,20 +115,24 @@ export default async function SubscriptionPage() {
   const hasCustomer = Boolean(account?.stripe_customer_id);
 
   const dot =
-    c.tone === "good" ? "#0F766E" : c.tone === "warn" ? "#B4462F" : "#8A8378";
+    c.tone === "good"
+      ? "var(--teal)"
+      : c.tone === "warn"
+        ? "var(--above)"
+        : "var(--ink-mute)";
 
   return (
     <div style={{ maxWidth: 620 }}>
       <h1 style={{ marginBottom: 6 }}>Subscription</h1>
-      <p style={{ color: "#5A554B", marginTop: 0 }}>{session.email}</p>
+      <p style={{ color: "var(--ink-soft)", marginTop: 0 }}>{session.email}</p>
 
       <section
         style={{
           marginTop: 26,
           padding: "22px 24px",
-          border: "1px solid #E4DDD0",
-          borderRadius: 14,
-          background: "#fff",
+          border: "1px solid var(--line)",
+          borderRadius: 18,
+          background: "var(--paper)",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -145,7 +149,7 @@ export default async function SubscriptionPage() {
           <strong style={{ fontSize: 18 }}>{c.status}</strong>
         </div>
 
-        <p style={{ color: "#5A554B", margin: "10px 0 0", lineHeight: 1.6 }}>
+        <p style={{ color: "var(--ink-soft)", margin: "10px 0 0", lineHeight: 1.6 }}>
           {c.detail}
         </p>
 
@@ -157,11 +161,7 @@ export default async function SubscriptionPage() {
             />
           )}
           {c.cta === "checkout" && (
-            <>
-              <Link href="/pricing/" className="primary" style={{ display: "inline-block" }}>
-                {ent.state === "none" ? "See plans" : "Subscribe"}
-              </Link>
-            </>
+            <Subscribe label={ent.state === "trial" ? "Keep Ontor" : "Subscribe"} />
           )}
         </div>
       </section>
@@ -169,7 +169,7 @@ export default async function SubscriptionPage() {
       {hasCustomer && (
         <section style={{ marginTop: 22 }}>
           <ManageButton label="Payment method and invoices" />
-          <p style={{ color: "#8A8378", fontSize: 14, marginTop: 10, lineHeight: 1.6 }}>
+          <p style={{ color: "var(--ink-mute)", fontSize: 14, marginTop: 10, lineHeight: 1.6 }}>
             Card details and receipts are held by Stripe, not by us. That page
             opens on their site.
           </p>

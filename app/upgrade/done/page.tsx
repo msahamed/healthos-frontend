@@ -98,7 +98,7 @@ export default async function UpgradeDone({
           className="font-serif-display"
           style={{ fontSize: 32, lineHeight: 1.15, letterSpacing: "-0.01em", margin: 0 }}
         >
-          {paid ? "You're subscribed" : "Thanks — you're all set"}
+          {paid ? "You're subscribed" : "Thanks, you're all set"}
         </h1>
 
         <p style={{ color: inkSoft, fontSize: 16, lineHeight: 1.6, marginTop: 14 }}>

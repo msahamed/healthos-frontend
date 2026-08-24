@@ -62,13 +62,13 @@ export default function Controls({
       <>
         <button
           type="button"
-          className="primary"
+          className="btn btn-primary"
           onClick={() => act("resume")}
           disabled={busy !== null}
         >
           {busy === "resume" ? "Resuming…" : "Resume subscription"}
         </button>
-        <p style={{ color: "#8A8378", fontSize: 14, marginTop: 12 }}>
+        <p style={{ color: "var(--ink-mute)", fontSize: 14, marginTop: 12 }}>
           Nothing to re-enter. Your card and history are still here.
         </p>
         {error && <Err>{error}</Err>}
@@ -81,9 +81,9 @@ export default function Controls({
       <div
         style={{
           padding: "16px 18px",
-          border: "1px solid #E4DDD0",
-          borderRadius: 12,
-          background: "#FBF8F2",
+          border: "1px solid var(--line)",
+          borderRadius: 18,
+          background: "var(--paper-2)",
         }}
       >
         <p style={{ margin: "0 0 14px", lineHeight: 1.6 }}>
@@ -93,25 +93,17 @@ export default function Controls({
         </p>
         <button
           type="button"
-          className="primary"
+          className="btn btn-danger"
           onClick={() => act("cancel")}
           disabled={busy !== null}
-          style={{ background: "#B4462F" }}
         >
           {busy === "cancel" ? "Cancelling…" : "Yes, cancel"}
         </button>
         <button
           type="button"
+          className="btn btn-quiet"
           onClick={() => setConfirming(false)}
           disabled={busy !== null}
-          style={{
-            marginLeft: 12,
-            background: "none",
-            border: "none",
-            color: "#5A554B",
-            fontSize: 15,
-            cursor: "pointer",
-          }}
         >
           Keep it
         </button>
@@ -124,16 +116,8 @@ export default function Controls({
     <>
       <button
         type="button"
+        className="btn btn-secondary"
         onClick={() => setConfirming(true)}
-        style={{
-          background: "none",
-          border: "1px solid #D6CDBC",
-          borderRadius: 10,
-          padding: "10px 16px",
-          color: "#5A554B",
-          fontSize: 15,
-          cursor: "pointer",
-        }}
       >
         Cancel subscription
       </button>
@@ -144,6 +128,6 @@ export default function Controls({
 
 function Err({ children }: { children: React.ReactNode }) {
   return (
-    <p style={{ color: "#B4462F", fontSize: 14, marginTop: 10 }}>{children}</p>
+    <p style={{ color: "var(--above)", fontSize: 14, marginTop: 10 }}>{children}</p>
   );
 }

@@ -38,11 +38,11 @@ export default function ManageButton({ label }: { label: string }) {
 
   return (
     <>
-      <button type="button" className="primary" onClick={open} disabled={busy}>
+      <button type="button" className="btn btn-secondary" onClick={open} disabled={busy}>
         {busy ? "Opening…" : label}
       </button>
       {error && (
-        <p style={{ color: "#B4462F", fontSize: 14, marginTop: 10 }}>{error}</p>
+        <p style={{ color: "var(--above)", fontSize: 14, marginTop: 10 }}>{error}</p>
       )}
     </>
   );
