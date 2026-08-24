@@ -27,6 +27,21 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
+  // The trial is for people who have never had access, not for anyone
+  // whose `trial_started_at` happens to be missing. Someone who
+  // subscribed without ever trialing and then lapsed has no such field,
+  // so the absence test alone handed them fourteen free days — once per
+  // account, but once is enough, and it rewards cancelling.
+  //
+  // A paying customer would also have been sent a "your trial has
+  // started" email in the middle of their subscription.
+  const current = await entitlementForEmail(session.email);
+  if (current.state !== "none") {
+    return NextResponse.json(current, {
+      headers: { "Cache-Control": "no-store" },
+    });
+  }
+
   const col = await accounts();
   // Only stamps when the field is absent, so a double-tap on a slow
   // connection cannot hand out a second trial. Comped accounts are

@@ -16,6 +16,7 @@
 
 import { NextResponse } from "next/server";
 import { accounts, requireSession } from "@/lib/auth";
+import { entitlementForEmail } from "@/lib/entitlement";
 import { priceIdFor, siteUrl, stripe, stripeConfigured, type Plan } from "@/lib/stripe";
 
 export const runtime = "nodejs";
@@ -28,6 +29,22 @@ export async function POST(req: Request) {
   }
   if (!stripeConfigured()) {
     return NextResponse.json({ error: "billing_unavailable" }, { status: 503 });
+  }
+
+  // Stripe will happily create a second subscription for a customer who
+  // already has one, and bill for both. Nothing downstream would notice:
+  // entitlement only asks whether a paid period is running, so the
+  // customer sees no change while paying twice, and the first they learn
+  // of it is the card statement.
+  const current = await entitlementForEmail(session.email);
+  if (current.state === "active") {
+    return NextResponse.json(
+      {
+        error: current.reason === "comped" ? "already_comped" : "already_active",
+        ...current,
+      },
+      { status: 409, headers: { "Cache-Control": "no-store" } },
+    );
   }
 
   let plan: Plan = "monthly";
