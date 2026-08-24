@@ -72,13 +72,11 @@ export default function Pricing() {
                 or <span style={{ fontVariantNumeric: "tabular-nums", fontWeight: 600, color: cream }}>$168</span>/year <span style={{ color: "rgba(251,248,241,.6)" }}>($14/mo)</span> · <span style={{ color: amber, fontWeight: 700 }}>save about 30%</span>
               </div>
 
-              {/* Sign in, then /start-trial, which begins it and forwards
-                  to the subscription page. No second press: the decision
-                  was made here. Routing through /start-trial rather than
-                  landing on the subscription page directly is what keeps
-                  the intent explicit, so someone who merely opens
-                  Subscription from the nav is never auto-enrolled. */}
-              <a href="/login/?next=/start-trial" className="price-btn-primary" style={{ display: "block", textAlign: "center", background: cream, color: "#0B5048", fontWeight: 700, fontSize: 16, borderRadius: 12, padding: "13px 20px", marginTop: 24, textDecoration: "none", boxShadow: "0 6px 18px rgba(0,0,0,.22)" }}>Start free trial</a>
+              {/* Sign in, then straight to the subscription page, which
+                  starts the trial itself for anyone who has never had
+                  access. No second press, and nothing here that a
+                  redirect could drop on the way. */}
+              <a href="/login/?next=/dashboard/subscription/" className="price-btn-primary" style={{ display: "block", textAlign: "center", background: cream, color: "#0B5048", fontWeight: 700, fontSize: 16, borderRadius: 12, padding: "13px 20px", marginTop: 24, textDecoration: "none", boxShadow: "0 6px 18px rgba(0,0,0,.22)" }}>Start free trial</a>
               <div style={{ textAlign: "center", fontSize: 13, color: "rgba(251,248,241,.68)", marginTop: 10 }}>No card required</div>
 
               <div style={{ height: 1, background: "rgba(251,248,241,.18)", margin: "22px 0 18px" }} />

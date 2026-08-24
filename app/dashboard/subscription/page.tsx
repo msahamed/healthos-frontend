@@ -14,9 +14,11 @@
 
 import type { Metadata } from "next";
 import { accounts, getSessionFromCookies } from "@/lib/auth";
+import { sendTrialStarted } from "@/lib/billing-email";
 import {
   ENTITLEMENT_FIELDS,
   entitlementFor,
+  trialDays,
   type Entitlement,
 } from "@/lib/entitlement";
 import Link from "next/link";
@@ -99,24 +101,58 @@ function copyFor(e: Entitlement): {
   }
 }
 
-export default async function SubscriptionPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ trial?: string }>;
-}) {
-  const justStarted = (await searchParams).trial === "started";
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Begin the trial for anyone who has never had access.
+ *
+ * The server's own record is what decides this, not a query parameter
+ * or which link was followed: an entitlement of "none" means no trial
+ * has ever run and nothing has ever been paid, which is exactly the
+ * person a trial is for. Deciding from state rather than intent means
+ * there is no path that can lose the intent on the way here.
+ *
+ * The Mongo filter only stamps when the field is absent, so two tabs
+ * opening at once cannot produce two trials, and returns whether this
+ * call was the one that started it — the email goes out only then.
+ */
+async function beginTrialIfNew(email: string, state: string): Promise<boolean> {
+  if (state !== "none") return false;
+  const col = await accounts();
+  const days = trialDays();
+  const res = await col.updateOne(
+    { email, trial_started_at: { $exists: false }, comped: { $ne: true } },
+    { $set: { trial_started_at: new Date(), trial_days: days } },
+  );
+  if (res.modifiedCount === 0) return false;
+  await sendTrialStarted(email, new Date(Date.now() + days * DAY_MS), days);
+  return true;
+}
+
+export default async function SubscriptionPage() {
   const session = await getSessionFromCookies();
   // layout.tsx already redirects, so this only guards the types.
   if (!session) return null;
 
   const col = await accounts();
-  const account = await col.findOne(
-    { email: session.email },
-    // Shared with the API so the two cannot drift. stripe_customer_id is
-    // this page's own extra — it decides whether a portal link is offered.
-    { projection: { ...ENTITLEMENT_FIELDS, stripe_customer_id: 1 } },
-  );
-  const ent = entitlementFor(account);
+  const read = async () =>
+    col.findOne(
+      { email: session.email },
+      // Shared with the API so the two cannot drift. stripe_customer_id is
+      // this page's own extra — it decides whether a portal link is offered.
+      { projection: { ...ENTITLEMENT_FIELDS, stripe_customer_id: 1 } },
+    );
+
+  let account = await read();
+  let ent = entitlementFor(account);
+
+  // Existing customers fall straight through: their state is not "none",
+  // so nothing starts and they see exactly what they had.
+  const justStarted = await beginTrialIfNew(session.email, ent.state);
+  if (justStarted) {
+    account = await read();
+    ent = entitlementFor(account);
+  }
   const c = copyFor(ent);
   const hasCustomer = Boolean(account?.stripe_customer_id);
 
