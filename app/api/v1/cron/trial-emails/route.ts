@@ -20,7 +20,7 @@ import { NextResponse } from "next/server";
 import type { Filter } from "mongodb";
 import { accounts, type AccountDoc } from "@/lib/auth";
 import { sendTrialEnded, sendTrialEnding } from "@/lib/billing-email";
-import { trialDays, trialUsage } from "@/lib/entitlement";
+import { trialDays } from "@/lib/entitlement";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -89,8 +89,7 @@ export async function GET(req: Request) {
       (a.trial_started_at as Date).getTime() + (a.trial_days ?? days) * DAY_MS,
     );
     const left = Math.max(1, Math.ceil((endsAt.getTime() - now) / DAY_MS));
-    const usage = await trialUsage(a.user_id, a.trial_started_at as Date);
-    await sendTrialEnding(a.email, endsAt, left, usage);
+    await sendTrialEnding(a.email, endsAt, left);
     await col.updateOne(
       { email: a.email },
       { $set: { trial_ending_email_at: new Date() } },
@@ -100,8 +99,7 @@ export async function GET(req: Request) {
 
   let sentEnded = 0;
   for (const a of ended) {
-    const usage = await trialUsage(a.user_id, a.trial_started_at as Date);
-    await sendTrialEnded(a.email, usage);
+    await sendTrialEnded(a.email);
     await col.updateOne(
       { email: a.email },
       {
