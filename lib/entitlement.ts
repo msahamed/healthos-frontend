@@ -174,3 +174,45 @@ export async function entitlementForEmail(email: string): Promise<Entitlement> {
   );
   return entitlementFor(doc);
 }
+
+/**
+ * How much of the product someone has actually used during their trial.
+ *
+ * The trial emails are far stronger when they can say what a person
+ * built rather than that a clock ran out — and for Ontor "what you
+ * built" is literal. Every reading is scored against that person's own
+ * baseline, so a lapsed trial genuinely does mean starting the
+ * measurement over. Naming the number makes that concrete.
+ *
+ * Returns zeros rather than throwing: an email that goes out slightly
+ * generic beats an email that does not go out.
+ */
+export async function trialUsage(
+  userId: string,
+  since: Date,
+): Promise<{ sessions: number; days: number }> {
+  try {
+    const { getDb } = await import("@/lib/auth");
+    const db = await getDb();
+    const rows = await db
+      .collection("observations")
+      .aggregate([
+        { $match: { user_id: userId, deleted_at: null, created_at: { $gte: since } } },
+        {
+          $group: {
+            _id: {
+              $dateToString: { date: "$created_at", format: "%Y-%m-%d" },
+            },
+            n: { $sum: 1 },
+          },
+        },
+      ])
+      .toArray();
+    return {
+      sessions: rows.reduce((sum, r) => sum + (r.n as number), 0),
+      days: rows.length,
+    };
+  } catch {
+    return { sessions: 0, days: 0 };
+  }
+}

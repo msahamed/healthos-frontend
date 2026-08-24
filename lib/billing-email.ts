@@ -111,6 +111,11 @@ export async function sendTrialStarted(to: string, endsAt: Date, days: number) {
       paragraphs: [
         `You have ${days} days of full access, through ${ends}. No card, nothing to cancel.`,
         `One thing worth knowing: Ontor gets better the longer it listens. The first few sessions build your baseline, and the patterns only start meaning something once there is one. Use it a few times this week and it will have something real to tell you.`,
+        // Said now, on purpose. Someone who first meets the price on day
+        // eleven has spent the whole trial judging the product without
+        // knowing what it costs, and then gets a surprise at the worst
+        // possible moment.
+        `After that it is $20 a month, or $168 for the year. Nothing happens automatically — we have no card.`,
       ],
       footnote: "Questions? Just reply to this email.",
     }),
@@ -120,11 +125,43 @@ export async function sendTrialStarted(to: string, endsAt: Date, days: number) {
       `You have ${days} days of full access, through ${ends}. No card, nothing to cancel.`,
       "",
       "Ontor gets better the longer it listens. The first few sessions build your baseline.",
+      "",
+      "After that it is $20 a month, or $168 for the year. Nothing happens automatically.",
     ],
   );
 }
 
-export async function sendTrialEnding(to: string, endsAt: Date, daysLeft: number) {
+export interface TrialUsage {
+  sessions: number;
+  days: number;
+}
+
+/**
+ * The middle paragraph, which is the whole email.
+ *
+ * Somebody who used it has built a baseline and would be starting the
+ * measurement over; say so with their own numbers. Somebody who did not
+ * has nothing to lose yet, and telling them what they built would be
+ * both false and slightly insulting — they get an honest nudge instead.
+ */
+function usageLine(u: TrialUsage): string {
+  if (u.sessions >= 5) {
+    const s = `${u.sessions} check-in${u.sessions === 1 ? "" : "s"}`;
+    const d = `${u.days} day${u.days === 1 ? "" : "s"}`;
+    return `You have recorded ${s} across ${d}. That is enough for Ontor to know your usual range, which means everything it tells you now is measured against how <em>you</em> actually sound rather than an average of strangers. That is the part that took two weeks to build, and the part you would be starting over on later.`;
+  }
+  if (u.sessions > 0) {
+    return `You have recorded ${u.sessions} check-in${u.sessions === 1 ? "" : "s"} so far. A few more and Ontor has enough to know your usual range, which is when the readings stop being numbers and start being about you.`;
+  }
+  return `You have not had a chance to use it yet. It takes about a minute: talk to Ontor a few times and it starts learning what your usual sounds like. That is worth doing before the clock runs out.`;
+}
+
+export async function sendTrialEnding(
+  to: string,
+  endsAt: Date,
+  daysLeft: number,
+  usage: TrialUsage = { sessions: 0, days: 0 },
+) {
   const ends = longDate(endsAt);
   const n = `${daysLeft} ${daysLeft === 1 ? "day" : "days"}`;
   await send(
@@ -134,7 +171,7 @@ export async function sendTrialEnding(to: string, endsAt: Date, daysLeft: number
       heading: `${n} left`,
       paragraphs: [
         `Your trial ends on ${ends}.`,
-        `By now Ontor has a baseline for you, which means everything from here is measured against how you actually sound rather than an average of strangers. That is the part that took two weeks to build, and it is the part you would be starting over on later.`,
+        usageLine(usage),
         `$20 a month, or $168 for the year.`,
       ],
       cta: { label: "Keep your access", href: PRICING },
@@ -144,21 +181,29 @@ export async function sendTrialEnding(to: string, endsAt: Date, daysLeft: number
       `${n} left on your Ontor trial.`,
       "",
       `Your trial ends on ${ends}.`,
-      "$20 a month, or $168 for the year.",
+      usageLine(usage).replace(/<[^>]+>/g, ""),
       "",
+      "$20 a month, or $168 for the year.",
       PRICING,
     ],
   );
 }
 
-export async function sendTrialEnded(to: string) {
+export async function sendTrialEnded(
+  to: string,
+  usage: TrialUsage = { sessions: 0, days: 0 },
+) {
+  const built =
+    usage.sessions >= 5
+      ? `Your ${usage.sessions} check-ins and the baseline built from them are still here. Nothing has been deleted, and picking up where you left off takes one click.`
+      : `Your readings are still here. Nothing has been deleted, and picking up where you left off takes one click.`;
   await send(
     to,
     "Your Ontor trial has ended",
     shell({
       heading: "Your trial has ended.",
       paragraphs: [
-        `Your readings and your baseline are still here. Nothing has been deleted, and picking up where you left off takes one click.`,
+        built,
         `$20 a month, or $168 for the year.`,
       ],
       cta: { label: "Continue with Ontor", href: PRICING },
