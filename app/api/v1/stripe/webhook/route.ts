@@ -34,6 +34,11 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { accounts } from "@/lib/auth";
+import {
+  sendCancelled,
+  sendSubscribed,
+  sendSubscriptionEnded,
+} from "@/lib/billing-email";
 import { normalizeStatus, periodEndOf, stripe, stripeConfigured } from "@/lib/stripe";
 
 export const runtime = "nodejs";
@@ -78,22 +83,41 @@ async function applySubscription(sub: Stripe.Subscription): Promise<void> {
 
   const customerId =
     typeof sub.customer === "string" ? sub.customer : sub.customer?.id;
+  const status = normalizeStatus(sub.status);
+  const periodEnd = periodEndOf(sub);
+  const cancelling = Boolean(sub.cancel_at_period_end);
 
   const col = await accounts();
+  // Read BEFORE writing. Stripe sends subscription.updated for a dozen
+  // reasons, most of which change nothing a customer would care about.
+  // Emailing on the event rather than on the transition would mean a
+  // "you cancelled" message every time an invoice was finalised.
+  const before = await col.findOne(
+    { email },
+    { projection: { subscription_status: 1, cancel_at_period_end: 1 } },
+  );
+
   await col.updateOne(
     { email },
     {
       $set: {
-        subscription_status: normalizeStatus(sub.status),
-        current_period_end: periodEndOf(sub),
+        subscription_status: status,
+        current_period_end: periodEnd,
         // Cancelling at period end leaves Stripe's status on "active",
         // so this flag is the only way to tell "renews" from "ends".
-        cancel_at_period_end: Boolean(sub.cancel_at_period_end),
+        cancel_at_period_end: cancelling,
         stripe_subscription_id: sub.id,
         ...(customerId ? { stripe_customer_id: customerId } : {}),
       },
     },
   );
+
+  const justCancelled = cancelling && !before?.cancel_at_period_end;
+  const justEnded =
+    status === "canceled" && before?.subscription_status !== "canceled";
+
+  if (justEnded) await sendSubscriptionEnded(email);
+  else if (justCancelled) await sendCancelled(email, periodEnd);
 }
 
 export async function POST(req: Request) {
@@ -142,9 +166,13 @@ export async function POST(req: Request) {
         // the customer. Fetching the subscription here as well makes
         // access immediate rather than waiting on event ordering.
         if (typeof s.subscription === "string") {
-          await applySubscription(
-            await stripe().subscriptions.retrieve(s.subscription),
-          );
+          const sub = await stripe().subscriptions.retrieve(s.subscription);
+          await applySubscription(sub);
+          // Checkout completing is the one unambiguous "they just
+          // subscribed" moment. subscription.created also fires, but it
+          // fires for dashboard-created subscriptions too, where a
+          // welcome email would be wrong.
+          if (email) await sendSubscribed(email, periodEndOf(sub));
         }
         break;
       }

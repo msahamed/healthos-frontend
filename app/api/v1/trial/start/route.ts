@@ -15,6 +15,7 @@
 
 import { NextResponse } from "next/server";
 import { accounts, requireSession } from "@/lib/auth";
+import { sendTrialStarted } from "@/lib/billing-email";
 import { entitlementForEmail, trialDays } from "@/lib/entitlement";
 
 export const runtime = "nodejs";
@@ -31,7 +32,7 @@ export async function POST(req: Request) {
   // connection cannot hand out a second trial. Comped accounts are
   // excluded too — stamping one would do no harm today (comped wins in
   // the derivation) but it would misreport when their access began.
-  await col.updateOne(
+  const started = await col.updateOne(
     {
       email: session.email,
       trial_started_at: { $exists: false },
@@ -40,7 +41,15 @@ export async function POST(req: Request) {
     { $set: { trial_started_at: new Date(), trial_days: trialDays() } },
   );
 
-  return NextResponse.json(await entitlementForEmail(session.email), {
+  const ent = await entitlementForEmail(session.email);
+
+  // Only on the transition. The filter above matches nothing on a
+  // repeat call, so a double-tap cannot send a second welcome.
+  if (started.modifiedCount > 0 && ent.expires_at) {
+    await sendTrialStarted(session.email, new Date(ent.expires_at), trialDays());
+  }
+
+  return NextResponse.json(ent, {
     headers: { "Cache-Control": "no-store" },
   });
 }

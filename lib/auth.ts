@@ -95,6 +95,10 @@ export interface AccountDoc {
   cancel_at_period_end?: boolean;
   stripe_customer_id?: string | null;
   stripe_subscription_id?: string | null;
+  /** Set when the "trial ending" nudge went out. Presence = already sent. */
+  trial_ending_email_at?: Date;
+  /** Set when the "trial ended" email went out. Presence = already sent. */
+  trial_ended_email_at?: Date;
 }
 
 export interface AuthCodeDoc {
