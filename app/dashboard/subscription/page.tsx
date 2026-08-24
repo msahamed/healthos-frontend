@@ -15,7 +15,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { accounts, getSessionFromCookies } from "@/lib/auth";
-import { entitlementFor, type Entitlement } from "@/lib/entitlement";
+import {
+  ENTITLEMENT_FIELDS,
+  entitlementFor,
+  type Entitlement,
+} from "@/lib/entitlement";
 import ManageButton from "./ManageButton";
 
 export const dynamic = "force-dynamic";
@@ -101,16 +105,9 @@ export default async function SubscriptionPage() {
   const col = await accounts();
   const account = await col.findOne(
     { email: session.email },
-    {
-      projection: {
-        comped: 1,
-        trial_started_at: 1,
-        trial_days: 1,
-        subscription_status: 1,
-        current_period_end: 1,
-        stripe_customer_id: 1,
-      },
-    },
+    // Shared with the API so the two cannot drift. stripe_customer_id is
+    // this page's own extra — it decides whether a portal link is offered.
+    { projection: { ...ENTITLEMENT_FIELDS, stripe_customer_id: 1 } },
   );
   const ent = entitlementFor(account);
   const c = copyFor(ent);

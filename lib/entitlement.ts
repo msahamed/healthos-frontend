@@ -156,21 +156,28 @@ export function entitlementFor(
   };
 }
 
+/**
+ * Every field [entitlementFor] reads. Use this rather than writing a
+ * projection by hand.
+ *
+ * A caller that omits one gets `undefined` for it, and `undefined`
+ * looks exactly like "false" — so a hand-written projection missing
+ * `cancel_at_period_end` reports a cancelled subscription as renewing,
+ * with no error anywhere to notice. That is not hypothetical: the
+ * subscription page did precisely that.
+ */
+export const ENTITLEMENT_FIELDS = {
+  comped: 1,
+  trial_started_at: 1,
+  trial_days: 1,
+  subscription_status: 1,
+  current_period_end: 1,
+  cancel_at_period_end: 1,
+} as const;
+
 /** Read one account and derive its entitlement. */
 export async function entitlementForEmail(email: string): Promise<Entitlement> {
   const col = await accounts();
-  const doc = await col.findOne(
-    { email },
-    {
-      projection: {
-        comped: 1,
-        trial_started_at: 1,
-        trial_days: 1,
-        subscription_status: 1,
-        current_period_end: 1,
-        cancel_at_period_end: 1,
-      },
-    },
-  );
+  const doc = await col.findOne({ email }, { projection: ENTITLEMENT_FIELDS });
   return entitlementFor(doc);
 }
