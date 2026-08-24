@@ -10,10 +10,10 @@
 // session behind it, and /trial/start refuses anyone who has already
 // trialed or paid.
 //
-// Where they land afterwards matters. A trial is worth nothing until
-// Ontor is installed, so a brand-new person goes to /install; someone
-// who already had access goes to their subscription page instead of
-// being told to install something they have.
+// Everyone lands on the subscription page afterwards, which states what
+// they now have and offers the install link. That is a better answer
+// than a download page for someone who has just pressed a button about
+// billing.
 
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
@@ -72,6 +72,8 @@ export default async function StartTrial() {
     );
   }
 
-  // The trial is useless without the tool, so that is the next step.
-  redirect("/install/?trial=started");
+  // Back to the subscription page, which now reads "Free trial, 14 days
+  // left" and carries the install link. Sending them straight to a
+  // download instead would answer a question they had not asked yet.
+  redirect("/dashboard/subscription/?trial=started");
 }

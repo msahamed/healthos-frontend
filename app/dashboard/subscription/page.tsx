@@ -45,7 +45,7 @@ function copyFor(e: Entitlement): {
   status: string;
   tone: "good" | "warn" | "plain";
   detail: string;
-  cta: "checkout" | "manage" | "resume" | "none";
+  cta: "checkout" | "manage" | "resume" | "trial" | "none";
 } {
   switch (e.state) {
     case "active":
@@ -93,8 +93,8 @@ function copyFor(e: Entitlement): {
       return {
         status: "No subscription",
         tone: "plain",
-        detail: "Start with a 14-day free trial. No card needed.",
-        cta: "checkout",
+        detail: "Start with a 14-day free trial. No card, nothing to cancel.",
+        cta: "trial",
       };
   }
 }
@@ -163,6 +163,22 @@ export default async function SubscriptionPage() {
           )}
           {c.cta === "checkout" && (
             <Subscribe label={ent.state === "trial" ? "Keep Ontor" : "Subscribe"} />
+          )}
+          {/* Never trialed, never paid. The trial is the point of this
+              screen, so it is the one button that stands out; paying is
+              offered underneath for anyone who would rather skip it. */}
+          {c.cta === "trial" && (
+            <>
+              <Link href="/start-trial/" className="btn btn-primary">
+                Start free trial
+              </Link>
+              <div style={{ marginTop: 22 }}>
+                <p style={{ color: "var(--ink-mute)", fontSize: 14, margin: "0 0 10px" }}>
+                  Or skip the trial and subscribe now.
+                </p>
+                <Subscribe label="Subscribe" />
+              </div>
+            </>
           )}
         </div>
       </section>
