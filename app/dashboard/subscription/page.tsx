@@ -43,7 +43,7 @@ function copyFor(e: Entitlement): {
   status: string;
   tone: "good" | "warn" | "plain";
   detail: string;
-  cta: "checkout" | "manage" | "none";
+  cta: "checkout" | "manage" | "resume" | "none";
 } {
   switch (e.state) {
     case "active":
@@ -61,8 +61,8 @@ function copyFor(e: Entitlement): {
             // the day it stops working.
             status: "Cancelled",
             tone: "warn",
-            detail: `You keep access until ${when(e.expires_at)}. It won't renew after that.`,
-            cta: "manage",
+            detail: `You keep access until ${when(e.expires_at)}. It won't renew after that. To keep it going, choose "Don't cancel subscription" on the next page — that is Stripe's wording for resuming.`,
+            cta: "resume",
           }
         : {
             status: "Active",
@@ -150,6 +150,14 @@ export default async function SubscriptionPage() {
 
         <div style={{ marginTop: 20 }}>
           {c.cta === "manage" && <ManageButton label="Manage subscription" />}
+          {c.cta === "resume" && (
+            <>
+              <ManageButton label="Resume subscription" />
+              <p style={{ color: "#8A8378", fontSize: 14, marginTop: 12 }}>
+                Nothing to re-enter. Your card and history are still there.
+              </p>
+            </>
+          )}
           {c.cta === "checkout" && (
             <>
               <Link href="/pricing/" className="primary" style={{ display: "inline-block" }}>
