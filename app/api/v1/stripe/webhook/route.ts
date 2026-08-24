@@ -1,0 +1,153 @@
+// POST /api/v1/stripe/webhook — Stripe telling us what it just did.
+//
+// This is the ONLY path by which a payment becomes access. The success
+// page after checkout is not trusted for that: the buyer's browser can
+// be closed, refreshed, or forged, and a card can fail months later
+// with no browser involved at all. Stripe retries this endpoint until
+// it gets a 2xx, which is why every failure below returns 500 rather
+// than swallowing the event.
+//
+// Signature verification uses the RAW body — parsing it first changes
+// the bytes and the signature stops matching. Hence req.text().
+//
+// Handled events:
+//   checkout.session.completed         — first payment; link the customer
+//   customer.subscription.created      — the subscription's opening state
+//   customer.subscription.updated      — renewal, dunning, cancel-at-end
+//   customer.subscription.deleted      — it is over
+//
+// Everything else is acknowledged and ignored, deliberately: an
+// unhandled event type is not an error, and 500-ing on one would make
+// Stripe retry something we will never do anything with.
+
+import { NextResponse } from "next/server";
+import type Stripe from "stripe";
+import { accounts } from "@/lib/auth";
+import { normalizeStatus, periodEndOf, stripe, stripeConfigured } from "@/lib/stripe";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+/**
+ * Which account does this subscription belong to?
+ *
+ * Metadata first — we set it at checkout and it survives every later
+ * event. The customer's email is the fallback for a subscription made
+ * outside our checkout (the Stripe dashboard, say), and the customer id
+ * is the last resort once a previous event has linked it.
+ */
+async function findAccountEmail(sub: Stripe.Subscription): Promise<string | null> {
+  const tagged = sub.metadata?.ontor_email;
+  if (tagged) return tagged.toLowerCase();
+
+  const customerId =
+    typeof sub.customer === "string" ? sub.customer : sub.customer?.id;
+  if (!customerId) return null;
+
+  const col = await accounts();
+  const linked = await col.findOne(
+    { stripe_customer_id: customerId },
+    { projection: { email: 1 } },
+  );
+  if (linked?.email) return linked.email;
+
+  const customer = await stripe().customers.retrieve(customerId);
+  if (!customer.deleted && customer.email) return customer.email.toLowerCase();
+  return null;
+}
+
+async function applySubscription(sub: Stripe.Subscription): Promise<void> {
+  const email = await findAccountEmail(sub);
+  if (!email) {
+    // Nothing to write this to. Throwing would make Stripe retry forever
+    // on an event we can never resolve, so record it and move on.
+    console.error("[stripe] no account for subscription", sub.id);
+    return;
+  }
+
+  const customerId =
+    typeof sub.customer === "string" ? sub.customer : sub.customer?.id;
+
+  const col = await accounts();
+  await col.updateOne(
+    { email },
+    {
+      $set: {
+        subscription_status: normalizeStatus(sub.status),
+        current_period_end: periodEndOf(sub),
+        stripe_subscription_id: sub.id,
+        ...(customerId ? { stripe_customer_id: customerId } : {}),
+      },
+    },
+  );
+}
+
+export async function POST(req: Request) {
+  if (!stripeConfigured()) {
+    return NextResponse.json({ error: "billing_unavailable" }, { status: 503 });
+  }
+  const secret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!secret) {
+    return NextResponse.json({ error: "no_webhook_secret" }, { status: 503 });
+  }
+
+  const signature = req.headers.get("stripe-signature");
+  if (!signature) {
+    return NextResponse.json({ error: "unsigned" }, { status: 400 });
+  }
+
+  let event: Stripe.Event;
+  try {
+    event = stripe().webhooks.constructEvent(
+      await req.text(),
+      signature,
+      secret,
+    );
+  } catch (err) {
+    // A bad signature is 400, never 500 — it is not something a retry
+    // can fix, and Stripe should stop rather than hammer the endpoint.
+    console.error("[stripe] signature check failed", err);
+    return NextResponse.json({ error: "bad_signature" }, { status: 400 });
+  }
+
+  try {
+    switch (event.type) {
+      case "checkout.session.completed": {
+        const s = event.data.object;
+        const email = (s.client_reference_id ?? s.customer_email ?? "").toLowerCase();
+        const customerId =
+          typeof s.customer === "string" ? s.customer : s.customer?.id;
+        if (email && customerId) {
+          const col = await accounts();
+          await col.updateOne(
+            { email },
+            { $set: { stripe_customer_id: customerId } },
+          );
+        }
+        // The subscription events carry the dates; this one only links
+        // the customer. Fetching the subscription here as well makes
+        // access immediate rather than waiting on event ordering.
+        if (typeof s.subscription === "string") {
+          await applySubscription(
+            await stripe().subscriptions.retrieve(s.subscription),
+          );
+        }
+        break;
+      }
+      case "customer.subscription.created":
+      case "customer.subscription.updated":
+      case "customer.subscription.deleted":
+        await applySubscription(event.data.object);
+        break;
+      default:
+        break;
+    }
+  } catch (err) {
+    // 500 so Stripe retries — a dropped event here means someone paid
+    // and never got access.
+    console.error("[stripe] handler failed", event.type, err);
+    return NextResponse.json({ error: "handler_failed" }, { status: 500 });
+  }
+
+  return NextResponse.json({ received: true });
+}
