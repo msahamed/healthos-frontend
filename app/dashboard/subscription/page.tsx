@@ -13,6 +13,7 @@
 // card details, which is the one thing worth never touching.
 
 import type { Metadata } from "next";
+import { after } from "next/server";
 import { accounts, getSessionFromCookies } from "@/lib/auth";
 import { sendTrialStarted } from "@/lib/billing-email";
 import {
@@ -115,6 +116,13 @@ const DAY_MS = 24 * 60 * 60 * 1000;
  * The Mongo filter only stamps when the field is absent, so two tabs
  * opening at once cannot produce two trials, and returns whether this
  * call was the one that started it — the email goes out only then.
+ *
+ * The email is handed to after(), which runs it once the response has
+ * been sent. Awaiting a call to Resend here held the page back by a
+ * second or more, and during that wait the browser still showed the
+ * PREVIOUS screen with its buttons live — long enough to press "Start
+ * free trial" or "Subscribe" on a view that was already stale. Nothing
+ * about access depends on the email, so nothing should wait for it.
  */
 async function beginTrialIfNew(email: string, state: string): Promise<boolean> {
   if (state !== "none") return false;
@@ -125,7 +133,7 @@ async function beginTrialIfNew(email: string, state: string): Promise<boolean> {
     { $set: { trial_started_at: new Date(), trial_days: days } },
   );
   if (res.modifiedCount === 0) return false;
-  await sendTrialStarted(email, new Date(Date.now() + days * DAY_MS), days);
+  after(sendTrialStarted(email, new Date(Date.now() + days * DAY_MS), days));
   return true;
 }
 
