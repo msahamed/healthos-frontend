@@ -19,6 +19,7 @@ import {
   entitlementFor,
   type Entitlement,
 } from "@/lib/entitlement";
+import Link from "next/link";
 import Controls from "./Controls";
 import Subscribe from "./Subscribe";
 import ManageButton from "./ManageButton";
@@ -165,6 +166,16 @@ export default async function SubscriptionPage() {
           )}
         </div>
       </section>
+
+      {/* Quiet on purpose. Most people here are managing billing and
+          already have it installed; this is for the ones who paid on the
+          web and have not got round to it. */}
+      <p style={{ color: "var(--ink-mute)", fontSize: 14, marginTop: 20 }}>
+        Not installed yet?{" "}
+        <Link href="/install/" style={{ color: "var(--teal)", fontWeight: 600 }}>
+          Get Ontor for Mac, Windows, iPhone or Android
+        </Link>
+      </p>
 
       {hasCustomer && (
         <section style={{ marginTop: 22 }}>

@@ -108,8 +108,30 @@ export default async function UpgradeDone({
         </p>
 
         <p style={{ color: inkSoft, fontSize: 16, lineHeight: 1.6, marginTop: 10 }}>
-          Open Ontor and it will pick this up on its own. Nothing else to do.
+          Already have Ontor? Open it and it will pick this up on its own.
         </p>
+
+        {/* Someone can pay here having never installed anything, and the
+            old copy assumed otherwise. Install is the actual next step
+            for them, so it gets the button rather than a footnote. */}
+        <div style={{ marginTop: 26 }}>
+          <Link
+            href="/install/"
+            style={{
+              display: "inline-block",
+              background: teal,
+              color: "#fff",
+              textDecoration: "none",
+              fontWeight: 700,
+              fontSize: 16,
+              padding: "13px 26px",
+              borderRadius: 12,
+              boxShadow: "0 6px 18px rgba(15,118,110,.22)",
+            }}
+          >
+            Install Ontor
+          </Link>
+        </div>
 
         <div
           style={{
