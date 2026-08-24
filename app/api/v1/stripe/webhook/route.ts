@@ -10,6 +10,17 @@
 // Signature verification uses the RAW body — parsing it first changes
 // the bytes and the signature stops matching. Hence req.text().
 //
+// ⚠️ REGISTER THIS ENDPOINT WITH THE TRAILING SLASH:
+//
+//     https://ontor.ai/api/v1/stripe/webhook/
+//
+// next.config.ts sets `trailingSlash: true`, which applies to /api too, so
+// the slashless URL answers 308. Stripe does not follow redirects on webhook
+// delivery — it counts a 3xx as a failed attempt, retries, and eventually
+// gives up. Every payment would then be taken without access being granted,
+// and the only symptom is failed deliveries in the Stripe dashboard. The
+// same applies to `stripe listen --forward-to`.
+//
 // Handled events:
 //   checkout.session.completed         — first payment; link the customer
 //   customer.subscription.created      — the subscription's opening state
