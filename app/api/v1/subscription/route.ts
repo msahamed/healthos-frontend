@@ -32,6 +32,7 @@ import {
   requireSession,
   type Session,
 } from "@/lib/auth";
+import { sendCancelled, sendResumed } from "@/lib/billing-email";
 import { entitlementForEmail } from "@/lib/entitlement";
 import { periodEndOf, stripe, stripeConfigured } from "@/lib/stripe";
 
@@ -87,6 +88,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "subscription_ended" }, { status: 409 });
   }
 
+  // Captured before the write, because the write is what destroys the
+  // evidence: this endpoint stamps the flag itself, so by the time the
+  // webhook arrives there is no transition left for it to notice. The
+  // webhook's own check still covers changes made in Stripe's portal.
+  const wasCancelling = Boolean(sub.cancel_at_period_end);
+
   const updated = await stripe().subscriptions.update(sub.id, {
     cancel_at_period_end: action === "cancel",
   });
@@ -104,10 +111,19 @@ export async function POST(req: Request) {
     },
   );
 
+  // Only on a real change of mind. Clicking cancel twice, or resuming
+  // something that was never cancelled, should say nothing.
+  const periodEnd = periodEndOf(updated);
+  if (action === "cancel" && !wasCancelling) {
+    await sendCancelled(session.email, periodEnd);
+  } else if (action === "resume" && wasCancelling) {
+    await sendResumed(session.email, periodEnd);
+  }
+
   return NextResponse.json(
     {
       ...(await entitlementForEmail(session.email)),
-      access_until: periodEndOf(updated)?.toISOString() ?? null,
+      access_until: periodEnd?.toISOString() ?? null,
     },
     { headers: { "Cache-Control": "no-store" } },
   );

@@ -241,6 +241,31 @@ export async function sendCancelled(to: string, accessUntil: Date | null) {
   );
 }
 
+export async function sendResumed(to: string, renewsAt: Date | null) {
+  const renews = longDate(renewsAt);
+  await send(
+    to,
+    "Your Ontor subscription is back on",
+    shell({
+      heading: "You're back.",
+      paragraphs: [
+        renews
+          ? `Your subscription is active again and will renew on ${renews}.`
+          : `Your subscription is active again.`,
+        `Nothing changed while it was cancelled, so there is nothing to set up.`,
+      ],
+      cta: { label: "Your subscription", href: MANAGE },
+    }),
+    [
+      "Your Ontor subscription is back on.",
+      "",
+      renews ? `Active again, renews ${renews}.` : "Active again.",
+      "",
+      MANAGE,
+    ],
+  );
+}
+
 export async function sendSubscriptionEnded(to: string) {
   await send(
     to,
