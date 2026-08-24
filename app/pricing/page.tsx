@@ -72,12 +72,13 @@ export default function Pricing() {
                 or <span style={{ fontVariantNumeric: "tabular-nums", fontWeight: 600, color: cream }}>$168</span>/year <span style={{ color: "rgba(251,248,241,.6)" }}>($14/mo)</span> · <span style={{ color: amber, fontWeight: 700 }}>save about 30%</span>
               </div>
 
-              {/* Goes to sign-in, then straight to the subscription page,
-                  where the trial is actually started. Signing in IS the
-                  signup: the account is created on first verify and the
-                  trial binds to that email. `next` survives the round
-                  trip, so the click they made is the click that lands. */}
-              <a href="/login/?next=/dashboard/subscription/" className="price-btn-primary" style={{ display: "block", textAlign: "center", background: cream, color: "#0B5048", fontWeight: 700, fontSize: 16, borderRadius: 12, padding: "13px 20px", marginTop: 24, textDecoration: "none", boxShadow: "0 6px 18px rgba(0,0,0,.22)" }}>Start free trial</a>
+              {/* Sign in, then /start-trial, which begins it and forwards
+                  to the subscription page. No second press: the decision
+                  was made here. Routing through /start-trial rather than
+                  landing on the subscription page directly is what keeps
+                  the intent explicit, so someone who merely opens
+                  Subscription from the nav is never auto-enrolled. */}
+              <a href="/login/?next=/start-trial" className="price-btn-primary" style={{ display: "block", textAlign: "center", background: cream, color: "#0B5048", fontWeight: 700, fontSize: 16, borderRadius: 12, padding: "13px 20px", marginTop: 24, textDecoration: "none", boxShadow: "0 6px 18px rgba(0,0,0,.22)" }}>Start free trial</a>
               <div style={{ textAlign: "center", fontSize: 13, color: "rgba(251,248,241,.68)", marginTop: 10 }}>No card required</div>
 
               <div style={{ height: 1, background: "rgba(251,248,241,.18)", margin: "22px 0 18px" }} />

@@ -99,7 +99,12 @@ function copyFor(e: Entitlement): {
   }
 }
 
-export default async function SubscriptionPage() {
+export default async function SubscriptionPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ trial?: string }>;
+}) {
+  const justStarted = (await searchParams).trial === "started";
   const session = await getSessionFromCookies();
   // layout.tsx already redirects, so this only guards the types.
   if (!session) return null;
@@ -124,6 +129,24 @@ export default async function SubscriptionPage() {
 
   return (
     <div style={{ maxWidth: 620 }}>
+      {/* The trial begins without a second click, so say so plainly.
+          Starting something on someone's behalf and staying quiet about
+          it is how people end up feeling signed up rather than served. */}
+      {justStarted && (
+        <p
+          style={{
+            margin: "0 0 22px",
+            padding: "12px 16px",
+            borderRadius: 12,
+            background: "var(--teal-surface)",
+            color: "var(--teal)",
+            fontWeight: 600,
+          }}
+        >
+          Your free trial has started. Nothing to pay, nothing to cancel.
+        </p>
+      )}
+
       <h1 style={{ marginBottom: 6 }}>Subscription</h1>
       <p style={{ color: "var(--ink-soft)", marginTop: 0 }}>{session.email}</p>
 
