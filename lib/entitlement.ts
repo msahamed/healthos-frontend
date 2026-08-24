@@ -37,6 +37,12 @@ export interface Entitlement {
   days_left: number | null;
   /** When the current entitlement runs out. Null when it never does. */
   expires_at: string | null;
+  /**
+   * True when [expires_at] is the END, not a renewal date — a cancelled
+   * subscription serving out its paid time. Callers must not say
+   * "renews" without checking this.
+   */
+  ends_at_expiry: boolean;
   /** Why they have access — shown to nobody, useful in support and logs. */
   reason: "comped" | "subscription" | "trial" | "none" | "lapsed";
 }
@@ -62,11 +68,18 @@ export function entitlementFor(
     | "trial_days"
     | "subscription_status"
     | "current_period_end"
+    | "cancel_at_period_end"
   > | null,
   now: Date = new Date(),
 ): Entitlement {
   if (!account) {
-    return { state: "none", days_left: null, expires_at: null, reason: "none" };
+    return {
+      state: "none",
+      days_left: null,
+      expires_at: null,
+      ends_at_expiry: false,
+      reason: "none",
+    };
   }
 
   if (account.comped) {
@@ -74,6 +87,7 @@ export function entitlementFor(
       state: "active",
       days_left: null,
       expires_at: null,
+      ends_at_expiry: false,
       reason: "comped",
     };
   }
@@ -94,6 +108,7 @@ export function entitlementFor(
       state: "active",
       days_left: daysUntil(periodEnd, now),
       expires_at: periodEnd.toISOString(),
+      ends_at_expiry: Boolean(account.cancel_at_period_end),
       reason: "subscription",
     };
   }
@@ -104,8 +119,20 @@ export function entitlementFor(
     // without ever having had a trial. Offer the trial; the endpoint
     // that starts one refuses a second.
     return paid || periodEnd
-      ? { state: "expired", days_left: 0, expires_at: periodEnd?.toISOString() ?? null, reason: "lapsed" }
-      : { state: "none", days_left: null, expires_at: null, reason: "none" };
+      ? {
+          state: "expired",
+          days_left: 0,
+          expires_at: periodEnd?.toISOString() ?? null,
+          ends_at_expiry: true,
+          reason: "lapsed",
+        }
+      : {
+          state: "none",
+          days_left: null,
+          expires_at: null,
+          ends_at_expiry: false,
+          reason: "none",
+        };
   }
 
   const days = account.trial_days ?? trialDays();
@@ -115,6 +142,7 @@ export function entitlementFor(
       state: "trial",
       days_left: daysUntil(endsAt, now),
       expires_at: endsAt.toISOString(),
+      ends_at_expiry: true,
       reason: "trial",
     };
   }
@@ -123,6 +151,7 @@ export function entitlementFor(
     state: "expired",
     days_left: 0,
     expires_at: endsAt.toISOString(),
+    ends_at_expiry: true,
     reason: periodEnd ? "lapsed" : "trial",
   };
 }
@@ -139,6 +168,7 @@ export async function entitlementForEmail(email: string): Promise<Entitlement> {
         trial_days: 1,
         subscription_status: 1,
         current_period_end: 1,
+        cancel_at_period_end: 1,
       },
     },
   );

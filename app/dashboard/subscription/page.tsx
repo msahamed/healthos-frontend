@@ -50,6 +50,16 @@ function copyFor(e: Entitlement): {
             detail: "You have full access, with our thanks. Nothing to pay.",
             cta: "none",
           }
+        : e.ends_at_expiry
+        ? {
+            // Cancelled, but still inside the paid period. Saying
+            // "renews" here would be a lie the customer discovers on
+            // the day it stops working.
+            status: "Cancelled",
+            tone: "warn",
+            detail: `You keep access until ${when(e.expires_at)}. It won't renew after that.`,
+            cta: "manage",
+          }
         : {
             status: "Active",
             tone: "good",

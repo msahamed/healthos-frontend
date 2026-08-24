@@ -86,6 +86,9 @@ async function applySubscription(sub: Stripe.Subscription): Promise<void> {
       $set: {
         subscription_status: normalizeStatus(sub.status),
         current_period_end: periodEndOf(sub),
+        // Cancelling at period end leaves Stripe's status on "active",
+        // so this flag is the only way to tell "renews" from "ends".
+        cancel_at_period_end: Boolean(sub.cancel_at_period_end),
         stripe_subscription_id: sub.id,
         ...(customerId ? { stripe_customer_id: customerId } : {}),
       },

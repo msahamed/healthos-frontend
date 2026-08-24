@@ -87,6 +87,12 @@ export interface AccountDoc {
   /** Last thing Stripe told us. Absent until they check out. */
   subscription_status?: "active" | "past_due" | "canceled" | null;
   current_period_end?: Date | null;
+  /**
+   * Cancelled, but the paid period has not run out yet. Stripe keeps
+   * `status: active` in this state, so without this flag a cancelled
+   * subscription is indistinguishable from a renewing one.
+   */
+  cancel_at_period_end?: boolean;
   stripe_customer_id?: string | null;
   stripe_subscription_id?: string | null;
 }
