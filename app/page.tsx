@@ -5,10 +5,18 @@ import styles from "./page.module.css";
 
 const START_FREE = "/login/?next=/dashboard/subscription/";
 
-const markers = [
-  ["Stress", "Higher than usual", "72%"],
-  ["Energy", "In your range", "48%"],
-  ["Confidence", "Steady", "61%"],
+// Hero call-read rows, modeled on the real desktop meeting view:
+// dots along a dashed baseline band, amber where the reading left
+// the usual range. [name, "higher =" gloss, status, elevated?, dots]
+// Dot = [left %, vertical offset px, out-of-range?]
+type Dot = [number, number, number];
+const callRead: [string, string, string, boolean, Dot[]][] = [
+  ["Stress", "Higher = more pressure", "↑ Elevated", true,
+    [[3, -2, 0], [8, 1, 0], [14, -1, 0], [22, 2, 0], [29, -3, 0], [36, 1, 0], [44, -1, 0], [53, 2, 0], [61, -7, 1], [67, -9, 1], [74, -8, 1], [82, -5, 1], [90, -2, 0], [96, 1, 0]]],
+  ["Energy", "Higher = more activated", "→ In range", false,
+    [[4, 2, 0], [11, -1, 0], [19, 1, 0], [27, -2, 0], [35, 3, 0], [43, -1, 0], [51, 2, 0], [59, -3, 0], [67, 1, 0], [75, -1, 0], [84, 2, 0], [93, -2, 0]]],
+  ["Confidence", "Higher = more decisive", "→ In range", false,
+    [[5, -1, 0], [13, 2, 0], [21, -2, 0], [30, 1, 0], [38, -1, 0], [47, 2, 0], [56, -2, 0], [64, 1, 0], [72, -1, 0], [81, 1, 0], [89, -2, 0], [95, 1, 0]]],
 ];
 
 // Dot positions for the after-the-call timeline mock: [left %, elevated?]
@@ -35,20 +43,25 @@ export default function Home() {
           </div>
           <div className={styles.productCard} aria-label="Example Ontor voice reading">
             <div className={styles.productHeader}><span className={styles.liveDot} /><span>Today&rsquo;s call</span><span className={styles.duration}>32 min</span></div>
-            <div className={styles.productBody}>
             <div className={styles.reading}>
               <h2>Stress rose near the end of the call.</h2>
               <p>Your pace quickened after minute 24. Energy and confidence stayed close to your usual range.</p>
             </div>
-            <div className={styles.markers}>
-              {markers.map(([name, value, width]) => (
-                <div className={styles.marker} key={name}>
-                  <div><span>{name}</span><small>{value}</small></div>
-                  <div className={styles.track}><span style={{ width }} /></div>
+            <div className={styles.callRead} aria-hidden="true">
+              {callRead.map(([name, gloss, status, elevated, dots]) => (
+                <div className={styles.mkRow} key={name}>
+                  <div className={styles.mkHead}>
+                    <span>{name} <small>{gloss}</small></span>
+                    <em className={elevated ? styles.mkHot : undefined}>{status}</em>
+                  </div>
+                  <div className={styles.mkStrip}>
+                    {dots.map(([x, y, hot], i) => (
+                      <span key={i} className={hot ? styles.mkDotHot : undefined} style={{ left: `${x}%`, marginTop: y }} />
+                    ))}
+                  </div>
                 </div>
               ))}
-              <p className={styles.productFoot}>Compared with your own baseline</p>
-            </div>
+              <div className={styles.mkAxis}><span>0s</span><span>16m</span><span>32m</span></div>
             </div>
           </div>
         </section>
@@ -108,7 +121,14 @@ export default function Home() {
               <p>A minute-by-minute read of the call, and what was happening when your state shifted.</p>
             </article>
           </div>
-          <p className={styles.stepsFoot}>Away from your desk? A short voice check-in on iPhone or Android reads against the same baseline.</p>
+          <div className={styles.mobileRow}>
+            <div className={styles.phoneCard} aria-hidden="true">
+              <p className={styles.phoneLabel}>Today so far</p>
+              <p className={styles.phoneInsight}>Your vocal strain has eased across your last 8 logs.</p>
+              <div className={styles.phoneChips}><span>↑ Speech clarity</span><span className={styles.phoneChipWarm}>↓ Breathing</span></div>
+            </div>
+            <p className={styles.stepsFoot}>Away from your desk? A short voice check-in on iPhone or Android reads against the same baseline.</p>
+          </div>
         </section>
 
         <section className={styles.signals}>
@@ -120,7 +140,7 @@ export default function Home() {
             <div><dt>Fatigue</dt><dd>the wear in your voice</dd></div>
             <div><dt>Vocal strain</dt><dd>the effort it takes to speak</dd></div>
             <div><dt>Expressiveness</dt><dd>how much range you&rsquo;re using</dd></div>
-            <div><dt>Articulation</dt><dd>how crisp the words land</dd></div>
+            <div><dt>Speech clarity</dt><dd>how crisp the words land</dd></div>
             <div><dt>Breathing</dt><dd>pauses and breath between phrases</dd></div>
           </dl>
           <p className={styles.signalsFoot}>Each one is compared with your own usual range. Not a population average, and not a score to chase.</p>

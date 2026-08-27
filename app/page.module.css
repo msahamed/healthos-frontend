@@ -17,15 +17,23 @@
 .productHeader{display:flex;align-items:center;gap:9px;padding-bottom:18px;border-bottom:1px solid var(--line);font-size:14px;font-weight:700}
 .liveDot{width:8px;height:8px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px var(--amber-soft)}
 .duration{margin-left:auto;color:var(--ink-soft);font-size:13px;font-weight:500}
-.productBody{display:grid;grid-template-columns:1.1fr 1fr;gap:44px;align-items:center;padding-top:24px}
-.reading h2{margin:0;font-size:26px;font-weight:700;line-height:1.2;letter-spacing:-.015em}
-.reading p{margin:10px 0 0;color:var(--ink-soft);font-size:15px;line-height:1.55}
-.markers{display:grid;gap:15px;padding:18px;border-radius:14px;background:var(--paper-2)}
-.marker>div:first-child{display:flex;justify-content:space-between;gap:16px;font-size:13px;font-weight:700}
-.marker small{color:var(--ink-soft);font-size:12px;font-weight:500}
-.track{height:5px;margin-top:7px;overflow:hidden;border-radius:999px;background:var(--line)}
-.track span{display:block;height:100%;border-radius:inherit;background:var(--teal)}
-.productFoot{margin:0;color:var(--ink-soft);font-size:12px;text-align:center}
+.reading{padding:18px 0 8px}
+.reading h2{margin:0;font-size:24px;font-weight:700;line-height:1.2;letter-spacing:-.015em}
+.reading p{margin:8px 0 0;color:var(--ink-soft);font-size:15px;line-height:1.55}
+
+/* Call read: dot timelines on a dashed baseline band, like the desktop view */
+.callRead{padding-top:8px}
+.mkRow{padding:10px 0 4px}
+.mkHead{display:flex;align-items:baseline;justify-content:space-between;gap:16px;font-size:13px;font-weight:700}
+.mkHead small{margin-left:6px;color:var(--ink-soft);font-size:11.5px;font-weight:500}
+.mkHead em{font-style:normal;color:var(--ink-soft);font-size:11.5px;font-weight:600;white-space:nowrap}
+.mkHead .mkHot{color:#B45309}
+.mkStrip{position:relative;height:28px;margin-top:4px}
+.mkStrip::before{content:"";position:absolute;inset:6px 0;border-radius:6px;background:rgba(27,26,23,.045)}
+.mkStrip::after{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--line-strong)}
+.mkStrip span{position:absolute;top:50%;width:7px;height:7px;margin-top:-3.5px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 3px rgba(15,118,110,.12);z-index:1}
+.mkStrip .mkDotHot{background:var(--amber);box-shadow:0 0 0 3px rgba(245,158,11,.16)}
+.mkAxis{display:flex;justify-content:space-between;margin-top:8px;color:var(--ink-soft);font-size:10.5px}
 
 /* ── Facts strip ── */
 .proofStrip{max-width:1128px;margin:0 auto;padding:22px 32px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);color:var(--ink-soft);font-size:14px;text-align:center}
@@ -40,7 +48,16 @@
 .stepWhen{margin:0;color:var(--teal);font-size:13.5px;font-weight:700}
 .steps h3{margin:18px 0 6px;font-size:18px;font-weight:700}
 .steps article>p:last-child{margin:0;color:var(--ink-soft);font-size:15px;line-height:1.55}
-.stepsFoot{margin:48px 0 0;color:var(--ink-soft);font-size:14px}
+.stepsFoot{margin:0;color:var(--ink-soft);font-size:14px;line-height:1.55}
+
+/* Mobile check-in moment, from the real Today screen */
+.mobileRow{display:flex;align-items:center;gap:32px;margin-top:52px;max-width:760px}
+.phoneCard{flex:0 0 300px;border:1px solid var(--line);border-radius:16px;background:#fff;padding:16px 18px;box-shadow:0 12px 34px rgba(27,26,23,.07)}
+.phoneLabel{margin:0;color:var(--teal);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.phoneInsight{margin:8px 0 0;font-size:15px;font-weight:600;line-height:1.4}
+.phoneChips{display:flex;gap:8px;margin-top:12px}
+.phoneChips span{padding:4px 10px;border-radius:999px;background:var(--teal-surface);color:var(--teal);font-size:12px;font-weight:600}
+.phoneChips .phoneChipWarm{background:var(--amber-soft);color:#B45309}
 
 /* Before the call — menu-bar mock */
 .menuMock{margin-top:18px;flex:1;border-radius:12px;background:linear-gradient(160deg,#2C3A40,#1B262B);padding:10px 10px 16px}
@@ -119,7 +136,6 @@
 /* ── Responsive ── */
 @media(max-width:960px){
 .hero{padding-top:56px}
-.productBody{grid-template-columns:1fr;gap:24px}
 .proofStrip{grid-template-columns:repeat(2,1fr);row-gap:12px}
 .proofStrip span:nth-child(3){border-left:0}
 .privacyInner{grid-template-columns:1fr;gap:24px;padding:64px 32px}
@@ -127,6 +143,8 @@
 @media(max-width:760px){
 .steps{grid-template-columns:1fr;gap:36px}
 .signalList{grid-template-columns:1fr}
+.mobileRow{flex-direction:column;align-items:flex-start;gap:20px}
+.phoneCard{flex:none;width:100%;max-width:340px}
 .footerSignup{flex-direction:column;align-items:flex-start}
 .footerSignup form{width:100%;flex:1 1 auto}
 }
