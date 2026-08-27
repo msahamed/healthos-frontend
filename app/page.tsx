@@ -57,11 +57,6 @@ export default function Home() {
           <span>macOS, Windows, iOS &amp; Android</span><span>Works during calls and check-ins</span><span>Only your voice is measured</span><span>No wearable needed</span>
         </section>
 
-        <section className={styles.hook}>
-          <h2>The 3pm call feels harder than the 10am one.</h2>
-          <p>You push through it on effort and call that a normal day. The shift started around noon. You notice it at six. Meeting tools capture what was said. Ontor captures how you showed up, and shows you the change while there&rsquo;s still day left.</p>
-        </section>
-
         <section className={styles.section} id="how">
           <div className={styles.sectionHeading}><h2>Press Start. Take the call. See how you held up.</h2></div>
           <div className={styles.steps}>
@@ -129,25 +124,6 @@ export default function Home() {
             <div><dt>Breathing</dt><dd>pauses and breath between phrases</dd></div>
           </dl>
           <p className={styles.signalsFoot}>Each one is compared with your own usual range. Not a population average, and not a score to chase.</p>
-        </section>
-
-        <section className={styles.week}>
-          <div className={styles.weekCopy}>
-            <h2>A week in, your days have a shape</h2>
-            <p>Readings collect into patterns: which days run hot, which hours you hold steady, what a good week actually looks like for you.</p>
-          </div>
-          <div className={styles.weekMock} aria-hidden="true">
-            <p className={styles.weekLabel}>Stress, by day</p>
-            <div className={styles.weekChart}>
-              {([["Mon", 62, false], ["Tue", 48, false], ["Wed", 55, false], ["Thu", 22, true], ["Fri", 58, false], ["Sat", 74, false], ["Sun", 70, false]] as [string, number, boolean][]).map(([day, top, hot]) => (
-                <div className={styles.weekDay} key={day}>
-                  <div className={styles.weekCol}><span className={hot ? styles.weekHot : undefined} style={{ top: `${top}%` }} /></div>
-                  <small>{day}</small>
-                </div>
-              ))}
-            </div>
-            <p className={styles.weekNote}>Thursdays run high. Late afternoons read steadier.</p>
-          </div>
         </section>
 
         <section className={styles.privacy} id="privacy">

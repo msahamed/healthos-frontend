@@ -31,11 +31,6 @@
 .proofStrip{max-width:1128px;margin:0 auto;padding:22px 32px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);color:var(--ink-soft);font-size:14px;text-align:center}
 .proofStrip span+span{border-left:1px solid var(--line)}
 
-/* ── Hook ── */
-.hook{max-width:1128px;margin:0 auto;padding:104px 32px 0}
-.hook h2{margin:0;max-width:640px;font-size:clamp(30px,3.4vw,42px);font-weight:800;line-height:1.12;letter-spacing:-.022em;text-wrap:balance}
-.hook p{margin:20px 0 0;max-width:640px;color:var(--ink-soft);font-size:18px;line-height:1.6}
-
 /* ── How it works ── */
 .section{max-width:1128px;margin:0 auto;padding:104px 32px}
 .sectionHeading{max-width:640px}
@@ -85,19 +80,6 @@
 .signalList dd{margin:0;color:var(--ink-soft);font-size:14px;text-align:right}
 .signalsFoot{margin:24px 0 0;color:var(--ink-soft);font-size:14px}
 
-/* ── Week pattern ── */
-.week{max-width:1128px;margin:0 auto;padding:0 32px 104px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
-.weekCopy h2{margin:0;font-size:clamp(26px,3vw,36px);font-weight:800;letter-spacing:-.02em}
-.weekCopy p{margin:16px 0 0;color:var(--ink-soft);font-size:17px;line-height:1.6}
-.weekMock{border:1px solid var(--line);border-radius:14px;background:var(--paper-2);padding:20px 22px}
-.weekLabel{margin:0;font-size:12px;font-weight:700;color:var(--ink)}
-.weekChart{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:14px}
-.weekDay small{display:block;margin-top:6px;color:var(--ink-soft);font-size:10.5px;text-align:center}
-.weekCol{position:relative;height:88px;border-radius:6px;background:rgba(27,26,23,.05)}
-.weekCol span{position:absolute;left:50%;margin-left:-3.5px;width:7px;height:7px;border-radius:50%;background:var(--teal)}
-.weekCol .weekHot{background:var(--amber)}
-.weekNote{margin:14px 0 0;padding-top:12px;border-top:1px dashed var(--line);color:#8A5A06;font-weight:600;font-size:12px}
-
 /* ── Privacy band ── */
 .privacy{background:var(--teal-dark);color:#fbf8f1}
 .privacyInner{max-width:1128px;margin:0 auto;padding:88px 32px;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
@@ -145,7 +127,6 @@
 @media(max-width:760px){
 .steps{grid-template-columns:1fr;gap:36px}
 .signalList{grid-template-columns:1fr}
-.week{grid-template-columns:1fr;gap:32px}
 .footerSignup{flex-direction:column;align-items:flex-start}
 .footerSignup form{width:100%;flex:1 1 auto}
 }
@@ -159,9 +140,7 @@
 .proofStrip span{padding:11px 0}
 .proofStrip span+span{border-left:0;border-top:1px solid var(--line)}
 .section{padding:80px 20px}
-.hook{padding:80px 20px 0}
 .signals{padding:0 20px 80px}
-.week{padding:0 20px 80px}
 .faq{padding:80px 20px 0}
 .privacyInner{padding:56px 20px}
 .science{padding:80px 20px 0}
