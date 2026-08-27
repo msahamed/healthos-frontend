@@ -11,7 +11,7 @@ const markers = [
   ["Confidence", "Steady", "61%"],
 ];
 
-// Dot positions for the step-3 timeline mock: [left %, elevated?]
+// Dot positions for the after-the-call timeline mock: [left %, elevated?]
 const timeline: [string, [number, boolean][]][] = [
   ["Stress", [[12, false], [26, false], [55, true], [63, true], [88, false]]],
   ["Energy", [[10, false], [30, false], [58, false], [86, true]]],
@@ -24,34 +24,31 @@ export default function Home() {
       <Nav />
       <main id="top">
         <section className={styles.hero}>
-          <p className={styles.eyebrow}>Performance intelligence from your voice</p>
-          <h1 className="font-serif-display">See when you&rsquo;re slipping, <em>before your work does.</em></h1>
-          <p className={styles.lede}>Ontor reads stress, energy, and confidence from your voice while you work. See when your state changes and what helps you recover.</p>
-          <div className={styles.actions}>
-            <Link className={styles.primaryButton} href={START_FREE}>Start free</Link>
-            <a className={styles.textLink} href="#how">See how it works <span aria-hidden="true">↓</span></a>
+          <div className={styles.heroCopy}>
+            <h1>See when you&rsquo;re slipping, before your work does.</h1>
+            <p className={styles.lede}>Ontor reads stress, energy, and confidence from your voice while you work. See when your state changes and what helps you recover.</p>
+            <div className={styles.actions}>
+              <Link className={styles.primaryButton} href={START_FREE}>Start free</Link>
+              <a className={styles.textLink} href="#how">See how it works <span aria-hidden="true">↓</span></a>
+            </div>
+            <p className={styles.trialNote}>14 days free. No card required.</p>
           </div>
-          <p className={styles.trialNote}>14 days free. No card required.</p>
-        </section>
-
-        <section className={styles.productWrap} aria-label="Example Ontor voice reading">
-          <div className={styles.productCard}>
+          <div className={styles.productCard} aria-label="Example Ontor voice reading">
             <div className={styles.productHeader}><span className={styles.liveDot} /><span>Today&rsquo;s call</span><span className={styles.duration}>32 min</span></div>
             <div className={styles.productBody}>
-              <div className={styles.reading}>
-                <p className={styles.readingLabel}>What changed</p>
-                <h2 className="font-serif-display">Stress rose near the end of the call.</h2>
-                <p>Your pace quickened after minute 24. Energy and confidence stayed close to your usual range.</p>
-              </div>
-              <div className={styles.markers}>
-                {markers.map(([name, value, width]) => (
-                  <div className={styles.marker} key={name}>
-                    <div><span>{name}</span><small>{value}</small></div>
-                    <div className={styles.track}><span style={{ width }} /></div>
-                  </div>
-                ))}
-                <p className={styles.productFoot}>Compared with your own baseline</p>
-              </div>
+            <div className={styles.reading}>
+              <h2>Stress rose near the end of the call.</h2>
+              <p>Your pace quickened after minute 24. Energy and confidence stayed close to your usual range.</p>
+            </div>
+            <div className={styles.markers}>
+              {markers.map(([name, value, width]) => (
+                <div className={styles.marker} key={name}>
+                  <div><span>{name}</span><small>{value}</small></div>
+                  <div className={styles.track}><span style={{ width }} /></div>
+                </div>
+              ))}
+              <p className={styles.productFoot}>Compared with your own baseline</p>
+            </div>
             </div>
           </div>
         </section>
@@ -61,10 +58,10 @@ export default function Home() {
         </section>
 
         <section className={styles.section} id="how">
-          <div className={styles.sectionHeading}><p className={styles.eyebrow}>How it works</p><h2 className="font-serif-display">Press Start. Take the call. See how you held up.</h2></div>
+          <div className={styles.sectionHeading}><h2>Press Start. Take the call. See how you held up.</h2></div>
           <div className={styles.steps}>
             <article>
-              <span>01</span>
+              <p className={styles.stepWhen}>Before the call</p>
               <div className={styles.menuMock} aria-hidden="true">
                 <div className={styles.menuTop}>
                   <span className={styles.menuWave}>{[5, 9, 12, 9, 5].map((h, i) => <span key={i} style={{ height: h }} />)}</span>
@@ -80,7 +77,7 @@ export default function Home() {
               <p>One click before the call. No window to manage, no bot joining the meeting.</p>
             </article>
             <article>
-              <span>02</span>
+              <p className={styles.stepWhen}>During the call</p>
               <div className={styles.gateMock} aria-hidden="true">
                 <div>
                   <p className={styles.gateLabel}>You speak → analyzed</p>
@@ -95,7 +92,7 @@ export default function Home() {
               <p>Pace, pitch, and steadiness, measured against your own baseline. Other voices are never analyzed.</p>
             </article>
             <article>
-              <span>03</span>
+              <p className={styles.stepWhen}>After the call</p>
               <div className={styles.timelineMock} aria-hidden="true">
                 {timeline.map(([name, dots]) => (
                   <div className={styles.tlRow} key={name}>
@@ -115,22 +112,27 @@ export default function Home() {
         </section>
 
         <section className={styles.privacy} id="privacy">
-          <p className={styles.eyebrow}>Private by design</p>
-          <h2 className="font-serif-display">Your voice. Your reading.</h2>
-          <p>Ontor is trained to recognize you. Other speakers are not measured. Analysis runs on-device, and optional sync stays under your control.</p>
+          <div className={styles.privacyInner}>
+            <h2>Only you are ever measured.</h2>
+            <div>
+              <p>Ontor is trained to recognize you. When anyone else speaks, nothing is captured. Analysis runs on your device, and optional sync stays under your control.</p>
+              <Link href="/privacy">How privacy works</Link>
+            </div>
+          </div>
         </section>
 
         <section className={styles.science}>
-          <p className={styles.eyebrow}>The science</p>
-          <p className={styles.scienceLine}>Decades of voice research link pitch, pace, and voice quality to stress, effort, and fatigue. Ontor measures those signals against your own baseline, never anyone else&rsquo;s.</p>
+          <h2>Grounded in voice research</h2>
+          <p className={styles.scienceLine}>Decades of research link pitch, pace, and voice quality to stress, effort, and fatigue. Ontor measures those signals against your own baseline, never anyone else&rsquo;s.</p>
           <Link className={styles.scienceLink} href="/voice-biomarkers">Read the science <span aria-hidden="true">→</span></Link>
           <p className={styles.scienceNote}>Ontor is a self-insight tool, not a medical device.</p>
         </section>
 
         <section className={styles.finalCta} id="start">
-          <p className={styles.eyebrow}>Try it yourself</p>
-          <h2 className="font-serif-display">Know how you sound before the day gets away from you.</h2>
-          <Link className={styles.primaryButton} href={START_FREE}>Start free</Link>
+          <h2>Know how you sound before the day gets away from you.</h2>
+          <div className={styles.actions}>
+            <Link className={styles.primaryButton} href={START_FREE}>Start free</Link>
+          </div>
           <p className={styles.trialNote}>14 days free. No card required. Cancel anytime.</p>
         </section>
       </main>

@@ -46,9 +46,9 @@ export default function Pricing() {
         <div style={{ width: "100%", maxWidth: 880, display: "flex", flexDirection: "column", alignItems: "center" }}>
           <h1
             className="font-serif-display"
-            style={{ fontWeight: 500, fontSize: "clamp(38px, 4.6vw, 56px)", lineHeight: 1.08, letterSpacing: "-0.015em", margin: "0 0 14px", textAlign: "center", maxWidth: 640, textWrap: "balance", color: "var(--pp-ink)" }}
+            style={{ fontWeight: 800, fontSize: "clamp(34px, 4.2vw, 50px)", lineHeight: 1.08, letterSpacing: "-0.025em", margin: "0 0 14px", textAlign: "center", maxWidth: 640, textWrap: "balance", color: "var(--pp-ink)" }}
           >
-            Try Ontor free for <em style={{ fontStyle: "italic", color: "var(--pp-teal)" }}>14 days</em>
+            Try Ontor free for 14 days
           </h1>
 
           <p style={{ color: "var(--pp-ink-soft)", fontSize: 17, margin: "0 0 28px", textAlign: "center", maxWidth: 520 }}>
