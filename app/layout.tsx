@@ -49,11 +49,11 @@ const DESCRIPTION =
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ontor.ai"),
-  title: "Ontor — See your nervous system while you speak",
+  title: "Ontor — Performance intelligence from your voice",
   description: DESCRIPTION,
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Ontor — See your nervous system while you speak",
+    title: "Ontor — Performance intelligence from your voice",
     description: DESCRIPTION,
     url: "https://ontor.ai",
     siteName: "Ontor",
@@ -63,13 +63,13 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Ontor — See your nervous system while you speak.",
+        alt: "Ontor — Performance intelligence from your voice.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ontor — See your nervous system while you speak",
+    title: "Ontor — Performance intelligence from your voice",
     description: DESCRIPTION,
     images: ["/og.png"],
   },
@@ -111,7 +111,7 @@ const APP_JSONLD = {
   url: "https://ontor.ai",
   description: DESCRIPTION,
   featureList: [
-    "Desktop menu-bar app reads your nervous-system state across a live call, in real time",
+    "Desktop menu-bar tool reads your nervous-system state across a live call, in real time",
     "Speaker-gated — only your own voice is analyzed, never the other person on the call",
     "Eight nervous-system signals: energy, stress, confidence, fatigue, vocal strain, expressiveness, articulation, breathing",
     "Voice is analyzed on your device by default; nothing is uploaded unless you turn on optional sync",
@@ -119,9 +119,9 @@ const APP_JSONLD = {
   ],
   offers: {
     "@type": "Offer",
-    price: "0",
+    price: "20",
     priceCurrency: "USD",
-    description: "Free during beta",
+    description: "$20/month after a 14-day free trial",
   },
 };
 

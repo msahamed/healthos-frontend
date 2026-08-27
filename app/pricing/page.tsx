@@ -52,7 +52,7 @@ export default function Pricing() {
           </h1>
 
           <p style={{ color: "var(--pp-ink-soft)", fontSize: 17, margin: "0 0 28px", textAlign: "center", maxWidth: 520 }}>
-            Near real-time voice analysis that shows how confident you sound. Start today, no card required.
+            See stress, energy, and confidence in your voice as you work. Start today, no card required.
           </p>
 
           <div

@@ -1,0 +1,129 @@
+/* Landing page. One rule per line, grouped by section top-to-bottom. */
+
+/* ── Hero ── */
+.hero{max-width:940px;margin:0 auto;padding:104px 32px 72px;text-align:center}
+.hero h1{margin:18px auto 0;font-size:clamp(46px,6.2vw,76px);font-weight:500;line-height:1.02;letter-spacing:-.03em;text-wrap:balance}
+.hero h1 em{color:var(--teal);font-style:italic}
+.eyebrow{margin:0;color:var(--teal);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.lede{max-width:680px;margin:28px auto 0;color:var(--ink-soft);font-size:20px;line-height:1.55}
+.actions{display:flex;align-items:center;justify-content:center;gap:24px;margin-top:34px}
+.primaryButton{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:12px;background:var(--teal);color:#fff;font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 6px 18px rgba(15,118,110,.2);transition:background .2s,transform .2s}
+.primaryButton:hover{background:var(--teal-dark);transform:translateY(-1px)}
+.textLink{color:var(--ink);font-size:15px;font-weight:600;text-decoration:none}
+.trialNote{margin:10px 0 0;color:var(--ink-soft);font-size:13px}
+
+/* ── Example reading card ── */
+.productWrap{max-width:960px;margin:0 auto;padding:0 32px 88px}
+.productCard{padding:28px;border:1px solid var(--line);border-radius:20px;background:#fff;box-shadow:0 24px 70px rgba(27,26,23,.09)}
+.productHeader{display:flex;align-items:center;gap:9px;padding-bottom:20px;border-bottom:1px solid var(--line);font-size:14px;font-weight:700}
+.liveDot{width:8px;height:8px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px var(--amber-soft)}
+.duration{margin-left:auto;color:var(--ink-soft);font-size:13px;font-weight:500}
+.productBody{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;padding-top:28px}
+.readingLabel{margin:0 0 8px;color:var(--teal);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.reading h2{margin:0;font-size:36px;font-weight:500;line-height:1.08}
+.reading>p:last-child{margin:14px 0 0;color:var(--ink-soft);font-size:15px;line-height:1.55}
+.markers{display:grid;gap:18px;padding:22px;border-radius:14px;background:var(--paper-2)}
+.marker>div:first-child{display:flex;justify-content:space-between;gap:16px;font-size:13px;font-weight:700}
+.marker small{color:var(--ink-soft);font-size:12px;font-weight:500}
+.track{height:5px;margin-top:8px;overflow:hidden;border-radius:999px;background:var(--line)}
+.track span{display:block;height:100%;border-radius:inherit;background:var(--teal)}
+.productFoot{margin:2px 0 0;color:var(--ink-soft);font-size:12px;text-align:center}
+
+/* ── Facts strip ── */
+.proofStrip{max-width:1096px;margin:0 auto;padding:22px 32px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);color:var(--ink-soft);font-size:14px;text-align:center}
+.proofStrip span+span{border-left:1px solid var(--line)}
+
+/* ── How it works ── */
+.section{max-width:1096px;margin:0 auto;padding:112px 32px}
+.sectionHeading{max-width:680px}
+.sectionHeading h2,.privacy h2,.finalCta h2{margin:14px 0 0;font-size:clamp(36px,4vw,52px);font-weight:500;line-height:1.05;letter-spacing:-.02em;text-wrap:balance}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:56px}
+.steps article{padding:28px 0 0;border-top:1px solid var(--line-strong);display:flex;flex-direction:column}
+.steps article>span{color:var(--teal);font-size:12px;font-weight:700;letter-spacing:.1em}
+.steps h3{margin:20px 0 6px;font-size:18px}
+.steps p{margin:0;color:var(--ink-soft);font-size:15px;line-height:1.55}
+.stepsFoot{margin:52px 0 0;color:var(--ink-soft);font-size:14px;text-align:center}
+
+/* Step 1 — menu-bar mock */
+.menuMock{margin-top:20px;flex:1;border-radius:12px;background:linear-gradient(160deg,#2C3A40,#1B262B);padding:10px 10px 16px}
+.menuTop{display:flex;align-items:center;justify-content:flex-end;gap:10px;background:rgba(255,255,255,.14);border-radius:6px;padding:4px 9px;color:#E8EDEC;font-size:11px;font-weight:600}
+.menuWave{display:inline-flex;align-items:center;gap:2px;background:rgba(255,255,255,.22);border-radius:5px;padding:3px 6px}
+.menuWave span{width:2.5px;border-radius:2px;background:#fff}
+.menuList{width:156px;margin:8px 24px 0 auto;background:rgba(250,250,250,.97);border-radius:9px;padding:5px;box-shadow:0 16px 30px rgba(0,0,0,.35);font-size:12.5px;color:var(--ink)}
+.menuList>div{padding:5px 9px;border-radius:5px;display:flex;justify-content:space-between;align-items:center}
+.menuActive{background:var(--teal);color:#fff;font-weight:600}
+.menuChevron{color:#8A8375}
+
+/* Step 2 — speaker-gate mock */
+.gateMock{margin-top:20px;flex:1;border:1px solid var(--line);border-radius:12px;background:var(--paper-2);padding:16px;display:grid;align-content:center;gap:14px}
+.gateLabel{margin:0 0 6px;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--teal)}
+.gateLabelMuted{color:#A39B8B}
+.gateWave{display:flex;align-items:center;gap:2.5px;height:20px}
+.gateWave span{width:3px;border-radius:2px;background:var(--teal)}
+.gateSilence{display:flex;align-items:center;gap:8px;height:20px}
+.gateSilence i{flex:1;border-top:1.5px dashed var(--line-strong)}
+
+/* Step 3 — timeline mock */
+.timelineMock{margin-top:20px;flex:1;border:1px solid var(--line);border-radius:12px;background:var(--paper-2);padding:14px 16px;display:grid;align-content:center;gap:11px}
+.tlRow{display:flex;align-items:center;gap:8px}
+.tlRow b{width:66px;font-size:11px;font-weight:700}
+.tlTrack{position:relative;flex:1;height:10px}
+.tlTrack::before{content:"";position:absolute;inset:2px 0;border-radius:5px;background:rgba(27,26,23,.06)}
+.tlTrack span{position:absolute;top:2px;width:6px;height:6px;border-radius:50%;background:var(--teal)}
+.tlTrack .tlHot{background:var(--amber)}
+.tlNote{margin:2px 0 0;padding-top:10px;border-top:1px dashed var(--line);color:#8A5A06;font-weight:600;font-size:11.5px;line-height:1.4}
+
+/* ── Privacy panel ── */
+.privacy{max-width:800px;margin:0 auto;padding:72px;border-radius:24px;background:var(--teal-dark);color:#fbf8f1;text-align:center}
+.privacy .eyebrow{color:#8ddbd1}
+.privacy>p:last-child{max-width:620px;margin:24px auto 0;color:#d3dfdc;font-size:18px;line-height:1.65}
+
+/* ── Science line ── */
+.science{max-width:720px;margin:0 auto;padding:104px 32px 0;text-align:center}
+.scienceLine{margin:16px 0 0;color:var(--ink-soft);font-size:18px;line-height:1.6}
+.scienceLink{display:inline-block;margin-top:14px;color:var(--teal);font-size:14px;font-weight:600;text-decoration:none}
+.scienceNote{margin:20px 0 0;color:var(--ink-soft);font-size:12.5px}
+
+/* ── Final CTA ── */
+.finalCta{max-width:800px;margin:0 auto;padding:112px 32px 104px;text-align:center}
+.finalCta .primaryButton{margin-top:30px}
+
+/* ── Footer ── */
+.footerSignup{max-width:1096px;margin:0 auto;padding:34px 32px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:32px}
+.footerSignup p{margin:0;max-width:380px;color:var(--ink-soft);font-size:14px;line-height:1.5}
+.footerSignup form{margin-top:0!important;flex:0 1 420px}
+.footerRow{max-width:1096px;margin:0 auto;padding:0 32px 48px;display:flex;justify-content:space-between;gap:24px;color:var(--ink-soft);font-size:13px}
+.footerRow div{display:flex;gap:22px}
+.footerRow a{color:inherit;text-decoration:none}
+.primaryButton:focus-visible,.textLink:focus-visible,.scienceLink:focus-visible,.footerRow a:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+
+/* ── Responsive ── */
+@media(max-width:900px){
+.proofStrip{grid-template-columns:repeat(2,1fr);row-gap:12px}
+.proofStrip span:nth-child(3){border-left:0}
+}
+@media(max-width:760px){
+.productBody{grid-template-columns:1fr;gap:30px}
+.steps{grid-template-columns:1fr;gap:36px}
+.footerSignup{flex-direction:column;align-items:flex-start}
+.footerSignup form{width:100%;flex:1 1 auto}
+}
+@media(max-width:600px){
+.hero{padding:64px 20px 56px}
+.hero h1{font-size:44px}
+.lede{font-size:17px}
+.actions{align-items:center;flex-direction:column;gap:16px}
+.productWrap{padding:0 20px 64px}
+.productCard{padding:20px}
+.proofStrip{grid-template-columns:1fr;text-align:left;padding:12px 20px;row-gap:0}
+.proofStrip span{padding:11px 0}
+.proofStrip span+span{border-left:0;border-top:1px solid var(--line)}
+.section{padding:88px 20px}
+.privacy{margin:0 20px;padding:48px 24px}
+.science{padding:80px 20px 0}
+.finalCta{padding:96px 20px 88px}
+.footerSignup{padding:28px 20px}
+.footerSignup form{flex-direction:column}
+.footerRow{padding:0 20px 48px;flex-direction:column}
+.footerRow div{flex-wrap:wrap}
+}

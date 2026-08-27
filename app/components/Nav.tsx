@@ -64,7 +64,7 @@ export default function Nav() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 30,
+            gap: 28,
             fontSize: 14.5,
             fontWeight: 500,
             color: "var(--ink-soft)",
@@ -73,25 +73,19 @@ export default function Nav() {
           <Link href="/#how" className="nav-link">
             How it works
           </Link>
-          <Link href="/#signals" className="nav-link">
-            What it reads
-          </Link>
           <Link href="/#privacy" className="nav-link">
             Privacy
-          </Link>
-          <Link href="/#science" className="nav-link">
-            Science
           </Link>
           <Link href="/pricing" className="nav-link">
             Pricing
           </Link>
-          <Link href="/blog" className="nav-link">
-            Blog
+          <Link href="/login" className="nav-link">
+            Sign in
           </Link>
         </nav>
 
         <Link
-          href="/#join"
+          href="/login/?next=/dashboard/subscription/"
           style={{
             fontFamily: "inherit",
             fontSize: 14,
@@ -106,7 +100,7 @@ export default function Nav() {
             transition: "transform .15s, box-shadow .2s, background .2s",
           }}
         >
-          Join the waitlist
+          Start free
         </Link>
       </div>
 
