@@ -57,6 +57,11 @@ export default function Home() {
           <span>macOS, Windows, iOS &amp; Android</span><span>Works during calls and check-ins</span><span>Only your voice is measured</span><span>No wearable needed</span>
         </section>
 
+        <section className={styles.hook}>
+          <h2>The 3pm call feels harder than the 10am one.</h2>
+          <p>You push through it on effort and call that a normal day. The shift started around noon. You notice it at six. Meeting tools capture what was said. Ontor captures how you showed up, and shows you the change while there&rsquo;s still day left.</p>
+        </section>
+
         <section className={styles.section} id="how">
           <div className={styles.sectionHeading}><h2>Press Start. Take the call. See how you held up.</h2></div>
           <div className={styles.steps}>
@@ -89,7 +94,7 @@ export default function Home() {
                 </div>
               </div>
               <h3>It reads only you</h3>
-              <p>Pace, pitch, and steadiness, measured against your own baseline. Other voices are never analyzed.</p>
+              <p>Pace, pitch, and steadiness, read quietly while you talk. Other voices are never analyzed.</p>
             </article>
             <article>
               <p className={styles.stepWhen}>After the call</p>
@@ -111,6 +116,40 @@ export default function Home() {
           <p className={styles.stepsFoot}>Away from your desk? A short voice check-in on iPhone or Android reads against the same baseline.</p>
         </section>
 
+        <section className={styles.signals}>
+          <h2>Eight signals, read from how you sound</h2>
+          <dl className={styles.signalList}>
+            <div><dt>Energy</dt><dd>how activated you sound</dd></div>
+            <div><dt>Stress</dt><dd>pressure showing in pace and pitch</dd></div>
+            <div><dt>Confidence</dt><dd>how decisive you come across</dd></div>
+            <div><dt>Fatigue</dt><dd>the wear in your voice</dd></div>
+            <div><dt>Vocal strain</dt><dd>the effort it takes to speak</dd></div>
+            <div><dt>Expressiveness</dt><dd>how much range you&rsquo;re using</dd></div>
+            <div><dt>Articulation</dt><dd>how crisp the words land</dd></div>
+            <div><dt>Breathing</dt><dd>pauses and breath between phrases</dd></div>
+          </dl>
+          <p className={styles.signalsFoot}>Each one is compared with your own usual range. Not a population average, and not a score to chase.</p>
+        </section>
+
+        <section className={styles.week}>
+          <div className={styles.weekCopy}>
+            <h2>A week in, your days have a shape</h2>
+            <p>Readings collect into patterns: which days run hot, which hours you hold steady, what a good week actually looks like for you.</p>
+          </div>
+          <div className={styles.weekMock} aria-hidden="true">
+            <p className={styles.weekLabel}>Stress, by day</p>
+            <div className={styles.weekChart}>
+              {([["Mon", 62, false], ["Tue", 48, false], ["Wed", 55, false], ["Thu", 22, true], ["Fri", 58, false], ["Sat", 74, false], ["Sun", 70, false]] as [string, number, boolean][]).map(([day, top, hot]) => (
+                <div className={styles.weekDay} key={day}>
+                  <div className={styles.weekCol}><span className={hot ? styles.weekHot : undefined} style={{ top: `${top}%` }} /></div>
+                  <small>{day}</small>
+                </div>
+              ))}
+            </div>
+            <p className={styles.weekNote}>Thursdays run high. Late afternoons read steadier.</p>
+          </div>
+        </section>
+
         <section className={styles.privacy} id="privacy">
           <div className={styles.privacyInner}>
             <h2>Only you are ever measured.</h2>
@@ -126,6 +165,27 @@ export default function Home() {
           <p className={styles.scienceLine}>Decades of research link pitch, pace, and voice quality to stress, effort, and fatigue. Ontor measures those signals against your own baseline, never anyone else&rsquo;s.</p>
           <Link className={styles.scienceLink} href="/voice-biomarkers">Read the science <span aria-hidden="true">→</span></Link>
           <p className={styles.scienceNote}>Ontor is a self-insight tool, not a medical device.</p>
+        </section>
+
+        <section className={styles.faq}>
+          <h2>Questions people ask first</h2>
+          <details>
+            <summary>Is anyone else on the call measured?</summary>
+            <p>No. Ontor is enrolled to your voice. When someone else speaks, nothing is captured, so there&rsquo;s nothing to disclose and no one to ask.</p>
+          </details>
+          <details>
+            <summary>Does it join the meeting like a notetaker bot?</summary>
+            <p>No. It never appears in the call. The reading happens on your side only, and nobody on the call sees anything.</p>
+          </details>
+          <details>
+            <summary>Do I have to change how I work?</summary>
+            <p>You press Start before the call and read the result after. That&rsquo;s the whole habit.</p>
+          </details>
+          <details>
+            <summary>What does it cost?</summary>
+            <p>14 days free, no card. After that it&rsquo;s $20 a month, or $168 a year.</p>
+          </details>
+          <Link className={styles.faqLink} href="/faq">More questions <span aria-hidden="true">→</span></Link>
         </section>
 
         <section className={styles.finalCta} id="start">
