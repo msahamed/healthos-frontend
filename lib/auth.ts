@@ -70,6 +70,41 @@ export interface AccountDoc {
   verified_at?: Date | null;
   created_at: Date;
   last_login_at?: Date;
+
+  // ── Entitlement ─────────────────────────────────────────────────
+  //
+  // Facts only. The state (none/trial/active/expired) is DERIVED from
+  // these on every read — see lib/entitlement.ts for why nothing here
+  // is a stored status field.
+
+  /** Free forever. The pilot users who carried the product early. */
+  comped?: boolean;
+  comped_reason?: string;
+  /** When the trial clock started. Absent means it never has. */
+  trial_started_at?: Date | null;
+  /** Per-account override of TRIAL_DAYS — for extending one person. */
+  trial_days?: number;
+  /** Last thing Stripe told us. Absent until they check out. */
+  subscription_status?: "active" | "past_due" | "canceled" | null;
+  current_period_end?: Date | null;
+  /**
+   * Cancelled, but the paid period has not run out yet. Stripe keeps
+   * `status: active` in this state, so without this flag a cancelled
+   * subscription is indistinguishable from a renewing one.
+   */
+  cancel_at_period_end?: boolean;
+  stripe_customer_id?: string | null;
+  stripe_subscription_id?: string | null;
+  /**
+   * When the subscription state we hold was last true. Stripe does not
+   * guarantee webhook ordering, so this is what stops an older event
+   * arriving late and overwriting a newer one.
+   */
+  subscription_synced_at?: Date;
+  /** Set when the "trial ending" nudge went out. Presence = already sent. */
+  trial_ending_email_at?: Date;
+  /** Set when the "trial ended" email went out. Presence = already sent. */
+  trial_ended_email_at?: Date;
 }
 
 export interface AuthCodeDoc {

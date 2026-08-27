@@ -305,3 +305,40 @@
 
   .rowactions{display:flex;align-items:center;gap:4px;flex:none}
   .linkbtn.accept{color:var(--teal)}
+
+/* ── Buttons ──────────────────────────────────────────────────────
+   Actions are buttons, not sentences. Every one of these was a bare
+   <button className="primary"> against a class that did not exist, so
+   they rendered as browser defaults and read as text.
+
+   Geometry and colour follow DESIGN.md: radius 12, teal-tinted shadow
+   rather than neutral grey, ghost buttons transparent with teal text.
+   Theme variables throughout, so they follow light and dark. */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  font:inherit; font-size:15px; font-weight:600; line-height:1;
+  padding:13px 20px; border-radius:12px; border:1px solid transparent;
+  cursor:pointer; text-decoration:none; white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+  transition:background .2s, border-color .2s, color .2s, box-shadow .2s;
+}
+.btn:disabled{opacity:.55; cursor:default}
+.btn + .btn{margin-left:10px}
+
+.btn-primary{background:var(--teal); color:#FFFFFF; box-shadow:0 6px 18px rgba(15,118,110,.22)}
+.btn-primary:hover:not(:disabled){background:var(--teal-dark)}
+
+.btn-secondary{background:transparent; color:var(--teal); border-color:var(--line-strong)}
+.btn-secondary:hover:not(:disabled){border-color:var(--teal); background:var(--teal-surface)}
+
+.btn-danger{background:var(--above); color:#FFFFFF}
+.btn-danger:hover:not(:disabled){filter:brightness(.92)}
+
+.btn-quiet{background:none; color:var(--ink-soft); border-color:transparent; padding:12px 10px}
+.btn-quiet:hover:not(:disabled){color:var(--ink)}
+
+/* Stacks on narrow windows so two actions never collide. */
+@media (max-width:520px){
+  .btn{width:100%}
+  .btn + .btn{margin-left:0; margin-top:10px}
+}

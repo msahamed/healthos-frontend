@@ -2,6 +2,7 @@ import InlineWaitlistForm from "./components/InlineWaitlistForm";
 import HeroTimeline from "./components/landing/HeroTimeline";
 import Nav from "./components/Nav";
 import PatternSection from "./components/landing/PatternSection";
+import Link from "next/link";
 
 // Ontor homepage — performance-intelligence relaunch.
 // Ported from the approved Claude Design "Ontor Home". The hero visual is
@@ -217,7 +218,7 @@ export default function Home() {
           <div style={{ display: "flex", gap: 24, fontSize: 14, color: inkSoft }}>
             <a href="#signals" style={footLink}>What it reads</a>
             <a href="#privacy" style={footLink}>Privacy</a>
-            <a href="/blog" style={footLink}>Blog</a>
+            <Link href="/blog" style={footLink}>Blog</Link>
             <a href="#join" style={footLink}>Beta</a>
           </div>
         </div>
