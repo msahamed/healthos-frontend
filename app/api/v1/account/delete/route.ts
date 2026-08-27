@@ -22,7 +22,7 @@
 
 import { NextResponse } from "next/server";
 import { getMongoClient } from "@/lib/mongodb";
-import { authorizeUser, getDb, DB_NAME } from "@/lib/auth";
+import { authorizeUser, DB_NAME } from "@/lib/auth";
 import { revalidateTag } from "next/cache";
 import { obsTag } from "@/lib/coach-analytics";
 import { DeleteObjectsCommand, S3Client } from "@aws-sdk/client-s3";
