@@ -25,7 +25,7 @@ export default function Home() {
       <main id="top">
         <section className={styles.hero}>
           <p className={styles.eyebrow}>Performance intelligence from your voice</p>
-          <h1 className="font-serif-display">See how you actually show up, <em>call after call.</em></h1>
+          <h1 className="font-serif-display">See when you&rsquo;re slipping, <em>before your work does.</em></h1>
           <p className={styles.lede}>Ontor reads stress, energy, and confidence from your voice while you work. See when your state changes and what helps you recover.</p>
           <div className={styles.actions}>
             <Link className={styles.primaryButton} href={START_FREE}>Start free</Link>
