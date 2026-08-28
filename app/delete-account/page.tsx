@@ -4,7 +4,7 @@
 // This URL goes in the Play Console Data Safety form.
 
 import Nav from "../components/Nav";
-import Logo from "../components/Logo";
+import Footer from "../components/Footer";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -74,20 +74,7 @@ export default function DeleteAccountPage() {
         </section>
       </main>
 
-      <footer className="border-t border-slate-100 py-8">
-        <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <Logo size={24} />
-            <span className="text-sm font-medium text-slate-700">Ontor</span>
-          </div>
-          <div className="flex items-center gap-5 text-sm text-slate-400">
-            <Link href="/privacy" className="hover:text-slate-600 transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-slate-600 transition-colors">Terms of Use</Link>
-            <a href="mailto:sabber@ontor.ai" className="hover:text-slate-600 transition-colors">Contact</a>
-          </div>
-          <p className="text-sm text-slate-400">© {new Date().getFullYear()} Ontor</p>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

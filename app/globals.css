@@ -77,11 +77,16 @@ body {
 
 ::selection { background: #F8DDB6; }
 
-/* Editorial display type — used for h1/h2/h3 and the "beat" line. */
+/* Display type — same grotesque as the body, set heavier and tighter.
+   (Class name kept for compatibility; the serif was retired 2026-08.) */
 .font-serif-display {
-  font-family: var(--font-newsreader), Georgia, "Times New Roman", serif;
-  font-weight: 500;
-  letter-spacing: -0.01em;
+  font-family: var(--font-hanken), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.022em;
+  font-style: normal;
+}
+.font-serif-display em, .font-serif-display i {
+  font-style: normal;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -16,8 +16,7 @@
 //
 // This is now the first screen after "Start free trial" on /pricing
 // (?next=/dashboard/subscription/, where the trial auto-starts), so
-// it's framed like the rest of the site instead of floating on bare
-// white: Nav up top, a bordered card on a recessed page background.
+// it uses the same quiet white surface and typography as the rest of the site.
 // Visual/copy only — request/verify logic, state, and the `next`
 // redirect are unchanged from before this pass.
 
@@ -200,27 +199,7 @@ function LoginForm() {
 
       <style>{`
         .login-page {
-          --lg-paper: #FFFFFF; --lg-paper-2: #F1ECE2; --lg-card: #FFFFFF;
-          --lg-ink: #1B1A17; --lg-ink-soft: #5A554B;
-          --lg-line: #E4DDD0; --lg-line-strong: #D6CDBC;
-          --lg-teal: #0F766E; --lg-teal-dark: #0B5048;
-        }
-        @media (prefers-color-scheme: dark) {
-          .login-page {
-            --lg-paper: #14130F; --lg-paper-2: #1C1A15; --lg-card: #1C1A15;
-            --lg-ink: #F3EFE6; --lg-ink-soft: #B5AE9F;
-            --lg-line: #2E2A22; --lg-line-strong: #403A2F;
-            --lg-teal: #4FB3A6; --lg-teal-dark: #7FD0C4;
-          }
-        }
-        :root[data-theme="dark"] .login-page {
-          --lg-paper: #14130F; --lg-paper-2: #1C1A15; --lg-card: #1C1A15;
-          --lg-ink: #F3EFE6; --lg-ink-soft: #B5AE9F;
-          --lg-line: #2E2A22; --lg-line-strong: #403A2F;
-          --lg-teal: #4FB3A6; --lg-teal-dark: #7FD0C4;
-        }
-        :root[data-theme="light"] .login-page {
-          --lg-paper: #FFFFFF; --lg-paper-2: #F1ECE2; --lg-card: #FFFFFF;
+          --lg-paper: #FFFFFF; --lg-card: #FFFFFF;
           --lg-ink: #1B1A17; --lg-ink-soft: #5A554B;
           --lg-line: #E4DDD0; --lg-line-strong: #D6CDBC;
           --lg-teal: #0F766E; --lg-teal-dark: #0B5048;
@@ -238,24 +217,22 @@ function LoginForm() {
 
 const mainStyle: React.CSSProperties = {
   minHeight: "calc(100vh - 70px)",
-  background: "var(--lg-paper-2)",
+  background: "var(--lg-paper)",
   display: "flex",
-  alignItems: "center",
+  alignItems: "flex-start",
   justifyContent: "center",
-  padding: "40px 24px",
+  padding: "clamp(64px, 12vh, 110px) 24px 56px",
 };
 
 const cardStyle: React.CSSProperties = {
   background: "var(--lg-card)",
-  border: "1px solid var(--lg-line)",
-  borderRadius: 18,
-  padding: "36px 32px 32px",
-  boxShadow: "0 1px 2px rgba(27,26,23,.04), 0 10px 28px rgba(15,118,110,.08)",
+  borderTop: "1px solid var(--lg-line)",
+  padding: "34px 0 32px",
 };
 
 const h1Style: React.CSSProperties = {
-  fontWeight: 500,
-  fontSize: 30,
+  fontWeight: 800,
+  fontSize: 34,
   lineHeight: 1.15,
   letterSpacing: "-0.015em",
   color: "var(--lg-ink)",
@@ -271,11 +248,10 @@ const subStyle: React.CSSProperties = {
 
 const labelStyle: React.CSSProperties = {
   display: "block",
-  fontSize: 11.5,
+  fontSize: 14,
   fontWeight: 700,
-  letterSpacing: "0.14em",
-  textTransform: "uppercase",
-  color: "var(--lg-teal)",
+  letterSpacing: "0",
+  color: "var(--lg-ink)",
   marginBottom: 8,
 };
 
@@ -303,16 +279,17 @@ const buttonStyle: React.CSSProperties = {
   border: "none",
   borderRadius: 12,
   cursor: "pointer",
-  boxShadow: "0 6px 18px rgba(15,118,110,.22)",
+  boxShadow: "0 6px 18px rgba(15,118,110,.16)",
   transition: "background .15s",
 };
 
 const buttonDisabledStyle: React.CSSProperties = {
   ...buttonStyle,
-  color: "var(--lg-ink-soft)",
-  background: "var(--lg-line-strong)",
+  color: "#fff",
+  background: "var(--lg-teal)",
   boxShadow: "none",
   cursor: "default",
+  opacity: 0.45,
 };
 
 const linkStyle: React.CSSProperties = {
