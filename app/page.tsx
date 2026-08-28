@@ -1,30 +1,30 @@
+import Image from "next/image";
 import Link from "next/link";
-import InlineWaitlistForm from "./components/InlineWaitlistForm";
 import Nav from "./components/Nav";
+import Footer from "./components/Footer";
 import styles from "./page.module.css";
 
 const START_FREE = "/login/?next=/dashboard/subscription/";
 
-// Hero call-read rows, modeled on the real desktop meeting view:
-// dots along a dashed baseline band, amber where the reading left
-// the usual range. [name, "higher =" gloss, status, elevated?, dots]
-// Dot = [left %, vertical offset px, out-of-range?]
-type Dot = [number, number, number];
-const callRead: [string, string, string, boolean, Dot[]][] = [
-  ["Stress", "Higher = more pressure", "↑ Elevated", true,
-    [[3, -2, 0], [8, 1, 0], [14, -1, 0], [22, 2, 0], [29, -3, 0], [36, 1, 0], [44, -1, 0], [53, 2, 0], [61, -7, 1], [67, -9, 1], [74, -8, 1], [82, -5, 1], [90, -2, 0], [96, 1, 0]]],
-  ["Energy", "Higher = more activated", "→ In range", false,
-    [[4, 2, 0], [11, -1, 0], [19, 1, 0], [27, -2, 0], [35, 3, 0], [43, -1, 0], [51, 2, 0], [59, -3, 0], [67, 1, 0], [75, -1, 0], [84, 2, 0], [93, -2, 0]]],
-  ["Confidence", "Higher = more decisive", "→ In range", false,
-    [[5, -1, 0], [13, 2, 0], [21, -2, 0], [30, 1, 0], [38, -1, 0], [47, 2, 0], [56, -2, 0], [64, 1, 0], [72, -1, 0], [81, 1, 0], [89, -2, 0], [95, 1, 0]]],
-];
+const liveSignals = [
+  ["Energy", "In range", 48, false],
+  ["Stress", "In range", 52, false],
+  ["Fatigue", "In range", 57, false],
+  ["Confidence", "In range", 49, false],
+  ["Speech clarity", "Above usual", 70, false],
+  ["Vocal strain", "In range", 54, false],
+  ["Breathing", "Below usual", 28, true],
+] as const;
 
-// Dot positions for the after-the-call timeline mock: [left %, elevated?]
-const timeline: [string, [number, boolean][]][] = [
-  ["Stress", [[12, false], [26, false], [55, true], [63, true], [88, false]]],
-  ["Energy", [[10, false], [30, false], [58, false], [86, true]]],
-  ["Confidence", [[14, false], [34, false], [60, false], [84, false]]],
-];
+const comparisonSignals = [
+  ["Stress", "down", "9%", true],
+  ["Confidence", "up", "7%", true],
+  ["Breathing", "up", "6%", true],
+  ["Vocal strain", "down", "5%", true],
+  ["Speech clarity", "up", "3%", true],
+  ["Energy", "down", "2%", false],
+  ["Fatigue", "up", "1%", false],
+] as const;
 
 export default function Home() {
   return (
@@ -32,177 +32,161 @@ export default function Home() {
       <Nav />
       <main id="top">
         <section className={styles.hero}>
-          <div className={styles.heroCopy}>
-            <h1>See when you&rsquo;re slipping, before your work does.</h1>
-            <p className={styles.lede}>Ontor reads stress, energy, and confidence from your voice while you work. See when your state changes and what helps you recover.</p>
-            <div className={styles.actions}>
-              <Link className={styles.primaryButton} href={START_FREE}>Start free</Link>
-              <a className={styles.textLink} href="#how">See how it works <span aria-hidden="true">↓</span></a>
-            </div>
-            <p className={styles.trialNote}>14 days free. No card required.</p>
+          <p className={styles.eyebrow}>Voice signals during your workday</p>
+          <h1>Ontor detects shifts and helps you reset.</h1>
+          <p className={styles.lede}>
+            While you speak, Ontor compares stress, energy, confidence, breathing, and other signals with your usual range. When a shift lasts, it suggests a short exercise and lets you see the difference afterward.
+          </p>
+          <div className={styles.actions}>
+            <Link className={styles.primaryButton} href={START_FREE}>See what your voice shows</Link>
           </div>
-          <div className={styles.productCard} aria-label="Example Ontor voice reading">
-            <div className={styles.productHeader}><span className={styles.liveDot} /><span>Today&rsquo;s call</span><span className={styles.duration}>32 min</span></div>
-            <div className={styles.reading}>
-              <h2>Stress rose near the end of the call.</h2>
-              <p>Your pace quickened after minute 24. Energy and confidence stayed close to your usual range.</p>
+          <p className={styles.trialNote}>14 days free. No card required.</p>
+        </section>
+
+        <section className={styles.liveSection} id="how">
+          <div className={styles.sectionCopy}>
+            <p className={styles.eyebrow}>While you&rsquo;re speaking</p>
+            <h2>Signals from your voice, in near real time.</h2>
+            <p>Ontor refreshes your reading after each 10 seconds you speak. Keep the live view open, or let it work quietly in the background.</p>
+          </div>
+          <div className={styles.livePanel} aria-label="Example of Ontor reading voice signals while someone speaks">
+            <div className={styles.liveTopline}>
+              <span>Listening</span>
+              <time>0:32</time>
+              <i aria-hidden="true" />
             </div>
-            <div className={styles.callRead} aria-hidden="true">
-              {callRead.map(([name, gloss, status, elevated, dots]) => (
-                <div className={styles.mkRow} key={name}>
-                  <div className={styles.mkHead}>
-                    <span>{name} <small>{gloss}</small></span>
-                    <em className={elevated ? styles.mkHot : undefined}>{status}</em>
+            <h3>Ontor is listening.</h3>
+            <p className={styles.liveIntro}>Markers refresh with each 10-second voice window.</p>
+            <p className={styles.liveLabel}>Latest window</p>
+            <div className={styles.liveSignals}>
+              {liveSignals.map(([name, status, position, warm], index) => (
+                <div className={styles.liveRow} key={name}>
+                  <strong>{name}</strong>
+                  <div className={styles.liveTrack} aria-hidden="true">
+                    <span className={styles.usualRange} />
+                    <i className={warm ? styles.warmMarker : undefined} style={{ left: `${position}%`, animationDelay: `${index * -0.35}s` }} />
                   </div>
-                  <div className={styles.mkStrip}>
-                    {dots.map(([x, y, hot], i) => (
-                      <span key={i} className={hot ? styles.mkDotHot : undefined} style={{ left: `${x}%`, marginTop: y }} />
-                    ))}
-                  </div>
+                  <span className={warm ? styles.warmStatus : undefined}>{status}</span>
                 </div>
               ))}
-              <div className={styles.mkAxis}><span>0s</span><span>16m</span><span>32m</span></div>
+            </div>
+            <div className={styles.liveFooter}>
+              <span>Latest window · 7 seconds ago</span>
+              <button type="button">End</button>
             </div>
           </div>
         </section>
 
-        <section className={styles.proofStrip} aria-label="Product details">
-          <span>macOS, Windows, iOS &amp; Android</span><span>Works during calls and check-ins</span><span>Only your voice is measured</span><span>No wearable needed</span>
+        <div className={styles.facts} aria-label="Product details">
+          <span>Conversations, presentations, work calls, and voice check-ins</span>
+          <span>Compared with your usual range</span>
+          <span>No wearable needed</span>
+        </div>
+
+        <section className={styles.reviewSection}>
+          <div className={styles.sectionCopy}>
+            <p className={styles.eyebrow}>After a session</p>
+            <h2>See what changed and when.</h2>
+            <p>Review each signal across the session. Ontor shows when it moved outside your usual range and where the biggest shift happened.</p>
+          </div>
+          <figure className={styles.reviewShot}>
+            <Image src="/landing/post-call-reset.png" alt="Ontor session analysis showing stress, energy, and fatigue against the user’s usual range" fill sizes="(max-width: 960px) 100vw, 856px" />
+          </figure>
         </section>
 
-        <section className={styles.section} id="how">
-          <div className={styles.sectionHeading}><h2>Press Start. Take the call. See how you held up.</h2></div>
-          <div className={styles.steps}>
-            <article>
-              <p className={styles.stepWhen}>Before the call</p>
-              <div className={styles.menuMock} aria-hidden="true">
-                <div className={styles.menuTop}>
-                  <span className={styles.menuWave}>{[5, 9, 12, 9, 5].map((h, i) => <span key={i} style={{ height: h }} />)}</span>
-                  <span>Tue 9:58 AM</span>
-                </div>
-                <div className={styles.menuList}>
-                  <div>Open Ontor</div>
-                  <div className={styles.menuActive}>Start</div>
-                  <div>Microphone <span className={styles.menuChevron}>›</span></div>
-                </div>
+        <section className={styles.breakSection}>
+          <div className={styles.sectionCopy}>
+            <p className={styles.eyebrow}>When a shift lasts</p>
+            <h2>Ontor helps you reset based on what changed.</h2>
+            <p>If stress, fatigue, confidence, or breathing stays outside your usual range, Ontor suggests a short exercise. Speak again afterward to see the difference.</p>
+          </div>
+          <div className={styles.resetPanel} aria-label="Example of an Ontor reset and follow-up check-in">
+            <div className={styles.compactMoment}>
+              <div className={styles.compactMomentCopy}>
+                <span>While you&apos;re speaking</span>
+                <p>See what changes while you speak on a call, during a presentation, or in everyday conversation.</p>
               </div>
-              <h3>Press Start in your menu bar</h3>
-              <p>One click before the call. No window to manage, no bot joining the meeting.</p>
-            </article>
-            <article>
-              <p className={styles.stepWhen}>During the call</p>
-              <div className={styles.gateMock} aria-hidden="true">
-                <div>
-                  <p className={styles.gateLabel}>You speak → analyzed</p>
-                  <div className={styles.gateWave}>{[8, 15, 20, 12, 18, 9, 16, 11, 19, 7].map((h, i) => <span key={i} style={{ height: h }} />)}</div>
+              <div className={styles.compactPreview} aria-label="Compact Ontor view showing stress moving above the usual range">
+                <div className={styles.compactTopline}>
+                  <div><strong>Listening</strong><span>0:32</span><i aria-hidden="true" /></div>
+                  <button type="button">End</button>
                 </div>
-                <div>
-                  <p className={`${styles.gateLabel} ${styles.gateLabelMuted}`}>They speak → nothing captured</p>
-                  <div className={styles.gateSilence}><i /><i /></div>
-                </div>
-              </div>
-              <h3>It reads only you</h3>
-              <p>Pace, pitch, and steadiness, read quietly while you talk. Other voices are never analyzed.</p>
-            </article>
-            <article>
-              <p className={styles.stepWhen}>After the call</p>
-              <div className={styles.timelineMock} aria-hidden="true">
-                {timeline.map(([name, dots]) => (
-                  <div className={styles.tlRow} key={name}>
-                    <b>{name}</b>
-                    <div className={styles.tlTrack}>
-                      {dots.map(([left, hot], i) => <span key={i} className={hot ? styles.tlHot : undefined} style={{ left: `${left}%` }} />)}
-                    </div>
+                <div className={styles.compactSignals}>
+                  <div className={styles.compactRow}>
+                    <strong>Stress</strong>
+                    <div className={styles.compactTrack} aria-hidden="true"><span /><i className={styles.compactAlertDot} /></div>
+                    <span className={styles.compactAlertStatus}>Above usual</span>
                   </div>
-                ))}
-                <p className={styles.tlNote}>Stress climbed at minute 25, right at the pricing question.</p>
+                  <div className={styles.compactRow}>
+                    <strong>Breathing</strong>
+                    <div className={styles.compactTrack} aria-hidden="true"><span /><i style={{ left: "49%" }} /></div>
+                    <span>In range</span>
+                  </div>
+                  <div className={styles.compactRow}>
+                    <strong>Confidence</strong>
+                    <div className={styles.compactTrack} aria-hidden="true"><span /><i style={{ left: "54%" }} /></div>
+                    <span>In range</span>
+                  </div>
+                </div>
               </div>
-              <h3>See how you held up</h3>
-              <p>A minute-by-minute read of the call, and what was happening when your state shifted.</p>
-            </article>
-          </div>
-          <div className={styles.mobileRow}>
-            <div className={styles.phoneCard} aria-hidden="true">
-              <p className={styles.phoneLabel}>Today so far</p>
-              <p className={styles.phoneInsight}>Your vocal strain has eased across your last 8 logs.</p>
-              <div className={styles.phoneChips}><span>↑ Speech clarity</span><span className={styles.phoneChipWarm}>↓ Breathing</span></div>
             </div>
-            <p className={styles.stepsFoot}>Away from your desk? A short voice check-in on iPhone or Android reads against the same baseline.</p>
-          </div>
-        </section>
 
-        <section className={styles.signals}>
-          <h2>Eight signals, read from how you sound</h2>
-          <dl className={styles.signalList}>
-            <div><dt>Energy</dt><dd>how activated you sound</dd></div>
-            <div><dt>Stress</dt><dd>pressure showing in pace and pitch</dd></div>
-            <div><dt>Confidence</dt><dd>how decisive you come across</dd></div>
-            <div><dt>Fatigue</dt><dd>the wear in your voice</dd></div>
-            <div><dt>Vocal strain</dt><dd>the effort it takes to speak</dd></div>
-            <div><dt>Expressiveness</dt><dd>how much range you&rsquo;re using</dd></div>
-            <div><dt>Speech clarity</dt><dd>how crisp the words land</dd></div>
-            <div><dt>Breathing</dt><dd>pauses and breath between phrases</dd></div>
-          </dl>
-          <p className={styles.signalsFoot}>Each one is compared with your own usual range. Not a population average, and not a score to chase.</p>
-        </section>
+            <div className={styles.resetNotice}>
+              <span>If the shift continues</span>
+              <h3>Stress stayed above your usual range near the end.</h3>
+              <p>Ontor suggests an exercise based on what changed.</p>
+            </div>
 
-        <section className={styles.privacy} id="privacy">
-          <div className={styles.privacyInner}>
-            <h2>Only you are ever measured.</h2>
-            <div>
-              <p>Ontor is trained to recognize you. When anyone else speaks, nothing is captured. Analysis runs on your device, and optional sync stays under your control.</p>
-              <Link href="/privacy">How privacy works</Link>
+            <div className={styles.resetSuggestion}>
+              <div className={styles.resetSuggestionCopy}>
+                <span>Suggested for this shift</span>
+                <h3>Extended exhale</h3>
+                <p>Breathe in for 4 seconds, then breathe out slowly for 8.</p>
+              </div>
+              <div className={styles.resetAction}>
+                <div className={styles.exhaleVisual} aria-hidden="true"><i /></div>
+                <span>1:45</span>
+                <button type="button">Begin</button>
+              </div>
+            </div>
+
+            <div className={styles.resetFollowUp}>
+              <div className={styles.resetComparison}>
+                <h3>Compare check-ins</h3>
+                <div className={styles.comparisonTimes}>
+                  <div>
+                    <span>Before</span>
+                    <strong>10:09 AM</strong>
+                  </div>
+                  <i aria-hidden="true">→</i>
+                  <div>
+                    <span>After</span>
+                    <strong>10:13 AM</strong>
+                  </div>
+                </div>
+                <div className={styles.comparisonList}>
+                  {comparisonSignals.map(([name, direction, amount, improving]) => (
+                    <div className={improving ? styles.improvingComparison : undefined} key={name}>
+                      <strong>{name}</strong>
+                      <span aria-label={`${direction} ${amount}`}>
+                        <i aria-hidden="true">{direction === "up" ? "↑" : "↓"}</i> {amount}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-        </section>
-
-        <section className={styles.science}>
-          <h2>Grounded in voice research</h2>
-          <p className={styles.scienceLine}>Decades of research link pitch, pace, and voice quality to stress, effort, and fatigue. Ontor measures those signals against your own baseline, never anyone else&rsquo;s.</p>
-          <Link className={styles.scienceLink} href="/voice-biomarkers">Read the science <span aria-hidden="true">→</span></Link>
-          <p className={styles.scienceNote}>Ontor is a self-insight tool, not a medical device.</p>
-        </section>
-
-        <section className={styles.faq}>
-          <h2>Questions people ask first</h2>
-          <details>
-            <summary>Is anyone else on the call measured?</summary>
-            <p>No. Ontor is enrolled to your voice. When someone else speaks, nothing is captured, so there&rsquo;s nothing to disclose and no one to ask.</p>
-          </details>
-          <details>
-            <summary>Does it join the meeting like a notetaker bot?</summary>
-            <p>No. It never appears in the call. The reading happens on your side only, and nobody on the call sees anything.</p>
-          </details>
-          <details>
-            <summary>Do I have to change how I work?</summary>
-            <p>You press Start before the call and read the result after. That&rsquo;s the whole habit.</p>
-          </details>
-          <details>
-            <summary>What does it cost?</summary>
-            <p>14 days free, no card. After that it&rsquo;s $20 a month, or $168 a year.</p>
-          </details>
-          <Link className={styles.faqLink} href="/faq">More questions <span aria-hidden="true">→</span></Link>
         </section>
 
         <section className={styles.finalCta} id="start">
-          <h2>Know how you sound before the day gets away from you.</h2>
-          <div className={styles.actions}>
-            <Link className={styles.primaryButton} href={START_FREE}>Start free</Link>
-          </div>
+          <h2>See what changes the next time you speak.</h2>
+          <Link className={styles.primaryButton} href={START_FREE}>See what your voice shows</Link>
           <p className={styles.trialNote}>14 days free. No card required. Cancel anytime.</p>
         </section>
       </main>
 
-      <footer>
-        <div className={styles.footerSignup}>
-          <p>Not ready yet? Get an email when there&rsquo;s something worth sharing.</p>
-          <InlineWaitlistForm variant="cta" buttonLabel="Join the list" successLabel="You're on the list." />
-        </div>
-        <div className={styles.footerRow}>
-          <span>© {new Date().getFullYear()} Ontor</span>
-          <div><Link href="/pricing">Pricing</Link><Link href="/blog">Blog</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></div>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

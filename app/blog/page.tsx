@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "../components/Nav";
-import Logo from "../components/Logo";
+import Footer from "../components/Footer";
 import { getPublishedPosts } from "../../lib/blog";
 
 const PAGE_DESCRIPTION =
@@ -84,16 +84,7 @@ export default function BlogIndexPage() {
         </section>
       </main>
 
-      <footer className="post-foot">
-        <div className="post-foot-inner">
-          <span className="post-foot-brand"><Logo size={26} /> Ontor</span>
-          <div className="post-foot-links">
-            <Link href="/#join">Waitlist</Link>
-            <a href="https://discord.gg/SyZPw3cgG" target="_blank" rel="noopener noreferrer">Discord</a>
-            <Link href="/faq">FAQ</Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       <style>{BLOG_CSS}</style>
     </>

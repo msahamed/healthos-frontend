@@ -1,5 +1,5 @@
 import Nav from "./Nav";
-import Logo from "./Logo";
+import Footer from "./Footer";
 import Link from "next/link";
 
 // Shared shell for editorial content pages (explainers, comparisons, about).
@@ -44,27 +44,7 @@ export default function ContentPage({
         </section>
       </main>
 
-      <footer className="cp-foot">
-        <div className="cp-wrap cp-foot-inner">
-          <span className="cp-foot-brand">
-            <Logo size={26} />
-            Ontor
-          </span>
-          <div className="cp-foot-links">
-            <Link href="/#signals">What it reveals</Link>
-            <Link href="/faq">FAQ</Link>
-            <Link href="/voice-biomarkers">Voice biomarkers</Link>
-            <a
-              href="https://discord.gg/SyZPw3cgG"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Discord
-            </a>
-            <Link href="/#join">Waitlist</Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       <style>{CONTENT_CSS}</style>
     </>

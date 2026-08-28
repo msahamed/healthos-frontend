@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Nav from "../../components/Nav";
-import Logo from "../../components/Logo";
+import Footer from "../../components/Footer";
 import { getAllPosts, getPostBySlug } from "../../../lib/blog";
 
 export function generateStaticParams() {
@@ -121,17 +121,7 @@ export default async function BlogPostPage(
         </article>
       </main>
 
-      <footer className="post-foot">
-        <div className="post-foot-inner">
-          <span className="post-foot-brand"><Logo size={26} /> Ontor</span>
-          <div className="post-foot-links">
-            <Link href="/blog">Blog</Link>
-            <Link href="/#join">Waitlist</Link>
-            <a href="https://discord.gg/SyZPw3cgG" target="_blank" rel="noopener noreferrer">Discord</a>
-            <Link href="/faq">FAQ</Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       <style>{POST_CSS}</style>
     </>

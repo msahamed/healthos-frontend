@@ -43,7 +43,7 @@ export default function Nav() {
         }}
       >
         <Link
-          href="/#top"
+          href="/"
           style={{
             display: "inline-flex",
             alignItems: "center",
@@ -70,10 +70,13 @@ export default function Nav() {
             color: "var(--ink-soft)",
           }}
         >
-          <Link href="/#how" className="nav-link">
+          <Link href="/how-it-works" className="nav-link">
             How it works
           </Link>
-          <Link href="/#privacy" className="nav-link">
+          <Link href="/for-teams" className="nav-link">
+            For teams
+          </Link>
+          <Link href="/privacy" className="nav-link">
             Privacy
           </Link>
           <Link href="/pricing" className="nav-link">

@@ -1,5 +1,5 @@
 import Nav from "../components/Nav";
-import Logo from "../components/Logo";
+import Footer from "../components/Footer";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -141,26 +141,7 @@ export default function FaqPage() {
         </section>
       </main>
 
-      <footer className="faq-foot">
-        <div className="faq-wrap faq-foot-inner">
-          <span className="faq-foot-brand">
-            <Logo size={26} />
-            Ontor
-          </span>
-          <div className="faq-foot-links">
-            <Link href="/#signals">What it reveals</Link>
-            <Link href="/#join">Waitlist</Link>
-            <a
-              href="https://discord.gg/SyZPw3cgG"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Discord
-            </a>
-            <Link href="/privacy">Privacy</Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       <style>{FAQ_CSS}</style>
     </>
