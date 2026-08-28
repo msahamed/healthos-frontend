@@ -53,11 +53,11 @@ export default async function ClientPage({
 
   return (
     <>
-      <Link className="back" href="/dashboard">
+      <Link className="back" href={isSelf ? "/dashboard" : "/dashboard/team"}>
         <svg viewBox="0 0 24 24">
           <path d="m14 6-6 6 6 6" />
         </svg>{" "}
-        All clients
+        {isSelf ? "Your overview" : "Team members"}
       </Link>
 
       <div className="topbar">
@@ -69,7 +69,7 @@ export default async function ClientPage({
         </div>
       </div>
 
-      <CoachView days={dayRows} clientId={client.userId} />
+      <CoachView days={dayRows} clientId={client.userId} perspective={isSelf ? "self" : "member"} />
 
     </>
   );

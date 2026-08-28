@@ -3,10 +3,10 @@
 // forget it.
 
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import type { Metadata } from "next";
 import { getSessionFromCookies } from "@/lib/auth";
 import SignOut from "./sign-out";
+import DashboardNav from "./dashboard-nav";
 import "./dashboard.css";
 
 export const dynamic = "force-dynamic";
@@ -47,32 +47,7 @@ export default async function DashboardLayout({
           <span className="wordmark">Ontor</span>
         </div>
 
-        <div className="navlabel">Coaching</div>
-        <nav className="nav">
-          <Link href="/dashboard" aria-current="page">
-            <svg viewBox="0 0 24 24">
-              <circle cx="9" cy="8" r="3.2" />
-              <path d="M3.5 19c.4-3.2 2.7-5 5.5-5s5.1 1.8 5.5 5" />
-              <path d="M16.5 7.5a3 3 0 0 1 0 5.6" />
-              <path d="M18 18.8c-.2-2-.9-3.4-2-4.3" />
-            </svg>
-            Clients
-          </Link>
-          <Link href="/dashboard/profile">
-            <svg viewBox="0 0 24 24">
-              <circle cx="12" cy="8" r="3.4" />
-              <path d="M5 20c.6-3.8 3.3-6 7-6s6.4 2.2 7 6" />
-            </svg>
-            Profile
-          </Link>
-          <Link href="/dashboard/subscription">
-            <svg viewBox="0 0 24 24">
-              <rect x="3" y="6" width="18" height="12" rx="2.2" />
-              <path d="M3 10.5h18" />
-            </svg>
-            Subscription
-          </Link>
-        </nav>
+        <DashboardNav />
 
         <div className="whoami">
           <span className="avatar">{initials(session.email)}</span>

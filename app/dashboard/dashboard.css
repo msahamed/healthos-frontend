@@ -74,10 +74,10 @@
     display:grid;place-items:center;flex:none}
   .glyph i{display:block;width:2px;background:var(--amber);border-radius:1px}
   .glyph span{display:flex;align-items:center;gap:2px;height:13px}
-  .wordmark{font-family:var(--font-newsreader),Georgia,serif;font-size:18px;font-weight:600;letter-spacing:-.01em}
+  .wordmark{font-family:var(--font-hanken),-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:18px;font-weight:750;letter-spacing:-.02em}
 
-  .navlabel{font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-    color:var(--ink-mute);padding:14px 8px 6px}
+  .navlabel{font-size:12px;font-weight:700;letter-spacing:0;color:var(--ink-mute);padding:14px 8px 6px}
+  .teamLabel{margin-top:12px;padding-top:18px;border-top:1px solid var(--line)}
   .nav{display:flex;flex-direction:column;gap:1px}
   .nav a,.nav button{
     display:flex;align-items:center;gap:10px;width:100%;text-align:left;
@@ -101,7 +101,7 @@
   /* ── Main ──────────────────────────────────────────────────── */
   .shell main{padding:26px 34px 60px;max-width:1180px}
   .topbar{display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:6px}
-  h1{font-family:var(--font-newsreader),Georgia,serif;font-size:31px;font-weight:600;letter-spacing:-.015em;
+  h1{font-family:var(--font-hanken),-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:31px;font-weight:800;letter-spacing:-.025em;
     line-height:1.1;margin:0;text-wrap:balance}
   .sub{color:var(--ink-soft);font-size:14.5px;margin:6px 0 0}
   .spacer{flex:1}
@@ -118,15 +118,15 @@
   /* ── Stat tiles ────────────────────────────────────────────── */
   .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:12px;margin:22px 0 26px}
   .tile{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:15px 17px 16px}
-  .tile .k{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute)}
-  .tile .v{font-family:var(--font-newsreader),Georgia,serif;font-size:33px;font-weight:600;letter-spacing:-.02em;
+  .tile .k{font-size:12px;font-weight:700;letter-spacing:0;color:var(--ink-mute)}
+  .tile .v{font-family:var(--font-hanken),-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:33px;font-weight:750;letter-spacing:-.025em;
     line-height:1.15;margin-top:7px}
   .tile .n{font-size:12.5px;color:var(--ink-soft);margin-top:3px}
 
   /* ── Roster ────────────────────────────────────────────────── */
   .panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;overflow:hidden}
   .panelhead{display:flex;align-items:center;gap:12px;padding:14px 18px 6px}
-  .panelhead h2{font-family:var(--font-newsreader),Georgia,serif;font-size:26px;font-weight:500;
+  .panelhead h2{font-family:var(--font-hanken),-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:24px;font-weight:750;
     letter-spacing:-.01em;margin:0;color:var(--ink)}
   .scroll{overflow-x:auto}
   table{width:100%;border-collapse:collapse;min-width:720px}
@@ -199,7 +199,7 @@
     border:1px solid var(--line-strong);border-radius:999px;padding:2px 8px;white-space:nowrap}
 
   /* ── Coach view (ported from the approved design) ──────────── */
-  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:0;
     color:var(--ink-soft);padding:16px 18px 2px}
   .panelhead.spread{justify-content:space-between}
   .seg{display:flex;gap:0;flex:none;border:1px solid var(--line-strong);border-radius:10px;overflow:hidden}
@@ -223,7 +223,7 @@
   .dialbadge{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
     padding:2px 7px;border-radius:999px;margin-left:auto}
   .dialrow{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
-  .dialval{font-family:var(--font-newsreader),Georgia,serif;font-size:27px;font-weight:600;
+  .dialval{font-family:var(--font-hanken),-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:27px;font-weight:750;
     line-height:1;letter-spacing:-.02em}
   .dialdelta{font-size:11.5px;margin-top:4px}
   .dialmini{display:inline-block;width:68px;height:24px}
@@ -243,7 +243,7 @@
   .sect{margin-top:30px}
   .sect > .eyebrow{padding:0 0 6px}
   .sectHead{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:6px}
-  .sectTitle{font-family:var(--font-newsreader),Georgia,serif;font-size:26px;font-weight:500;
+  .sectTitle{font-family:var(--font-hanken),-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:26px;font-weight:750;
     letter-spacing:-.01em;line-height:1.15;margin:0 0 6px;color:var(--ink)}
   .sect > .sub, .sect .sub{margin:0 0 14px;color:var(--ink-soft);font-size:14.5px;line-height:1.55;max-width:78ch}
   .sect > .chips{padding:0 0 12px}
@@ -299,12 +299,14 @@
     justify-content:center;padding:48px 24px;background:var(--paper);box-sizing:border-box}
   .acceptCard{width:100%;max-width:520px;background:var(--paper);border:1px solid var(--line);
     border-radius:18px;padding:30px 30px 28px;display:flex;flex-direction:column;gap:14px}
-  .acceptCard h1{font-family:var(--font-newsreader),Georgia,serif;font-size:28px;font-weight:500;
+  .acceptCard h1{font-family:var(--font-hanken),-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:28px;font-weight:750;
     letter-spacing:-.015em;line-height:1.2;margin:6px 0 0;color:var(--ink);text-wrap:balance}
   .acceptCard .btn{align-self:flex-start;text-decoration:none;display:inline-block}
 
   .rowactions{display:flex;align-items:center;gap:4px;flex:none}
   .linkbtn.accept{color:var(--teal)}
+  .sharingSection{max-width:620px}
+  .sharingForm{margin-top:14px}
 
 /* ── Buttons ──────────────────────────────────────────────────────
    Actions are buttons, not sentences. Every one of these was a bare

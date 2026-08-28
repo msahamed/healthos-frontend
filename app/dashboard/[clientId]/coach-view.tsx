@@ -99,7 +99,17 @@ const TOD_OVERLAYS: { key: MarkerKey; name: string }[] = [
   { key: "vocal_strain", name: "Vocal strain" },
 ];
 
-export default function CoachView({ days, clientId }: { days: DayRow[]; clientId: string }) {
+type Perspective = "self" | "member";
+
+export default function CoachView({
+  days,
+  clientId,
+  perspective = "member",
+}: {
+  days: DayRow[];
+  clientId: string;
+  perspective?: Perspective;
+}) {
   const [range, setRange] = useState<Range>(30);
   const [zoneKey, setZoneKey] = useState<MarkerKey>("stress");
 
@@ -150,7 +160,7 @@ export default function CoachView({ days, clientId }: { days: DayRow[]; clientId
       </section>
 
       <section className="sect">
-        <div className="eyebrow">Day by day, against their own usual</div>
+        <div className="eyebrow">Day by day, against {perspective === "self" ? "your" : "their"} usual</div>
         <div className="sectHead">
           <h2 className="sectTitle">Each dial, in one look</h2>
           <div className="seg">
@@ -159,8 +169,8 @@ export default function CoachView({ days, clientId }: { days: DayRow[]; clientId
           </div>
         </div>
         <p className="sub">
-          Each dot is one day&apos;s average. The green band is their usual zone for that dial, one
-          standard swing either side of their own baseline across the whole run. A dot outside the
+          Each dot is one day&apos;s average. The green band is {perspective === "self" ? "your" : "their"} usual zone for that dial, one
+          standard swing either side of {perspective === "self" ? "your" : "their"} baseline across the whole run. A dot outside the
           zone is labeled with its day: red means it moved the wrong way for that dial, teal means
           better than usual. Dashed stretches are days with no check-ins. Hover any dot for detail.
         </p>
@@ -171,12 +181,12 @@ export default function CoachView({ days, clientId }: { days: DayRow[]; clientId
           ))}
         </div>
         <div className="card">
-          <ZoneChart days={days} zoneKey={zoneKey} range={range} />
+          <ZoneChart days={days} zoneKey={zoneKey} range={range} perspective={perspective} />
         </div>
       </section>
 
       <TimeOfDayPanel clientId={clientId} />
-      <RecoveryPanel clientId={clientId} />
+      <RecoveryPanel clientId={clientId} perspective={perspective} />
       <MatrixPanel clientId={clientId} />
     </>
   );
@@ -295,7 +305,7 @@ function TimeOfDayPanel({ clientId }: { clientId: string }) {
   );
 }
 
-function RecoveryPanel({ clientId }: { clientId: string }) {
+function RecoveryPanel({ clientId, perspective }: { clientId: string; perspective: Perspective }) {
   const [range, setRange] = useState<Range>(30);
   const { data, state, ref } = useLazyPanel<Recovery>(
     `/api/v1/dashboard/${clientId}/?panel=recovery&days=${range}&marker=stress`,
@@ -327,7 +337,7 @@ function RecoveryPanel({ clientId }: { clientId: string }) {
             baseline. All {built.total} {built.total === 1 ? "spike" : "spikes"} from this run in one
             bar, sorted by how long they took to come down. About {built.floor} seconds is the
             fastest these check-ins can measure, so the first segment means &ldquo;at least that
-            fast&rdquo;. That floor is per client, not a fixed number.
+            fast&rdquo;. That floor comes from {perspective === "self" ? "your" : "this person's"} check-in timing, not a fixed number.
           </p>
           <div className="card">
             <RecBar built={built} />
@@ -390,7 +400,7 @@ function Spark({ points, w, h, color }: { points: { d: string; v: number }[]; w:
   );
 }
 
-function ZoneChart({ days, zoneKey, range }: { days: DayRow[]; zoneKey: MarkerKey; range: Range }) {
+function ZoneChart({ days, zoneKey, range, perspective }: { days: DayRow[]; zoneKey: MarkerKey; range: Range; perspective: Perspective }) {
   const W = 1040, H = 300, R = 96, L = 36, T = 14, B = 32;
   const withVal = days.filter((d) => d.m[zoneKey] != null);
   if (!withVal.length) return <p className="note">No readings for this dial yet.</p>;
@@ -464,7 +474,7 @@ function ZoneChart({ days, zoneKey, range }: { days: DayRow[]; zoneKey: MarkerKe
         </g>
       ))}
       <rect x={L} y={y(base + sd)} width={W - L - R} height={y(base - sd) - y(base + sd)} fill={ZONE_FILL}>
-        <title>{`Usual zone: ${Math.round(base - sd)} to ${Math.round(base + sd)}, one standard swing either side of the client's baseline across the whole run.`}</title>
+        <title>{`Usual zone: ${Math.round(base - sd)} to ${Math.round(base + sd)}, one standard swing either side of ${perspective === "self" ? "your" : "this person's"} baseline across the whole run.`}</title>
       </rect>
       <line x1={L} x2={W - R} y1={y(base)} y2={y(base)} stroke={TEAL} strokeWidth="1.5" strokeDasharray="6 5" />
       <text x={W - R + 8} y={y(base) + 4} fontSize="12.5" fontWeight="700" fill={TEAL_DEEP}>
