@@ -10,7 +10,6 @@ import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
 import { getSessionFromCookies } from "@/lib/auth";
 import { getProfile, saveProfile, SEX_OPTIONS } from "@/lib/profile";
-import { acceptById, endShare, grantToCoach, listForClient } from "@/lib/shares";
 
 export const dynamic = "force-dynamic";
 
@@ -29,14 +28,13 @@ const SEX_LABEL: Record<string, string> = {
 export default async function ProfilePage({
   searchParams,
 }: {
-  searchParams: Promise<{ saved?: string; err?: string; shared?: string; serr?: string }>;
+  searchParams: Promise<{ saved?: string; err?: string }>;
 }) {
   const session = await getSessionFromCookies();
   if (!session) redirect("/login");
 
-  const [profile, granted, params] = await Promise.all([
+  const [profile, params] = await Promise.all([
     getProfile(session.userId),
-    listForClient(session),
     searchParams,
   ]);
 
@@ -58,41 +56,6 @@ export default async function ProfilePage({
     // The roster and the client header both read the name.
     revalidatePath("/dashboard");
     redirect("/dashboard/profile?saved=1");
-  }
-
-  /**
-   * Start sharing with a coach.
-   *
-   * Active immediately, with nothing for them to accept: you do not
-   * need anyone's permission to hand over your own numbers. If they
-   * have no account yet the row waits, invisible, until they sign in.
-   */
-  async function startSharing(formData: FormData) {
-    "use server";
-    const s = await getSessionFromCookies();
-    if (!s) redirect("/login");
-    const res = await grantToCoach(s, String(formData.get("coachEmail") ?? ""));
-    if (!res.ok) redirect(`/dashboard/profile?serr=${encodeURIComponent(res.error)}`);
-    revalidatePath("/dashboard/profile");
-    redirect(`/dashboard/profile?shared=${res.coachHasAccount ? "1" : "pending"}`);
-  }
-
-  async function acceptShare(formData: FormData) {
-    "use server";
-    const s = await getSessionFromCookies();
-    if (!s) redirect("/login");
-    await acceptById(s, String(formData.get("id") ?? ""));
-    revalidatePath("/dashboard/profile");
-    redirect("/dashboard/profile?shared=1");
-  }
-
-  async function stopSharing(formData: FormData) {
-    "use server";
-    const s = await getSessionFromCookies();
-    if (!s) redirect("/login");
-    await endShare(s, String(formData.get("id") ?? ""));
-    revalidatePath("/dashboard/profile");
-    redirect("/dashboard/profile");
   }
 
   return (
@@ -145,69 +108,6 @@ export default async function ProfilePage({
         <button className="btn" type="submit">Save profile</button>
       </form>
 
-      <section className="sect" style={{ maxWidth: 520 }}>
-        <h2 className="sectTitle">Who can see your check-ins</h2>
-        <p className="sub">
-          They see how your voice moves against your own usual. They never see or hear what you
-          said. Stop any of them at any time, and it takes effect immediately.
-        </p>
-        {params.shared === "1" && <p className="fmsg ok">Sharing started. They can see it now.</p>}
-        {params.shared === "pending" && (
-          <p className="fmsg ok">
-            Sharing started. They do not have an Ontor account yet, so nothing is visible to them
-            until they sign in with that address.
-          </p>
-        )}
-        {params.serr && <p className="fmsg err">{params.serr}</p>}
-
-        <form action={startSharing} className="inviteform" style={{ marginBottom: 14 }}>
-          <input
-            type="email"
-            name="coachEmail"
-            required
-            placeholder="coach@example.com"
-            aria-label="Coach email"
-          />
-          <button className="btn" type="submit">Share with a coach</button>
-        </form>
-        <div className="card">
-          {granted.length === 0 ? (
-            <p className="fhint" style={{ margin: 0 }}>
-              Nobody. You are not sharing your check-ins with anyone.
-            </p>
-          ) : (
-            <ul className="shares" style={{ padding: 0 }}>
-              {granted.map((g) => (
-                <li key={g.id}>
-                  <span>
-                    <b>{g.coachName ?? g.coachEmail}</b>
-                    {g.coachName && <small>{g.coachEmail}</small>}
-                    <small>
-                      {g.status === "active"
-                        ? `sharing since ${(g.acceptedAt ?? g.createdAt).toISOString().slice(0, 10)}`
-                        : "is inviting you to their program"}
-                    </small>
-                  </span>
-                  <span className="rowactions">
-                    {g.status === "pending" && (
-                      <form action={acceptShare}>
-                        <input type="hidden" name="id" value={g.id} />
-                        <button className="linkbtn accept" type="submit">Accept</button>
-                      </form>
-                    )}
-                    <form action={stopSharing}>
-                      <input type="hidden" name="id" value={g.id} />
-                      <button className="linkbtn" type="submit">
-                        {g.status === "active" ? "Stop sharing" : "Decline"}
-                      </button>
-                    </form>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </section>
     </>
   );
 }
