@@ -14,6 +14,7 @@
 // fourteen days of the product, not fourteen days of having been busy.
 
 import { NextResponse } from "next/server";
+import { after } from "next/server";
 import { accounts, requireSession } from "@/lib/auth";
 import { sendTrialStarted } from "@/lib/billing-email";
 import { entitlementForEmail, trialDays } from "@/lib/entitlement";
@@ -61,7 +62,7 @@ export async function POST(req: Request) {
   // Only on the transition. The filter above matches nothing on a
   // repeat call, so a double-tap cannot send a second welcome.
   if (started.modifiedCount > 0 && ent.expires_at) {
-    await sendTrialStarted(session.email, new Date(ent.expires_at), trialDays());
+    after(sendTrialStarted(session.email, new Date(ent.expires_at), trialDays()));
   }
 
   return NextResponse.json(ent, {

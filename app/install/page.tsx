@@ -1,5 +1,7 @@
 import Nav from "../components/Nav";
+import Link from "next/link";
 import type { Metadata } from "next";
+import { getSessionFromCookies } from "@/lib/auth";
 import { extractEmail, withEmail, type SearchParams } from "./_lib/query";
 import { INSTALL_SHARED_CSS } from "./_lib/shared-css";
 import PlatformTile from "./_components/PlatformTile";
@@ -25,6 +27,9 @@ export default async function InstallChooserPage({
   searchParams: SearchParams;
 }) {
   const email = await extractEmail(searchParams);
+  const params = await searchParams;
+  const trialStarted = params.trial === "started";
+  const session = await getSessionFromCookies();
   const link = (path: string) => withEmail(path, email);
 
   return (
@@ -45,6 +50,12 @@ export default async function InstallChooserPage({
 
         <section className="inst-body">
           <div className="inst-wrap">
+            {trialStarted && session && (
+              <div className="ch-trial-started" role="status">
+                <strong>Your 14-day trial has started.</strong>
+                <span>Install Ontor on this computer, or continue to your account.</span>
+              </div>
+            )}
             <div className="ch-primary">
               <PlatformTile
                 href={link("/install/mac")}
@@ -63,6 +74,12 @@ export default async function InstallChooserPage({
                 ctaLabel="Download for Windows"
               />
             </div>
+
+            {session && (
+              <Link className="ch-dashboard-link" href="/dashboard/">
+                Continue to dashboard
+              </Link>
+            )}
 
             <div className="ch-private">
               <div className="ch-private-copy">
@@ -119,6 +136,12 @@ const CHOOSER_CSS = `
 }
 
 .inst-body { padding: 0 0 96px; background: var(--paper); }
+.ch-trial-started {
+  display: flex; justify-content: space-between; gap: 20px; margin: 0 0 20px;
+  padding: 15px 18px; border-radius: 12px; background: var(--teal-surface); color: var(--teal-dark);
+  font-size: 14px;
+}
+.ch-trial-started span { color: var(--ink-soft); }
 .ch-primary { display: grid; gap: 14px; }
 .ch-tile {
   display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; grid-template-areas:
@@ -143,6 +166,11 @@ const CHOOSER_CSS = `
 }
 .ch-cta.is-live { background: var(--teal); color: #fff; }
 .ch-cta.is-quiet { color: var(--ink-soft); }
+.ch-dashboard-link {
+  display: inline-block; margin-top: 20px; color: var(--teal); font-size: 14px;
+  font-weight: 700; text-decoration: none;
+}
+.ch-dashboard-link:hover { color: var(--teal-dark); }
 
 .ch-private { margin-top: 72px; padding-top: 38px; border-top: 1px solid var(--line); }
 .ch-private-copy { max-width: 600px; }
@@ -164,6 +192,7 @@ const CHOOSER_CSS = `
   .ch-hero h1 { font-size: 38px; }
   .ch-hero .inst-wrap > p:last-child { font-size: 17px; }
   .inst-body { padding-bottom: 72px; }
+  .ch-trial-started { flex-direction: column; gap: 3px; }
   .ch-tile { grid-template-columns: 44px 1fr; grid-template-areas:
     "icon badge" "icon title" "copy copy" "cta cta"; padding: 20px; }
   .ch-icon { width: 44px; height: 44px; }
