@@ -9,12 +9,27 @@ import Logo from "./Logo";
 // "you've left the top" affordance.
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetch("/api/v1/auth/me/", {
+      credentials: "same-origin",
+      cache: "no-store",
+      signal: controller.signal,
+    }).then((res) => {
+      if (res.ok) setSignedIn(true);
+    }).catch(() => {
+      // Public navigation remains usable when the session check is offline.
+    });
+    return () => controller.abort();
   }, []);
 
   return (
@@ -82,13 +97,15 @@ export default function Nav() {
           <Link href="/pricing" className="nav-link">
             Pricing
           </Link>
-          <Link href="/login" className="nav-link">
-            Sign in
-          </Link>
+          {!signedIn && (
+            <Link href="/login" className="nav-link">
+              Sign in
+            </Link>
+          )}
         </nav>
 
         <Link
-          href="/login/?next=/dashboard/subscription/"
+          href={signedIn ? "/dashboard/" : "/login/?next=/dashboard/subscription/"}
           style={{
             fontFamily: "inherit",
             fontSize: 14,
@@ -103,7 +120,7 @@ export default function Nav() {
             transition: "transform .15s, box-shadow .2s, background .2s",
           }}
         >
-          Start free
+          {signedIn ? "Dashboard" : "Start free"}
         </Link>
       </div>
 
