@@ -42,12 +42,13 @@ export const REQUEST_WINDOW_SEC = 60 * 60;
 export const MAX_REQUESTS_PER_IP = 30;
 
 /**
- * Session lifetime. Slides on every authenticated request, so an
- * actively used install effectively never signs out — matching the
- * product rule: you stay logged in until you log out or uninstall.
- * A device dormant for a year drops off on its own.
+ * Installed-client session lifetime. App tokens live in protected platform
+ * storage and slide while used; web sessions use the shorter limits below.
  */
 export const SESSION_TTL_DAYS = 365;
+/** Web dashboard sessions: convenient across visits, bounded if stolen. */
+export const WEB_SESSION_IDLE_DAYS = 7;
+export const WEB_SESSION_ABSOLUTE_DAYS = 30;
 
 /** Loose RFC-5322-ish check, same as the waitlist intake. */
 export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -123,6 +124,7 @@ export interface SessionDoc {
   email: string;
   role: string;
   device: string | null;
+  client?: "web" | "app";
   created_at: Date;
   last_used_at: Date;
   expires_at: Date;
@@ -202,11 +204,14 @@ export async function issueSession(args: {
   email: string;
   role: string;
   device?: string | null;
+  client?: "web" | "app";
 }): Promise<{ token: string; expiresAt: Date }> {
   const token = randomBytes(32).toString("base64url");
   const now = new Date();
+  const web = args.client === "web";
   const expiresAt = new Date(
-    now.getTime() + SESSION_TTL_DAYS * 24 * 60 * 60 * 1000,
+    now.getTime() +
+      (web ? WEB_SESSION_IDLE_DAYS : SESSION_TTL_DAYS) * 24 * 60 * 60 * 1000,
   );
 
   const col = await sessions();
@@ -217,6 +222,7 @@ export async function issueSession(args: {
     email: args.email,
     role: args.role,
     device: args.device ?? null,
+    client: args.client ?? "app",
     created_at: now,
     last_used_at: now,
     expires_at: expiresAt,
@@ -245,20 +251,51 @@ export interface Session {
  */
 export async function verifySessionToken(
   token: string | null,
+  options: { web?: boolean } = {},
 ): Promise<Session | null> {
   if (!token) return null;
 
   try {
     const col = await sessions();
     const now = new Date();
+    const id = hashToken(token);
+    const current = await col.findOne({ _id: id });
+    if (!current) return null;
+
+    const web = options.web === true || current.client === "web";
+    const absoluteExpiresAt = web
+      ? new Date(
+          current.created_at.getTime() +
+            WEB_SESSION_ABSOLUTE_DAYS * 24 * 60 * 60 * 1000,
+        )
+      : null;
+    const idleCutoff = web
+      ? new Date(now.getTime() - WEB_SESSION_IDLE_DAYS * 24 * 60 * 60 * 1000)
+      : null;
+    if (
+      current.expires_at <= now ||
+      (idleCutoff != null && current.last_used_at <= idleCutoff) ||
+      (absoluteExpiresAt != null && absoluteExpiresAt <= now)
+    ) {
+      await col.deleteOne({ _id: id });
+      return null;
+    }
+
+    const nextExpiresAt = web
+      ? new Date(
+          Math.min(
+            now.getTime() + WEB_SESSION_IDLE_DAYS * 24 * 60 * 60 * 1000,
+            absoluteExpiresAt!.getTime(),
+          ),
+        )
+      : new Date(now.getTime() + SESSION_TTL_DAYS * 24 * 60 * 60 * 1000);
     const doc = await col.findOneAndUpdate(
-      { _id: hashToken(token), expires_at: { $gt: now } },
+      { _id: id, expires_at: { $gt: now } },
       {
         $set: {
           last_used_at: now,
-          expires_at: new Date(
-            now.getTime() + SESSION_TTL_DAYS * 24 * 60 * 60 * 1000,
-          ),
+          expires_at: nextExpiresAt,
+          ...(web && { client: "web" as const }),
         },
       },
       { returnDocument: "after" },
@@ -294,9 +331,18 @@ export function bearerToken(req: Request): string | null {
   return found ? decodeURIComponent(found[1]) : null;
 }
 
+export function cookieToken(req: Request): string | null {
+  const cookie = req.headers.get("cookie") ?? "";
+  const found = /(?:^|;\s*)ontor_session=([^;]+)/.exec(cookie);
+  return found ? decodeURIComponent(found[1]) : null;
+}
+
 /** Convenience for protected routes: `const s = await requireSession(req)`. */
 export async function requireSession(req: Request): Promise<Session | null> {
-  return verifySessionToken(bearerToken(req));
+  const header = req.headers.get("authorization") ?? "";
+  return verifySessionToken(bearerToken(req), {
+    web: !/^Bearer\s+/i.test(header),
+  });
 }
 
 /**
@@ -310,7 +356,9 @@ export async function requireSession(req: Request): Promise<Session | null> {
 export async function getSessionFromCookies(): Promise<Session | null> {
   const { cookies } = await import("next/headers");
   const store = await cookies();
-  return verifySessionToken(store.get(SESSION_COOKIE)?.value ?? null);
+  return verifySessionToken(store.get(SESSION_COOKIE)?.value ?? null, {
+    web: true,
+  });
 }
 
 /** Revoke one session (logout). Idempotent. */

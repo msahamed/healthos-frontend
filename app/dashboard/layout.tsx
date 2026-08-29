@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { getSessionFromCookies } from "@/lib/auth";
 import SignOut from "./sign-out";
 import DashboardNav from "./dashboard-nav";
+import SessionKeepalive from "./session-keepalive";
 import "./dashboard.css";
 
 export const dynamic = "force-dynamic";
@@ -35,6 +36,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="shell">
+      <SessionKeepalive />
       <aside className="rail">
         <div className="mark">
           <span className="glyph">

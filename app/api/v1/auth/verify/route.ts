@@ -40,7 +40,7 @@ import {
   MAX_VERIFY_ATTEMPTS,
   VERIFY_WINDOW_SEC,
   SESSION_COOKIE,
-  SESSION_TTL_DAYS,
+  WEB_SESSION_IDLE_DAYS,
 } from "@/lib/auth";
 import { consume } from "@/lib/rate-limit";
 import { linkCoachShares } from "@/lib/shares";
@@ -195,6 +195,7 @@ export async function POST(req: Request) {
       email,
       role: existing?.role ?? "client",
       device,
+      client: body.client === "web" ? "web" : "app",
     });
 
     const res = NextResponse.json({
@@ -214,7 +215,7 @@ export async function POST(req: Request) {
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
         path: "/",
-        maxAge: SESSION_TTL_DAYS * 24 * 60 * 60,
+        maxAge: WEB_SESSION_IDLE_DAYS * 24 * 60 * 60,
       });
     }
 

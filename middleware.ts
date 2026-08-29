@@ -16,7 +16,8 @@ export function middleware(req: NextRequest) {
   const host = (req.headers.get("host") || "").toLowerCase();
 
   const isOldDomain = host === "healthos.live" || host === "www.healthos.live";
-  if (!isOldDomain) return NextResponse.next();
+  const isWww = host === "www.ontor.ai";
+  if (!isOldDomain && !isWww) return NextResponse.next();
 
   const { pathname, search } = req.nextUrl;
 

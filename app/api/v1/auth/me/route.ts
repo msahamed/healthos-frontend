@@ -2,15 +2,16 @@
 //
 // Returns: { user_id, email, role, expires_at } or 401.
 //
-// Two jobs. The obvious one is letting a client confirm it is still
-// signed in on launch. The quieter one is that verifying a session
-// slides its expiry (see verifySessionToken), so an app that pings
-// this on cold start keeps an active install signed in indefinitely
-// — the product rule being that you stay logged in until you log out
-// or uninstall.
+// Two jobs: confirm that a client is still signed in, and renew its idle
+// window. Web sessions remain capped by their absolute 30-day lifetime.
 
 import { NextResponse } from "next/server";
-import { requireSession } from "@/lib/auth";
+import {
+  cookieToken,
+  requireSession,
+  SESSION_COOKIE,
+  WEB_SESSION_IDLE_DAYS,
+} from "@/lib/auth";
 
 export const runtime = "nodejs";
 
@@ -20,10 +21,23 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
-  return NextResponse.json({
+  const res = NextResponse.json({
     user_id: session.userId,
     email: session.email,
     role: session.role,
     expires_at: session.expiresAt.toISOString(),
   });
+  // Keep an actively used browser signed in for seven days from its latest
+  // visit. The server still enforces the hard 30-day reauthentication limit.
+  const token = cookieToken(req);
+  if (token) {
+    res.cookies.set(SESSION_COOKIE, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: WEB_SESSION_IDLE_DAYS * 24 * 60 * 60,
+    });
+  }
+  return res;
 }
