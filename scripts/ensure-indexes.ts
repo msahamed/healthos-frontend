@@ -71,6 +71,13 @@ async function main() {
       { name: "user_live_by_date" },
     );
 
+  await db
+    .collection("reset_sessions")
+    .createIndex(
+      { user_id: 1, updated_at: 1, _id: 1 },
+      { name: "user_sync_cursor" },
+    );
+
   // Sharing. The three read shapes are: by invite token, a coach's
   // roster, and the permission check for one client.
   await db

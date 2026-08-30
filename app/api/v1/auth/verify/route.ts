@@ -1,7 +1,7 @@
 // POST /api/v1/auth/verify — exchange an emailed code for a session.
 //
 // Body:    { email, code, local_user_id?, device?, client? }
-// Returns: { token, user_id, is_new, has_cloud_data, expires_at }
+// Returns: { token, user_id, is_new, has_cloud_data, expires_at, entitlement }
 //
 // This is where identity is decided, and it replaces the old
 // unauthenticated GET /api/v1/installations?email= lookup that the
@@ -44,6 +44,7 @@ import {
 } from "@/lib/auth";
 import { consume } from "@/lib/rate-limit";
 import { linkCoachShares } from "@/lib/shares";
+import { entitlementForEmail } from "@/lib/entitlement";
 
 export const runtime = "nodejs";
 
@@ -180,9 +181,16 @@ export async function POST(req: Request) {
     // and signs up second still finds their client waiting.
     await linkCoachShares({ userId, email });
 
-    const priorObservation = await db
-      .collection("observations")
-      .findOne({ user_id: userId }, { projection: { _id: 1 } });
+    const [priorObservation, priorReset] = await Promise.all([
+      db.collection("observations").findOne(
+        { user_id: userId },
+        { projection: { _id: 1 } },
+      ),
+      db.collection("reset_sessions").findOne(
+        { user_id: userId },
+        { projection: { _id: 1 } },
+      ),
+    ]);
 
     const device =
       typeof body.device === "string" && body.device.length <= 120
@@ -198,12 +206,18 @@ export async function POST(req: Request) {
       client: body.client === "web" ? "web" : "app",
     });
 
+    // Bundle the app's gate decision into the login response. Existing
+    // callers ignore this additive field; new clients avoid immediately
+    // following a successful OTP exchange with a second request.
+    const entitlement = await entitlementForEmail(email);
+
     const res = NextResponse.json({
       token,
       user_id: userId,
       is_new: isNew,
-      has_cloud_data: priorObservation !== null,
+      has_cloud_data: priorObservation !== null || priorReset !== null,
       expires_at: expiresAt.toISOString(),
+      entitlement,
     });
 
     // Web gets an httpOnly cookie as well as the token in the body —
