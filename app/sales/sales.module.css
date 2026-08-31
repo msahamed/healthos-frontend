@@ -1,0 +1,53 @@
+.main{max-width:1040px;margin:0 auto;padding:0 32px}
+.hero{max-width:850px;padding:112px 0 104px;text-align:left}
+.hero h1,.sectionCopy h2,.pilotSection h2{margin:0;font-family:var(--font-hanken),Arial,sans-serif;font-weight:780;letter-spacing:-.045em}
+.hero h1{font-size:clamp(48px,6.2vw,78px);line-height:.98}
+.hero p{max-width:720px;margin:30px 0 28px;color:var(--ink-soft);font-size:20px;line-height:1.55}
+
+.productSection,.managerSection,.turnoverSection{padding:96px 0;border-top:1px solid var(--line)}
+.sectionCopy{max-width:760px}
+.sectionCopy h2,.pilotSection h2{font-size:clamp(34px,4.5vw,54px);line-height:1.04}
+.sectionCopy p,.pilotSection>p{max-width:700px;margin:22px 0 0;color:var(--ink-soft);font-size:17px;line-height:1.65}
+.productShot{position:relative;width:100%;aspect-ratio:16/11;margin:48px 0 0;overflow:hidden;border:1px solid var(--line);background:#fff}
+.productShot img{object-fit:cover;object-position:top}
+
+.teamView{margin-top:48px;border:1px solid var(--line);background:#fff}
+.teamView>header{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:22px 26px;border-bottom:1px solid var(--line);background:#eef7f5}
+.teamView>header div{display:flex;align-items:baseline;gap:18px}
+.teamView>header strong{font-size:18px}.teamView>header span,.teamView>header p{color:var(--ink-soft);font-size:12px}.teamView>header p{margin:0}
+.signalList{padding:0 26px}
+.signalRow{display:grid;grid-template-columns:160px minmax(300px,1fr) 170px;gap:24px;align-items:center;padding:25px 0;border-bottom:1px solid var(--line)}
+.signalName strong{display:block;font-size:15px}.signalName span{display:block;margin-top:4px;color:var(--ink-soft);font-size:11px}
+.dotLine{position:relative;height:62px;border-bottom:1px solid #dbe3e2}
+.usualBand{position:absolute;left:0;right:0;top:31px;height:13px;border:1px solid #a8cfca;background:#e8f1ef}
+.usualBand:after{content:"";position:absolute;left:0;right:0;top:5px;border-top:1px dashed #7caaa5}
+.dotLine b{position:absolute;z-index:1;width:10px;height:10px;border:2px solid #fff;border-radius:50%;background:#0f766e;box-shadow:0 0 0 5px rgba(15,118,110,.12)}
+.dotLine .warmDot{background:#f59e0b;box-shadow:0 0 0 5px rgba(245,158,11,.15)}
+.attentionStatus,.steadyStatus{font-size:12px;font-weight:700;text-align:right}.attentionStatus{color:#a45d10}.steadyStatus{color:var(--teal)}
+.managerRead{padding:24px 26px;background:#fff8df}.managerRead strong{font-size:13px}.managerRead p{max-width:720px;margin:7px 0 0;color:#5f5747;font-size:14px;line-height:1.55}
+.teamView>footer{padding:13px 26px;color:var(--ink-soft);font-size:11px;border-top:1px solid #ead8a9}
+
+.turnoverPath{display:grid;grid-template-columns:repeat(4,1fr);margin-top:48px;border-top:2px solid var(--ink)}
+.turnoverPath>div{position:relative;padding:24px 26px 10px 0}
+.turnoverPath>div:before{content:"";position:absolute;top:-7px;left:0;width:12px;height:12px;border-radius:50%;background:var(--ink)}
+.turnoverPath>div:not(:last-child){border-right:1px solid var(--line)}
+.turnoverPath>div:not(:first-child){padding-left:26px}
+.turnoverPath>div:not(:first-child):before{left:26px}
+.turnoverPath span{display:block;color:var(--teal);font-size:12px;font-weight:750}.turnoverPath strong{display:block;margin-top:10px;font-size:14px;line-height:1.5}
+.limitNote{max-width:760px;margin:38px 0 0;padding-top:26px;border-top:1px solid var(--line);color:var(--ink-soft);font-size:15px;line-height:1.65}
+
+.pilotSection{margin:0 0 96px;padding:70px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pilotSection>a{display:inline-block;margin-top:28px}
+
+@media(max-width:760px){
+  .main{padding:0 20px}.hero{padding:78px 0 74px}.hero p{font-size:17px}
+  .productSection,.managerSection,.turnoverSection{padding:72px 0}
+  .productShot{margin-top:36px}
+  .teamView{margin-top:36px}.teamView>header{align-items:flex-start;flex-direction:column;gap:7px;padding:19px}.teamView>header div{display:grid;gap:4px}
+  .signalList{padding:0 19px}.signalRow{grid-template-columns:1fr;padding:22px 0;gap:14px}.dotLine{min-width:0}.attentionStatus,.steadyStatus{text-align:left}
+  .managerRead{padding:20px 19px}.teamView>footer{padding:13px 19px}
+  .turnoverPath{grid-template-columns:1fr;border-top:0;border-left:2px solid var(--ink)}
+  .turnoverPath>div,.turnoverPath>div:not(:first-child){padding:0 0 30px 24px;border-right:0}
+  .turnoverPath>div:before,.turnoverPath>div:not(:first-child):before{top:3px;left:-7px}
+  .pilotSection{margin-bottom:70px;padding:54px 0}
+}
