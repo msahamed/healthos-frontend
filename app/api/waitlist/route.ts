@@ -12,6 +12,7 @@ import { NextResponse, after } from "next/server";
 import { getMongoClient } from "@/lib/mongodb";
 import { consume, clientIp } from "@/lib/rate-limit";
 import { sendWelcomeEmail, sendOwnerNotification } from "@/lib/email";
+import { sendClaimedOwnerMilestone } from "@/lib/owner-lifecycle";
 
 export const runtime = "nodejs";
 
@@ -102,10 +103,10 @@ export async function POST(req: Request) {
     // slow or failing email provider never blocks the signup response.
     if (res.upsertedCount === 1) {
       after(async () => {
-        await Promise.all([
-          sendWelcomeEmail(email),
-          sendOwnerNotification(email, { source, feedback }),
-        ]);
+        await sendWelcomeEmail(email);
+        if (source !== "mobile_app") {
+          await sendOwnerNotification(email, { source, feedback });
+        }
       });
     }
 
@@ -119,6 +120,21 @@ export async function POST(req: Request) {
       await collection.updateOne(
         { email, $or: [{ user_id: { $exists: false } }, { user_id: null }] },
         { $set: { user_id: userId } },
+      );
+    }
+
+    // The installed client posts here after the user reaches its email step.
+    // Claiming by canonical user id means retries and prior marketing-list
+    // signups still produce exactly one install alert.
+    if (source === "mobile_app") {
+      after(() =>
+        sendClaimedOwnerMilestone(db, {
+          milestone: "install_reached_signup",
+          identityKey: userId ?? email,
+          email,
+          userId,
+          occurredAt: now,
+        }),
       );
     }
 

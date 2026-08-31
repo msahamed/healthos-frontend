@@ -15,8 +15,9 @@
 
 import { NextResponse } from "next/server";
 import { after } from "next/server";
-import { accounts, requireSession } from "@/lib/auth";
+import { accounts, getDb, requireSession } from "@/lib/auth";
 import { sendTrialStarted } from "@/lib/billing-email";
+import { sendClaimedOwnerMilestone } from "@/lib/owner-lifecycle";
 import { entitlementForEmail, trialDays } from "@/lib/entitlement";
 
 export const runtime = "nodejs";
@@ -62,7 +63,22 @@ export async function POST(req: Request) {
   // Only on the transition. The filter above matches nothing on a
   // repeat call, so a double-tap cannot send a second welcome.
   if (started.modifiedCount > 0 && ent.expires_at) {
-    after(sendTrialStarted(session.email, new Date(ent.expires_at), trialDays()));
+    const endsAt = new Date(ent.expires_at);
+    const db = await getDb();
+    after(async () => {
+      await Promise.all([
+        sendTrialStarted(session.email, endsAt, trialDays()),
+        sendClaimedOwnerMilestone(db, {
+          milestone: "trial_started",
+          identityKey: session.userId,
+          email: session.email,
+          userId: session.userId,
+          occurredAt: new Date(),
+          trialEndsAt: endsAt,
+          trialDays: trialDays(),
+        }),
+      ]);
+    });
   }
 
   return NextResponse.json(ent, {

@@ -28,7 +28,7 @@
 // a first-run flow.
 
 import { randomUUID } from "node:crypto";
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import {
   accounts,
   authCodes,
@@ -45,6 +45,7 @@ import {
 import { consume } from "@/lib/rate-limit";
 import { linkCoachShares } from "@/lib/shares";
 import { entitlementForEmail } from "@/lib/entitlement";
+import { sendClaimedOwnerMilestone } from "@/lib/owner-lifecycle";
 
 export const runtime = "nodejs";
 
@@ -142,6 +143,7 @@ export async function POST(req: Request) {
     }
 
     const isNew = !existing;
+    const becameVerified = isNew || existing?.verified_at == null;
     let accountId: string;
     if (isNew) {
       const inserted = await accountsCol.insertOne({
@@ -210,6 +212,19 @@ export async function POST(req: Request) {
     // callers ignore this additive field; new clients avoid immediately
     // following a successful OTP exchange with a second request.
     const entitlement = await entitlementForEmail(email);
+
+    if (becameVerified) {
+      after(() =>
+        sendClaimedOwnerMilestone(db, {
+          milestone: "email_verified",
+          identityKey: userId,
+          email,
+          userId,
+          platform: device,
+          occurredAt: now,
+        }),
+      );
+    }
 
     const res = NextResponse.json({
       token,

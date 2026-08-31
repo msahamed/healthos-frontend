@@ -23,9 +23,11 @@
 // after a partial network failure won't double-count. Duplicate inserts
 // throw a code-11000 error which we silently ignore.
 
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
+import type { Db } from "mongodb";
 import { getMongoClient } from "@/lib/mongodb";
 import { consume, clientIp } from "@/lib/rate-limit";
+import { sendClaimedOwnerMilestone } from "@/lib/owner-lifecycle";
 
 // Mongo Node driver needs the Node runtime (no edge support).
 export const runtime = "nodejs";
@@ -44,6 +46,67 @@ interface IncomingEvent {
   app_version?: string;
   platform?: string;
   props?: Record<string, unknown>;
+}
+
+interface StoredEvent {
+  _id: string;
+  user_id: string;
+  event: string;
+  event_datetime: Date;
+  app_version: string | null;
+  platform: string | null;
+}
+
+const OWNER_EVENT_MILESTONES = {
+  onboarding_completed: "onboarding_completed",
+  log_created: "first_check_in",
+} as const;
+
+async function notifyOwnerMilestones(db: Db, docs: StoredEvent[]) {
+  for (const doc of docs) {
+    const milestone =
+      OWNER_EVENT_MILESTONES[
+        doc.event as keyof typeof OWNER_EVENT_MILESTONES
+      ];
+    if (!milestone) continue;
+
+    try {
+      // Analytics uses the same canonical user id that signup/auth stores.
+      // Requiring that link prevents the open analytics endpoint from being
+      // turned into a founder-email spam relay.
+      const [account, signup] = await Promise.all([
+        db.collection("accounts").findOne(
+          { user_id: doc.user_id },
+          { projection: { _id: 0, email: 1 } },
+        ),
+        db.collection("waitlist").findOne(
+          { user_id: doc.user_id },
+          { projection: { _id: 0, email: 1 } },
+        ),
+      ]);
+      const email =
+        typeof account?.email === "string"
+          ? account.email
+          : typeof signup?.email === "string"
+            ? signup.email
+            : null;
+      if (!email) continue;
+
+      await sendClaimedOwnerMilestone(db, {
+        milestone,
+        identityKey: doc.user_id,
+        email,
+        userId: doc.user_id,
+        platform: doc.platform,
+        appVersion: doc.app_version,
+        occurredAt: doc.event_datetime,
+      });
+    } catch (err) {
+      // Analytics acceptance is more important than a founder alert. A mail
+      // or claim failure must not leave a real device retrying its whole batch.
+      console.error("[events] owner milestone notification failed:", err);
+    }
+  }
 }
 
 function isPlainObject(v: unknown): v is Record<string, unknown> {
@@ -142,15 +205,18 @@ export async function POST(req: Request) {
     received_at: new Date(),
   }));
 
+  const client = await getMongoClient();
+  const db = client.db("healthos");
+  const col = db.collection("events");
+  let result: Record<string, unknown>;
+
   try {
-    const client = await getMongoClient();
-    const col = client.db("healthos").collection("events");
     // ordered:false → keep inserting on duplicate-key errors. Each
     // dup is the client retrying after a partial failure; that's the
     // whole point of using the client id as _id.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await col.insertMany(docs as any, { ordered: false });
-    return NextResponse.json({ accepted: docs.length, dropped });
+    result = { accepted: docs.length, dropped };
   } catch (err: unknown) {
     // Duplicate-key (11000) on every write is fine — it means the
     // entire batch was already accepted in a previous attempt.
@@ -163,25 +229,29 @@ export async function POST(req: Request) {
       e?.writeErrors?.every((w) => w?.code === 11000) === true ||
       e?.code === 11000;
     if (allDup) {
-      return NextResponse.json({
+      result = {
         accepted: docs.length,
         dropped,
         deduped: true,
-      });
-    }
-    // Mixed batch: some inserted, some duplicates. nInserted (if
-    // present) tells us the new count; still a 2xx since the client
-    // can safely ack the whole batch.
-    const inserted = e?.result?.nInserted;
-    if (typeof inserted === "number" && inserted >= 0) {
-      return NextResponse.json({
+      };
+    } else {
+      // Mixed batch: some inserted, some duplicates. nInserted (if
+      // present) tells us the new count; still a 2xx since the client
+      // can safely ack the whole batch.
+      const inserted = e?.result?.nInserted;
+      if (typeof inserted !== "number" || inserted < 0) {
+        console.error("[events] insert failed:", err);
+        return NextResponse.json({ error: "server" }, { status: 500 });
+      }
+      result = {
         accepted: docs.length,
         dropped,
         new: inserted,
         deduped: docs.length - inserted,
-      });
+      };
     }
-    console.error("[events] insert failed:", err);
-    return NextResponse.json({ error: "server" }, { status: 500 });
   }
+
+  after(() => notifyOwnerMilestones(db, docs));
+  return NextResponse.json(result);
 }
