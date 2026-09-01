@@ -26,7 +26,8 @@ export async function sendGoogleAnalyticsProductEvent({
   occurredAt,
   params = {},
 }: ProductEvent): Promise<boolean> {
-  const apiSecret = process.env.GA_API_SECRET;
+  const apiSecret =
+    process.env.GA_API_SECRET ?? process.env.ga_funnel_secrect_API_key;
   if (!apiSecret) return false;
 
   const measurementId =
@@ -75,4 +76,3 @@ export async function sendGoogleAnalyticsProductEvent({
     return false;
   }
 }
-

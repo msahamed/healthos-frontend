@@ -16,7 +16,8 @@ export async function sendFullStoryProductEvent({
   idempotencyKey,
   params = {},
 }: ProductEvent): Promise<boolean> {
-  const apiKey = process.env.FULLSTORY_API_KEY;
+  const apiKey =
+    process.env.FULLSTORY_API_KEY ?? process.env.fs_funnel_secrect_API_key;
   if (!apiKey) return false;
 
   const cleanParams = Object.fromEntries(
@@ -54,4 +55,3 @@ export async function sendFullStoryProductEvent({
     return false;
   }
 }
-
