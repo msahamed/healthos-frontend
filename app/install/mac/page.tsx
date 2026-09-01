@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Nav from "@/app/components/Nav";
 import BackLink from "../_components/BackLink";
 import InstallFooter from "../_components/InstallFooter";
+import DownloadLink from "../_components/DownloadLink";
 import { DownloadIcon, RefreshIcon } from "../_components/icons";
 import { INSTALL_SHARED_CSS } from "../_lib/shared-css";
 import { extractEmail, type SearchParams } from "../_lib/query";
@@ -44,9 +45,14 @@ export default async function InstallMacPage({
         </div>
 
         <div className="mc-dl">
-          <a className="mc-dl-btn" href={MAC_DMG_URL}>
+          <DownloadLink
+            className="mc-dl-btn"
+            href={MAC_DMG_URL}
+            platform="macos"
+            fileName="Ontor.dmg"
+          >
             <DownloadIcon /> Download Ontor for Mac
-          </a>
+          </DownloadLink>
           <span className="mc-dl-meta">Ontor.dmg &middot; notarized</span>
         </div>
 

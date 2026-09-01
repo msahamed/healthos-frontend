@@ -3,6 +3,8 @@ import {
   sendOwnerLifecycleNotification,
   type OwnerLifecycleMilestone,
 } from "@/lib/email";
+import { sendGoogleAnalyticsProductEvent } from "@/lib/google-analytics";
+import { sendFullStoryProductEvent } from "@/lib/fullstory";
 
 interface ClaimedOwnerMilestone {
   milestone: OwnerLifecycleMilestone;
@@ -47,6 +49,32 @@ export async function sendClaimedOwnerMilestone(
     );
 
   if (claimed.upsertedCount !== 1) return false;
-  await sendOwnerLifecycleNotification(notice);
+  const eventParams = {
+    platform: notice.platform,
+    app_version: notice.appVersion,
+    trial_days: notice.trialDays,
+  };
+  const deliveries = await Promise.allSettled([
+    sendOwnerLifecycleNotification(notice),
+    sendGoogleAnalyticsProductEvent({
+      name: notice.milestone,
+      userId: notice.userId ?? notice.identityKey,
+      occurredAt: notice.occurredAt,
+      params: eventParams,
+    }),
+    sendFullStoryProductEvent({
+      name: notice.milestone,
+      userId: notice.userId ?? notice.identityKey,
+      occurredAt: notice.occurredAt,
+      idempotencyKey: claimId,
+      params: eventParams,
+    }),
+  ]);
+
+  for (const delivery of deliveries) {
+    if (delivery.status === "rejected") {
+      console.error("[owner-lifecycle] milestone delivery failed:", delivery.reason);
+    }
+  }
   return true;
 }

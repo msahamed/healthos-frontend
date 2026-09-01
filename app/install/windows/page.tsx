@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Nav from "@/app/components/Nav";
 import BackLink from "../_components/BackLink";
 import InstallFooter from "../_components/InstallFooter";
+import DownloadLink from "../_components/DownloadLink";
 import { DownloadIcon } from "../_components/icons";
 import { INSTALL_SHARED_CSS } from "../_lib/shared-css";
 import { extractEmail, type SearchParams } from "../_lib/query";
@@ -35,9 +36,14 @@ export default async function InstallWindowsPage({
         </div>
 
         <div className="wn-dl">
-          <a className="wn-dl-btn" href={WINDOWS_INSTALLER_URL}>
+          <DownloadLink
+            className="wn-dl-btn"
+            href={WINDOWS_INSTALLER_URL}
+            platform="windows"
+            fileName="Ontor-Setup.exe"
+          >
             <DownloadIcon /> Download Ontor for Windows
-          </a>
+          </DownloadLink>
           <span className="wn-dl-meta">Ontor-Setup.exe &middot; unsigned beta</span>
         </div>
 

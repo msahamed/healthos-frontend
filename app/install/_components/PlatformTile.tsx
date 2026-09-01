@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { ReactNode } from "react";
+import { trackWebsiteEvent } from "@/lib/website-analytics";
 import { LockIcon, DownloadIcon } from "./icons";
 
 type TileState = "live" | "locked" | "soon";
@@ -24,7 +27,16 @@ type Props = {
 // a lock icon, soon is quiet text) — no per-platform layout branching.
 export default function PlatformTile({ href, state, icon, title, description, ctaLabel }: Props) {
   return (
-    <Link href={href} className={`ch-tile is-${state}`}>
+    <Link
+      href={href}
+      className={`ch-tile is-${state}`}
+      onClick={() =>
+        trackWebsiteEvent("install_platform_selected", {
+          platform: title.toLowerCase(),
+          availability: state,
+        })
+      }
+    >
       <span className={`inst-badge is-${state}`}>{BADGE_LABEL[state]}</span>
       <span className="ch-icon">{icon}</span>
       <h3>{title}</h3>
